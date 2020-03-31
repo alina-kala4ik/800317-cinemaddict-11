@@ -1,7 +1,7 @@
 # Личный проект «Киноман» [![Build status][travis-image]][travis-url]
 
 * Студент: [Алина](https://up.htmlacademy.ru/ecmascript/11/user/800317).
-* Наставник: `Неизвестно`.
+* Наставник: [Евгений](https://htmlacademy.ru/profile/ealipkin).
 
 ---
 
