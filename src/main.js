@@ -296,3 +296,5 @@ for (let i = 0; i < EXTRA_FILMS_COUNT; i++) {
 for (let i = 0; i < EXTRA_FILMS_COUNT; i++) {
   render(mostCommentedFilmsContainerElement, createCardFilmTemplate());
 }
+
+render(document.body, createFilmDetailsPopupTemplate());
