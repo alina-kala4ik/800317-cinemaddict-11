@@ -2,7 +2,7 @@
 
 const ALL_FILMS_COUNT = 5;
 const EXTRA_FILMS_COUNT = 2;
-const EXTRA_CLASS_FILMS = [`Top rated`, `Most commented`]
+const EXTRA_CLASS_FILMS = [`Top rated`, `Most commented`];
 
 
 const createUserRankTemplate = () => {
@@ -287,7 +287,7 @@ render(allFilmsListElement, createButtonShowMoreTemplate());
 
 EXTRA_CLASS_FILMS.forEach((item) => {
   render(filmsElement, createExtraFilmsListTemplate(item));
-})
+});
 
 
 const extraFilmsListElement = mainElement.querySelectorAll(`.films-list--extra`);
