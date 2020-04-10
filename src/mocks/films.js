@@ -13,7 +13,7 @@ const POSTERS_SRC = [
 
 const DESCRIPTIONS_PHRASES = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus`.split(`.`);
 
-const EMOJIS = [`angry.png`, `puke.png`, `sleeping.png`, `smile.png`];
+const EMOJIS = [`angry`, `puke`, `sleeping`, `smile`];
 
 
 const getRandomNumber = (max = 1, min = 0) => {
@@ -68,8 +68,7 @@ const generateFilm = () => {
   return {
     title: `The Dance of life`,
     originalTitle: `The Dance of life`,
-    smallPoster: POSTERS_SRC[getRandomNumber(POSTERS_SRC.length - 1)],
-    bigPoster: POSTERS_SRC[getRandomNumber(POSTERS_SRC.length - 1)],
+    poster: POSTERS_SRC[getRandomNumber(POSTERS_SRC.length - 1)],
     director: `Anthony Mann`,
     writers: [`Anne Wigton`, `Heinz Herald`, `Richard Weil`],
     releaseDate: generateDate(),
@@ -81,7 +80,7 @@ const generateFilm = () => {
     genres: [`Drama`, `Film-Noir`, `Mystery`],
     comments: generateArrayComments(getRandomNumber(5)),
     ageLimit: getRandomNumber(18),
-    isAddedToView: getRandomNumber(),
+    isAddedToWatchlist: getRandomNumber(),
     isMarkAsWatched: getRandomNumber(),
     isMarkAsFavorite: getRandomNumber(),
   };

@@ -68,5 +68,5 @@ for (let i = 0; i < EXTRA_FILMS_COUNT; i++) {
   render(mostCommentedFilmsContainerElement, createCardFilmTemplate(mostCommentedFilms[i]));
 }
 
-// render(document.body, createFilmDetailsPopupTemplate());
+render(document.body, createFilmDetailsPopupTemplate(arrayFilms[0]));
 
