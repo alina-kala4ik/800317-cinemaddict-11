@@ -81,6 +81,9 @@ const generateFilm = () => {
     genres: [`Drama`, `Film-Noir`, `Mystery`],
     comments: generateArrayComments(getRandomNumber(5)),
     ageLimit: getRandomNumber(18),
+    isAddedToView: getRandomNumber(),
+    isMarkAsWatched: getRandomNumber(),
+    isMarkAsFavorite: getRandomNumber(),
   };
 };
 
