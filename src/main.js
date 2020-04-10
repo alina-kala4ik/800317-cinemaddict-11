@@ -49,17 +49,18 @@ render(allFilmsListElement, createButtonShowMoreTemplate());
 
 
 const loadMoreButton = allFilmsListElement.querySelector(`.films-list__show-more`);
-let showingFilmsCount = SHOWING_FILMS;
+let firstFilmForShowing = SHOWING_FILMS + 1;
+let lastFilmForShowing = SHOWING_FILMS * 2 + 1;
+
 
 loadMoreButton.addEventListener(`click`, () => {
-  const firstFilm = showingFilmsCount;
-  showingFilmsCount += SHOWING_FILMS;
-  arrayFilms.slice(firstFilm, showingFilmsCount)
+  arrayFilms.slice(firstFilmForShowing, lastFilmForShowing)
     .forEach((film) => render(allFilmsContainerElement, createCardFilmTemplate(film)));
-
-  if (showingFilmsCount >= arrayFilms.length) {
+  if (lastFilmForShowing >= arrayFilms.length) {
     loadMoreButton.remove();
   }
+  firstFilmForShowing += SHOWING_FILMS;
+  lastFilmForShowing += SHOWING_FILMS;
 });
 
 
@@ -89,7 +90,7 @@ for (let i = 0; i < EXTRA_FILMS_COUNT; i++) {
   render(mostCommentedFilmsContainerElement, createCardFilmTemplate(mostCommentedFilms[i]));
 }
 
-// render(document.body, createFilmDetailsPopupTemplate(arrayFilms[0]));
+render(document.body, createFilmDetailsPopupTemplate(arrayFilms[0]));
 
 const footerStatistics = document.body.querySelector(`.footer__statistics`);
 footerStatistics.innerHTML = `<p>${arrayFilms.length.toLocaleString()} movies inside</p>`;
