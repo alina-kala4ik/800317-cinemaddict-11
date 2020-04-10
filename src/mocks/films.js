@@ -36,6 +36,15 @@ const generateDate = () => {
   return date;
 };
 
+const generateRunTime = () => {
+  const runTime = new Date();
+  runTime.setHours(getRandomNumber(3));
+  runTime.setMinutes(getRandomNumber(60));
+  const hours = runTime.getHours().toString().padStart(2, `0`);
+  const minutes = runTime.getMinutes();
+  return `${hours}h ${minutes}m`;
+};
+
 const generateComment = () => {
   return {
     emoji: EMOJIS[getRandomNumber(EMOJIS.length - 1)],
@@ -64,7 +73,7 @@ const generateFilm = () => {
     director: `Anthony Mann`,
     writers: [`Anne Wigton`, `Heinz Herald`, `Richard Weil`],
     releaseDate: generateDate(),
-    runtime: `1h 18m`,
+    runtime: generateRunTime(),
     actors: [`Erich von Stroheim`, `Mary Beth Hughes`, `Dan Duryea`],
     description: DESCRIPTIONS_PHRASES.slice(randomNumber, randomNumber + getRandomNumber(MAX_SENTENCES_IN_DESCRIPTION), 1).join(`.`),
     rating: getRandomRating(),
