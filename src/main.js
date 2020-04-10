@@ -7,6 +7,7 @@ import {createFilmsTemplate} from "./components/films.js";
 import {createMenuAndStatsTemplate} from "./components/menu-and-stats.js";
 import {createUserRankTemplate} from "./components/user-rank.js";
 import {generateArrayFilms} from "./mocks/films.js";
+import {generateStats} from "./mocks/stats.js";
 
 
 const ALL_FILMS_COUNT = 20;
@@ -14,6 +15,7 @@ const EXTRA_FILMS_COUNT = 2;
 const EXTRA_CLASS_FILMS = [`Top rated`, `Most commented`];
 
 const arrayFilms = generateArrayFilms(ALL_FILMS_COUNT);
+const stats = generateStats(arrayFilms);
 
 
 const render = (container, template, place = `beforeend`) => {
@@ -26,7 +28,7 @@ const mainElement = document.querySelector(`.main`);
 
 
 render(headerElement, createUserRankTemplate());
-render(mainElement, createMenuAndStatsTemplate());
+render(mainElement, createMenuAndStatsTemplate(stats));
 render(mainElement, createFilmsTemplate());
 
 
@@ -68,5 +70,7 @@ for (let i = 0; i < EXTRA_FILMS_COUNT; i++) {
   render(mostCommentedFilmsContainerElement, createCardFilmTemplate(mostCommentedFilms[i]));
 }
 
-render(document.body, createFilmDetailsPopupTemplate(arrayFilms[0]));
+// render(document.body, createFilmDetailsPopupTemplate(arrayFilms[0]));
 
+const footerStatistics = document.body.querySelector(`.footer__statistics`);
+footerStatistics.innerHTML = `<p>${arrayFilms.length.toLocaleString()} movies inside</p>`;
