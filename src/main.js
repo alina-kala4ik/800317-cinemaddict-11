@@ -11,6 +11,7 @@ import {generateStats} from "./mocks/stats.js";
 
 
 const ALL_FILMS_COUNT = 20;
+const SHOWING_FILMS = 5;
 const EXTRA_FILMS_COUNT = 2;
 const EXTRA_CLASS_FILMS = [`Top rated`, `Most commented`];
 
@@ -39,10 +40,28 @@ render(filmsElement, createAllFilmsListTemplate());
 const allFilmsListElement = filmsElement.querySelector(`.films-list`);
 const allFilmsContainerElement = allFilmsListElement.querySelector(`.films-list__container`);
 
-arrayFilms.forEach((film) => render(allFilmsContainerElement, createCardFilmTemplate(film)));
+
+arrayFilms.slice(1, SHOWING_FILMS + 1)
+  .forEach((film) => render(allFilmsContainerElement, createCardFilmTemplate(film)));
 
 
 render(allFilmsListElement, createButtonShowMoreTemplate());
+
+
+const loadMoreButton = allFilmsListElement.querySelector(`.films-list__show-more`);
+let showingFilmsCount = SHOWING_FILMS;
+
+loadMoreButton.addEventListener(`click`, () => {
+  const firstFilm = showingFilmsCount;
+  showingFilmsCount += SHOWING_FILMS;
+  arrayFilms.slice(firstFilm, showingFilmsCount)
+    .forEach((film) => render(allFilmsContainerElement, createCardFilmTemplate(film)));
+
+  if (showingFilmsCount >= arrayFilms.length) {
+    loadMoreButton.remove();
+  }
+});
+
 
 EXTRA_CLASS_FILMS.forEach((item) => {
   render(filmsElement, createExtraFilmsListTemplate(item));
