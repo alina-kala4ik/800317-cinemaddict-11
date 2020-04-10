@@ -1,5 +1,5 @@
 const MAX_SENTENCES_IN_DESCRIPTION = 5;
-const maxRating = 10;
+const MAX_RAITING = 10;
 
 const POSTERS_SRC = [
   `made-for-each-other.png`,
@@ -23,7 +23,7 @@ const getRandomNumber = (max = 1, min = 0) => {
 };
 
 const getRandomRating = () => {
-  return (Math.random() * (maxRating - 0) + 0).toFixed(1);
+  return (Math.random() * (MAX_RAITING - 0) + 0).toFixed(1);
 };
 
 const generateDate = () => {

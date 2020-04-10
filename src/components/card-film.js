@@ -1,8 +1,10 @@
+const MAX_DESCRIPTION_LENGTH = 140;
+
 export const createCardFilmTemplate = (filmData) => {
   const {title, rating, releaseDate, runtime, genres, poster, description, comments, isAddedToWatchlist, isMarkAsWatched, isMarkAsFavorite} = filmData;
 
   const filmYear = releaseDate.getFullYear();
-  const showingDescription = description.length > 140 ? `${description.substring(0, 140)}...` : description;
+  const showingDescription = description.length > MAX_DESCRIPTION_LENGTH ? `${description.substring(0, MAX_DESCRIPTION_LENGTH)}...` : description;
 
   return (
     `<article class="film-card">
