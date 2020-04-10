@@ -40,8 +40,8 @@ const generateRunTime = () => {
   const runTime = new Date();
   runTime.setHours(getRandomNumber(3));
   runTime.setMinutes(getRandomNumber(60));
-  const hours = runTime.getHours().toString().padStart(2, `0`);
-  const minutes = runTime.getMinutes();
+  const hours = runTime.getHours();
+  const minutes = runTime.getMinutes().toString().padStart(2, `0`);
   return `${hours}h ${minutes}m`;
 };
 
@@ -64,6 +64,8 @@ const generateArrayComments = (countComments) => {
 
 const generateFilm = () => {
   const randomNumber = getRandomNumber(DESCRIPTIONS_PHRASES.length - 1);
+  const maxNumberForSliceDescription = randomNumber + getRandomNumber(MAX_SENTENCES_IN_DESCRIPTION, 1);
+
 
   return {
     title: `The Dance of life`,
@@ -74,7 +76,7 @@ const generateFilm = () => {
     releaseDate: generateDate(),
     runtime: generateRunTime(),
     actors: [`Erich von Stroheim`, `Mary Beth Hughes`, `Dan Duryea`],
-    description: DESCRIPTIONS_PHRASES.slice(randomNumber, randomNumber + getRandomNumber(MAX_SENTENCES_IN_DESCRIPTION), 1).join(`.`),
+    description: DESCRIPTIONS_PHRASES.slice(randomNumber, maxNumberForSliceDescription).join(`.`),
     rating: getRandomRating(),
     country: `USA`,
     genres: [`Drama`, `Film-Noir`, `Mystery`],
