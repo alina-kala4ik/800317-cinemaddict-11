@@ -62,3 +62,4 @@ for (let i = 0; i < EXTRA_FILMS_COUNT; i++) {
 }
 
 render(document.body, createFilmDetailsPopupTemplate());
+
