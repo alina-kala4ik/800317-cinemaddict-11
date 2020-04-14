@@ -1,4 +1,6 @@
-export const createMenuAndStatsTemplate = (stats) => {
+import {createElement} from "./../util.js";
+
+const createMenuAndStatsTemplate = (stats) => {
 
   const statsLinksTemplate = Object.entries(stats).map((statsItem) => {
     const [title, count] = statsItem;
@@ -19,3 +21,22 @@ export const createMenuAndStatsTemplate = (stats) => {
     </nav>`
   );
 };
+
+export default class MenuAndStats {
+  constructor(stats) {
+    this._stats = stats;
+    this._element = null;
+  }
+  getTemplate() {
+    return createMenuAndStatsTemplate(this._stats);
+  }
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+  removeElement() {
+    this._element = null;
+  }
+}

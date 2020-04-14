@@ -1,11 +1,12 @@
-import {createFilmDetailsPopupTemplate} from "./components/film-details-popup.js";
-import {createButtonShowMoreTemplate} from "./components/button-show-more.js";
-import {createCardFilmTemplate} from "./components/card-film.js";
-import {createExtraFilmsListTemplate} from "./components/extra-films-list.js";
-import {createAllFilmsListTemplate} from "./components/all-films-list.js";
-import {createFilmsTemplate} from "./components/films.js";
-import {createMenuAndStatsTemplate} from "./components/menu-and-stats.js";
-import {createUserRankTemplate} from "./components/user-rank.js";
+import FilmDetailsPopupComponent from "./components/film-details-popup.js";
+import ButtonShowMoreComponent from "./components/button-show-more.js";
+import CardFilmComponent from "./components/card-film.js";
+import ExtraFilmsListComponent from "./components/extra-films-list.js";
+import AllFilmsListComponent from "./components/all-films-list.js";
+import FilmsComponent from "./components/films.js";
+import MenuAndStatsComponent from "./components/menu-and-stats.js";
+import UserRankComponent from "./components/user-rank.js";
+
 import {generateArrayFilms} from "./mocks/films.js";
 import {generateStats} from "./mocks/stats.js";
 
@@ -19,8 +20,10 @@ const arrayFilms = generateArrayFilms(ALL_FILMS_COUNT);
 const stats = generateStats(arrayFilms);
 
 
-const render = (container, template, place = `beforeend`) => {
-  container.insertAdjacentHTML(place, template);
+const render = (container, element, place = `beforeend`) => {
+  switch (place) {
+    case `beforeend`: container.append(element); break;
+  }
 };
 
 
@@ -28,24 +31,24 @@ const headerElement = document.querySelector(`.header`);
 const mainElement = document.querySelector(`.main`);
 
 
-render(headerElement, createUserRankTemplate());
-render(mainElement, createMenuAndStatsTemplate(stats));
-render(mainElement, createFilmsTemplate());
+render(headerElement, new UserRankComponent().getElement());
+render(mainElement, new MenuAndStatsComponent(stats).getElement());
+render(mainElement, new FilmsComponent().getElement());
 
 
 const filmsElement = mainElement.querySelector(`.films`);
 
-render(filmsElement, createAllFilmsListTemplate());
+render(filmsElement, new AllFilmsListComponent().getElement());
 
 const allFilmsListElement = filmsElement.querySelector(`.films-list`);
 const allFilmsContainerElement = allFilmsListElement.querySelector(`.films-list__container`);
 
 
 arrayFilms.slice(1, SHOWING_FILMS + 1)
-  .forEach((film) => render(allFilmsContainerElement, createCardFilmTemplate(film)));
+  .forEach((film) => render(allFilmsContainerElement, new CardFilmComponent(film).getElement()));
 
 
-render(allFilmsListElement, createButtonShowMoreTemplate());
+render(allFilmsListElement, new ButtonShowMoreComponent().getElement());
 
 
 const loadMoreButton = allFilmsListElement.querySelector(`.films-list__show-more`);
@@ -55,7 +58,7 @@ let lastFilmForShowing = SHOWING_FILMS * 2 + 1;
 
 loadMoreButton.addEventListener(`click`, () => {
   arrayFilms.slice(firstFilmForShowing, lastFilmForShowing)
-    .forEach((film) => render(allFilmsContainerElement, createCardFilmTemplate(film)));
+    .forEach((film) => render(allFilmsContainerElement, new CardFilmComponent(film).getElement()));
   if (lastFilmForShowing >= arrayFilms.length) {
     loadMoreButton.remove();
   }
@@ -65,7 +68,7 @@ loadMoreButton.addEventListener(`click`, () => {
 
 
 EXTRA_CLASS_FILMS.forEach((item) => {
-  render(filmsElement, createExtraFilmsListTemplate(item));
+  render(filmsElement, new ExtraFilmsListComponent(item).getElement());
 });
 
 
@@ -79,7 +82,7 @@ const topRatedFilms = arrayFilms.slice()
   .sort((max, min) => min.rating - max.rating);
 
 for (let i = 0; i < EXTRA_FILMS_COUNT; i++) {
-  render(topRatedFilmsContainerElement, createCardFilmTemplate(topRatedFilms[i]));
+  render(topRatedFilmsContainerElement, new CardFilmComponent(topRatedFilms[i]).getElement());
 }
 
 const mostCommentedFilms = arrayFilms.slice()
@@ -87,10 +90,10 @@ const mostCommentedFilms = arrayFilms.slice()
 
 
 for (let i = 0; i < EXTRA_FILMS_COUNT; i++) {
-  render(mostCommentedFilmsContainerElement, createCardFilmTemplate(mostCommentedFilms[i]));
+  render(mostCommentedFilmsContainerElement, new CardFilmComponent(mostCommentedFilms[i]).getElement());
 }
 
-render(document.body, createFilmDetailsPopupTemplate(arrayFilms[0]));
+render(document.body, new FilmDetailsPopupComponent(arrayFilms[0]).getElement());
 
 const footerStatistics = document.body.querySelector(`.footer__statistics`);
 footerStatistics.innerHTML = `<p>${arrayFilms.length.toLocaleString()} movies inside</p>`;
