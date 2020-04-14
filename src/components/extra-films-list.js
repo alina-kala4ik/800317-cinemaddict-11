@@ -1,6 +1,6 @@
 import {createElement} from "./../util.js";
 
-export const createExtraFilmsListTemplate = (title) => {
+const createExtraFilmsListTemplate = (title) => {
   return (
     `<section class="films-list--extra">
       <h2 class="films-list__title">${title}</h2>
@@ -11,7 +11,7 @@ export const createExtraFilmsListTemplate = (title) => {
 
 export default class ExtraFilmsList {
   constructor(title) {
-    this._film = title;
+    this._title = title;
     this._element = null;
   }
   getTemplate() {
