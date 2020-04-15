@@ -1,7 +1,9 @@
+import {createElement} from "./../util.js";
+
 const MAX_DESCRIPTION_LENGTH = 140;
 
-export const createCardFilmTemplate = (filmData) => {
-  const {title, rating, releaseDate, runtime, genres, poster, description, comments, isAddedToWatchlist, isMarkAsWatched, isMarkAsFavorite} = filmData;
+const createCardFilmTemplate = (film) => {
+  const {title, rating, releaseDate, runtime, genres, poster, description, comments, isAddedToWatchlist, isMarkAsWatched, isMarkAsFavorite} = film;
 
   const filmYear = releaseDate.getFullYear();
   const showingDescription = description.length > MAX_DESCRIPTION_LENGTH ? `${description.substring(0, MAX_DESCRIPTION_LENGTH)}...` : description;
@@ -26,3 +28,22 @@ export const createCardFilmTemplate = (filmData) => {
     </article>`
   );
 };
+
+export default class CardFilm {
+  constructor(film) {
+    this._film = film;
+    this._element = null;
+  }
+  getTemplate() {
+    return createCardFilmTemplate(this._film);
+  }
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+  removeElement() {
+    this._element = null;
+  }
+}

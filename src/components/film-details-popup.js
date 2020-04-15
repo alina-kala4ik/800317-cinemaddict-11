@@ -1,3 +1,5 @@
+import {createElement} from "./../util.js";
+
 const optionsReleaseDate = {
   year: `numeric`,
   month: `long`,
@@ -23,8 +25,8 @@ const createGenresTemplate = (genres) => {
   .join(``);
 };
 
-const createComment = (commentData) => {
-  const {emoji, date, author, message} = commentData;
+const createComment = (comment) => {
+  const {emoji, date, author, message} = comment;
 
   const now = new Date();
   const today = new Intl.DateTimeFormat(`en-GB`, optionsCommentDate).format(new Date(now.getFullYear(), now.getMonth(), now.getDate()));
@@ -66,8 +68,8 @@ const createComments = (comments) => {
 };
 
 
-export const createFilmDetailsPopupTemplate = (filmData) => {
-  const {poster, title, ageLimit, originalTitle, rating, director, writers, actors, releaseDate, runtime, country, genres, description, isAddedToWatchlist, isMarkAsWatched, isMarkAsFavorite, comments} = filmData;
+const createFilmDetailsPopupTemplate = (film) => {
+  const {poster, title, ageLimit, originalTitle, rating, director, writers, actors, releaseDate, runtime, country, genres, description, isAddedToWatchlist, isMarkAsWatched, isMarkAsFavorite, comments} = film;
 
   return (
     `<section class="film-details">
@@ -197,3 +199,23 @@ export const createFilmDetailsPopupTemplate = (filmData) => {
     </section>`
   );
 };
+
+
+export default class FilmDetailsPopup {
+  constructor(film) {
+    this._film = film;
+    this._element = null;
+  }
+  getTemplate() {
+    return createFilmDetailsPopupTemplate(this._film);
+  }
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+  removeElement() {
+    this._element = null;
+  }
+}
