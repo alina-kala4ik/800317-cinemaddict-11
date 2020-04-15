@@ -26,11 +26,11 @@ const render = (container, element, place = `beforeend`) => {
   }
 };
 
-const renderFilmCard = (filmCardComponent, filmPopupComponent) => {
+const renderFilmCard = (filmCardComponent, filmPopupComponent, container) => {
   const filmCard = filmCardComponent.getElement();
   const filmPopup = filmPopupComponent.getElement();
 
-  render(allFilmsContainerElement, filmCard);
+  render(container, filmCard);
 
   const poster = filmCard.querySelector(`.film-card__poster`);
   const title = filmCard.querySelector(`.film-card__title`);
@@ -60,7 +60,7 @@ let lastFilmForShowing = SHOWING_FILMS;
 const showFilms = (loadMoreButton) => {
   arrayFilms.slice(firstFilmForShowing, lastFilmForShowing)
   .forEach((film) => {
-    renderFilmCard(new CardFilmComponent(film), new FilmDetailsPopupComponent(film));
+    renderFilmCard(new CardFilmComponent(film), new FilmDetailsPopupComponent(film), allFilmsContainerElement);
   });
 
   if (lastFilmForShowing >= arrayFilms.length) {
@@ -90,7 +90,7 @@ const showExtraFilms = () => {
     .sort((max, min) => min.rating - max.rating);
 
   for (let i = 0; i < EXTRA_FILMS_COUNT; i++) {
-    render(topRatedFilmsContainerElement, new CardFilmComponent(topRatedFilms[i]).getElement());
+    renderFilmCard(new CardFilmComponent(topRatedFilms[i]), new FilmDetailsPopupComponent(topRatedFilms[i]), topRatedFilmsContainerElement);
   }
 
   const mostCommentedFilms = arrayFilms.slice()
@@ -98,7 +98,7 @@ const showExtraFilms = () => {
 
 
   for (let i = 0; i < EXTRA_FILMS_COUNT; i++) {
-    render(mostCommentedFilmsContainerElement, new CardFilmComponent(mostCommentedFilms[i]).getElement());
+    renderFilmCard(new CardFilmComponent(mostCommentedFilms[i]), new FilmDetailsPopupComponent(mostCommentedFilms[i]), mostCommentedFilmsContainerElement);
   }
 };
 
