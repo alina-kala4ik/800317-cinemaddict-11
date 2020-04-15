@@ -54,6 +54,54 @@ const renderFilmCard = (filmCardComponent, filmPopupComponent) => {
   closePopupButton.addEventListener(`click`, closePopup);
 };
 
+let firstFilmForShowing = 0;
+let lastFilmForShowing = SHOWING_FILMS;
+
+const showFilms = (loadMoreButton) => {
+  arrayFilms.slice(firstFilmForShowing, lastFilmForShowing)
+  .forEach((film) => {
+    renderFilmCard(new CardFilmComponent(film), new FilmDetailsPopupComponent(film));
+  });
+
+  if (lastFilmForShowing >= arrayFilms.length) {
+    loadMoreButton.remove();
+    return;
+  }
+
+  loadMoreButton.addEventListener(`click`, () => {
+    firstFilmForShowing += SHOWING_FILMS;
+    lastFilmForShowing += SHOWING_FILMS;
+    showFilms(loadMoreButton);
+  }, {once: true});
+};
+
+const showExtraFilms = () => {
+  EXTRA_CLASS_FILMS.forEach((title) => {
+    render(filmsElement, new ExtraFilmsListComponent(title).getElement());
+  });
+
+  const extraFilmsListElement = mainElement.querySelectorAll(`.films-list--extra`);
+  const topRatedFilmsListElement = extraFilmsListElement[0];
+  const topRatedFilmsContainerElement = topRatedFilmsListElement.querySelector(`.films-list__container`);
+  const mostCommentedFilmsListElement = extraFilmsListElement[1];
+  const mostCommentedFilmsContainerElement = mostCommentedFilmsListElement.querySelector(`.films-list__container`);
+
+  const topRatedFilms = arrayFilms.slice()
+    .sort((max, min) => min.rating - max.rating);
+
+  for (let i = 0; i < EXTRA_FILMS_COUNT; i++) {
+    render(topRatedFilmsContainerElement, new CardFilmComponent(topRatedFilms[i]).getElement());
+  }
+
+  const mostCommentedFilms = arrayFilms.slice()
+    .sort((max, min) => min.comments.length - max.comments.length);
+
+
+  for (let i = 0; i < EXTRA_FILMS_COUNT; i++) {
+    render(mostCommentedFilmsContainerElement, new CardFilmComponent(mostCommentedFilms[i]).getElement());
+  }
+};
+
 
 const headerElement = document.querySelector(`.header`);
 const mainElement = document.querySelector(`.main`);
@@ -75,54 +123,10 @@ render(allFilmsListElement, new ButtonShowMoreComponent().getElement());
 
 const loadMoreButton = allFilmsListElement.querySelector(`.films-list__show-more`);
 
-let firstFilmForShowing = 0;
-let lastFilmForShowing = SHOWING_FILMS;
 
-const showFilms = () => {
-  arrayFilms.slice(firstFilmForShowing, lastFilmForShowing)
-  .forEach((film) => {
-    renderFilmCard(new CardFilmComponent(film), new FilmDetailsPopupComponent(film));
-  });
+showFilms(loadMoreButton);
+showExtraFilms();
 
-  if (lastFilmForShowing >= arrayFilms.length) {
-    loadMoreButton.remove();
-    return;
-  }
-
-  loadMoreButton.addEventListener(`click`, () => {
-    firstFilmForShowing += SHOWING_FILMS;
-    lastFilmForShowing += SHOWING_FILMS;
-    showFilms();
-  }, {once: true});
-};
-showFilms();
-
-
-EXTRA_CLASS_FILMS.forEach((title) => {
-  render(filmsElement, new ExtraFilmsListComponent(title).getElement());
-});
-
-
-const extraFilmsListElement = mainElement.querySelectorAll(`.films-list--extra`);
-const topRatedFilmsListElement = extraFilmsListElement[0];
-const topRatedFilmsContainerElement = topRatedFilmsListElement.querySelector(`.films-list__container`);
-const mostCommentedFilmsListElement = extraFilmsListElement[1];
-const mostCommentedFilmsContainerElement = mostCommentedFilmsListElement.querySelector(`.films-list__container`);
-
-const topRatedFilms = arrayFilms.slice()
-  .sort((max, min) => min.rating - max.rating);
-
-for (let i = 0; i < EXTRA_FILMS_COUNT; i++) {
-  render(topRatedFilmsContainerElement, new CardFilmComponent(topRatedFilms[i]).getElement());
-}
-
-const mostCommentedFilms = arrayFilms.slice()
-  .sort((max, min) => min.comments.length - max.comments.length);
-
-
-for (let i = 0; i < EXTRA_FILMS_COUNT; i++) {
-  render(mostCommentedFilmsContainerElement, new CardFilmComponent(mostCommentedFilms[i]).getElement());
-}
 
 const footerStatistics = document.body.querySelector(`.footer__statistics`);
 footerStatistics.innerHTML = `<p>${arrayFilms.length.toLocaleString()} movies inside</p>`;
