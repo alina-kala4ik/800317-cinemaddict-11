@@ -38,20 +38,27 @@ const renderFilmCard = (filmCardComponent, filmPopupComponent, container) => {
 
   const closePopupButton = filmPopup.querySelector(`.film-details__close-btn`);
 
-  const openPopup = () => {
-    document.body.appendChild(filmPopup);
-  };
-
   const closePopup = () => {
     document.body.removeChild(filmPopup);
     filmPopupComponent.removeElement();
+    document.removeEventListener(`keydown`, documentKeydownHandler);
+  };
+
+  const documentKeydownHandler = (evt) => {
+    if (evt.key === `Escape` || evt.key === `Esc`) {
+      closePopup();
+    }
+  };
+
+  const openPopup = () => {
+    document.body.appendChild(filmPopup);
+    closePopupButton.addEventListener(`click`, closePopup);
+    document.addEventListener(`keydown`, documentKeydownHandler);
   };
 
   poster.addEventListener(`click`, openPopup);
   title.addEventListener(`click`, openPopup);
   comments.addEventListener(`click`, openPopup);
-
-  closePopupButton.addEventListener(`click`, closePopup);
 };
 
 let firstFilmForShowing = 0;
