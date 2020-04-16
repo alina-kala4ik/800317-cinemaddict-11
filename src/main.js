@@ -6,6 +6,7 @@ import AllFilmsListComponent from "./components/all-films-list.js";
 import FilmsComponent from "./components/films.js";
 import MenuAndStatsComponent from "./components/menu-and-stats.js";
 import UserRankComponent from "./components/user-rank.js";
+import NoFilmsComponent from "./components/no-films.js";
 
 import {generateArrayFilms} from "./mocks/films.js";
 import {generateStats} from "./mocks/stats.js";
@@ -18,7 +19,6 @@ const EXTRA_CLASS_FILMS = [`Top rated`, `Most commented`];
 
 const arrayFilms = generateArrayFilms(ALL_FILMS_COUNT);
 const stats = generateStats(arrayFilms);
-
 
 const render = (container, element, place = `beforeend`) => {
   switch (place) {
@@ -38,26 +38,33 @@ const renderFilmCard = (filmCardComponent, filmPopupComponent, container) => {
 
   const closePopupButton = filmPopup.querySelector(`.film-details__close-btn`);
 
-  const openPopup = () => {
-    document.body.appendChild(filmPopup);
-  };
-
   const closePopup = () => {
     document.body.removeChild(filmPopup);
     filmPopupComponent.removeElement();
+    document.removeEventListener(`keydown`, documentKeydownHandler);
+  };
+
+  const documentKeydownHandler = (evt) => {
+    if (evt.key === `Escape` || evt.key === `Esc`) {
+      closePopup();
+    }
+  };
+
+  const openPopup = () => {
+    document.body.appendChild(filmPopup);
+    closePopupButton.addEventListener(`click`, closePopup);
+    document.addEventListener(`keydown`, documentKeydownHandler);
   };
 
   poster.addEventListener(`click`, openPopup);
   title.addEventListener(`click`, openPopup);
   comments.addEventListener(`click`, openPopup);
-
-  closePopupButton.addEventListener(`click`, closePopup);
 };
 
 let firstFilmForShowing = 0;
 let lastFilmForShowing = SHOWING_FILMS;
 
-const showFilms = (loadMoreButton) => {
+const showFilms = (loadMoreButton, allFilmsContainerElement) => {
   arrayFilms.slice(firstFilmForShowing, lastFilmForShowing)
   .forEach((film) => {
     renderFilmCard(new CardFilmComponent(film), new FilmDetailsPopupComponent(film), allFilmsContainerElement);
@@ -71,11 +78,11 @@ const showFilms = (loadMoreButton) => {
   loadMoreButton.addEventListener(`click`, () => {
     firstFilmForShowing += SHOWING_FILMS;
     lastFilmForShowing += SHOWING_FILMS;
-    showFilms(loadMoreButton);
+    showFilms(loadMoreButton, allFilmsContainerElement);
   }, {once: true});
 };
 
-const showExtraFilms = () => {
+const showExtraFilms = (filmsElement) => {
   EXTRA_CLASS_FILMS.forEach((title) => {
     render(filmsElement, new ExtraFilmsListComponent(title).getElement());
   });
@@ -111,21 +118,27 @@ render(headerElement, new UserRankComponent().getElement());
 render(mainElement, new MenuAndStatsComponent(stats).getElement());
 render(mainElement, new FilmsComponent().getElement());
 
+const renderFilmsSection = () => {
+  const filmsElement = mainElement.querySelector(`.films`);
+  render(filmsElement, new AllFilmsListComponent().getElement());
+  const allFilmsListElement = filmsElement.querySelector(`.films-list`);
 
-const filmsElement = mainElement.querySelector(`.films`);
+  if (arrayFilms.length === 0) {
+    render(allFilmsListElement, new NoFilmsComponent().getElement());
+    return;
+  }
 
-render(filmsElement, new AllFilmsListComponent().getElement());
+  const allFilmsContainerElement = allFilmsListElement.querySelector(`.films-list__container`);
 
-const allFilmsListElement = filmsElement.querySelector(`.films-list`);
-const allFilmsContainerElement = allFilmsListElement.querySelector(`.films-list__container`);
+  render(allFilmsListElement, new ButtonShowMoreComponent().getElement());
 
-render(allFilmsListElement, new ButtonShowMoreComponent().getElement());
+  const loadMoreButton = allFilmsListElement.querySelector(`.films-list__show-more`);
 
-const loadMoreButton = allFilmsListElement.querySelector(`.films-list__show-more`);
+  showFilms(loadMoreButton, allFilmsContainerElement);
+  showExtraFilms(filmsElement);
+};
 
-
-showFilms(loadMoreButton);
-showExtraFilms();
+renderFilmsSection();
 
 
 const footerStatistics = document.body.querySelector(`.footer__statistics`);
