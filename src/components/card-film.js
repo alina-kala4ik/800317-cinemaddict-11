@@ -1,4 +1,4 @@
-import {createElement} from "./../util.js";
+import AbstractComponent from "./../components/abstract-component.js";
 
 const MAX_DESCRIPTION_LENGTH = 140;
 
@@ -29,21 +29,12 @@ const createCardFilmTemplate = (film) => {
   );
 };
 
-export default class CardFilm {
+export default class CardFilm extends AbstractComponent {
   constructor(film) {
+    super();
     this._film = film;
-    this._element = null;
   }
   getTemplate() {
     return createCardFilmTemplate(this._film);
-  }
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
-  }
-  removeElement() {
-    this._element = null;
   }
 }
