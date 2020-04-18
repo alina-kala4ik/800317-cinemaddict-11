@@ -1,4 +1,4 @@
-import {createElement} from "./../util.js";
+import AbstractComponent from "./../components/abstract-component.js";
 
 const optionsReleaseDate = {
   year: `numeric`,
@@ -201,21 +201,15 @@ const createFilmDetailsPopupTemplate = (film) => {
 };
 
 
-export default class FilmDetailsPopup {
+export default class FilmDetailsPopup extends AbstractComponent {
   constructor(film) {
+    super();
     this._film = film;
-    this._element = null;
   }
   getTemplate() {
     return createFilmDetailsPopupTemplate(this._film);
   }
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
-  }
-  removeElement() {
-    this._element = null;
+  setCloseButtonClickHandler(handler) {
+    this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, handler);
   }
 }
