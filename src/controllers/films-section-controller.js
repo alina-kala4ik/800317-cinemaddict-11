@@ -11,11 +11,11 @@ const EXTRA_FILMS_COUNT = 2;
 const EXTRA_CLASS_FILMS = [`Top rated`, `Most commented`];
 const SHOWING_FILMS = 5;
 
-const renderFilmCard = (filmCardComponent, filmPopupComponent, container) => {
-  render(container, filmCardComponent);
+const renderFilmCard = (cardFilmComponent, filmDetailsPopupComponent, container) => {
+  render(container, cardFilmComponent);
 
   const closePopup = () => {
-    removeChild(filmPopupComponent);
+    removeChild(filmDetailsPopupComponent);
     document.removeEventListener(`keydown`, documentKeydownHandler);
   };
 
@@ -26,14 +26,14 @@ const renderFilmCard = (filmCardComponent, filmPopupComponent, container) => {
   };
 
   const openPopup = () => {
-    appendChild(filmPopupComponent);
-    filmPopupComponent.setCloseButtonClickHandler(closePopup);
+    appendChild(filmDetailsPopupComponent);
+    filmDetailsPopupComponent.setCloseButtonClickHandler(closePopup);
     document.addEventListener(`keydown`, documentKeydownHandler);
   };
 
-  filmCardComponent.setPosterClickHandler(openPopup);
-  filmCardComponent.setTitleClickHandler(openPopup);
-  filmCardComponent.setCommentsClickHandler(openPopup);
+  cardFilmComponent.setPosterClickHandler(openPopup);
+  cardFilmComponent.setTitleClickHandler(openPopup);
+  cardFilmComponent.setCommentsClickHandler(openPopup);
 };
 
 let firstFilmForShowing = 0;
@@ -83,30 +83,29 @@ const showExtraFilms = (filmsElement, arrayFilms, mainElement) => {
   }
 };
 
-const renderFilmsSection = (mainElement, arrayFilms) => {
-  const filmsElement = mainElement.querySelector(`.films`);
-  render(filmsElement, new AllFilmsListComponent());
-  const allFilmsListElement = filmsElement.querySelector(`.films-list`);
-
-  if (arrayFilms.length === 0) {
-    render(allFilmsListElement, new NoFilmsComponent());
-    return;
-  }
-
-  const allFilmsContainerElement = allFilmsListElement.querySelector(`.films-list__container`);
-
-  const buttonShowMoreComponent = new ButtonShowMoreComponent();
-  render(allFilmsListElement, buttonShowMoreComponent);
-
-  showFilms(buttonShowMoreComponent, allFilmsContainerElement, arrayFilms);
-  showExtraFilms(filmsElement, arrayFilms, mainElement);
-};
-
 export default class FilmsSectionController {
-  constructor() {
+  constructor(container) {
+    this._container = container;
 
+    this._allFilmsListComponent = new AllFilmsListComponent();
+    this._noFilmsComponent = new NoFilmsComponent();
+    this._buttonShowMoreComponent = new ButtonShowMoreComponent();
   }
-  render(mainElement, arrayFilms) {
-    renderFilmsSection(mainElement, arrayFilms);
+  render(arrayFilms) {
+    const filmsElement = this._container.querySelector(`.films`);
+    render(filmsElement, this._allFilmsListComponent);
+    const allFilmsListElement = filmsElement.querySelector(`.films-list`);
+
+    if (arrayFilms.length === 0) {
+      render(allFilmsListElement, this._noFilmsComponent);
+      return;
+    }
+
+    const allFilmsContainerElement = allFilmsListElement.querySelector(`.films-list__container`);
+
+    render(allFilmsListElement, this._buttonShowMoreComponent);
+
+    showFilms(this._buttonShowMoreComponent, allFilmsContainerElement, arrayFilms);
+    showExtraFilms(filmsElement, arrayFilms, this._container);
   }
 }

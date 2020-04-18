@@ -9,7 +9,6 @@ import {render} from "./utils/render.js";
 
 import FilmsSectionController from "./controllers/films-section-controller.js";
 
-
 const ALL_FILMS_COUNT = 20;
 
 const arrayFilms = generateArrayFilms(ALL_FILMS_COUNT);
@@ -24,8 +23,7 @@ render(headerElement, new UserRankComponent());
 render(mainElement, new MenuAndStatsComponent(stats));
 render(mainElement, new FilmsComponent());
 
-new FilmsSectionController().render(mainElement, arrayFilms);
-
+new FilmsSectionController(mainElement).render(arrayFilms);
 
 const footerStatistics = document.body.querySelector(`.footer__statistics`);
 footerStatistics.innerHTML = `<p>${arrayFilms.length.toLocaleString()} movies inside</p>`;
