@@ -4,7 +4,7 @@ const SortType = {
   DEFAULT: `default`,
   BY_DATE: `by_date`,
   BY_RATING: `by_rating`,
-}
+};
 
 const createSortingTemplate = () => {
   return (
@@ -47,3 +47,5 @@ export default class Sorting extends AbstractComponent {
     });
   }
 }
+
+export {SortType};
