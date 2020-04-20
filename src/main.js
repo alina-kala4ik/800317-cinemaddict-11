@@ -1,6 +1,7 @@
 import FilmsComponent from "./components/films.js";
 import MenuAndStatsComponent from "./components/menu-and-stats.js";
 import UserRankComponent from "./components/user-rank.js";
+import SortingComponent from "./components/sorting.js";
 
 import {generateArrayFilms} from "./mocks/films.js";
 import {generateStats} from "./mocks/stats.js";
@@ -21,6 +22,7 @@ const mainElement = document.querySelector(`.main`);
 
 render(headerElement, new UserRankComponent());
 render(mainElement, new MenuAndStatsComponent(stats));
+render(mainElement, new SortingComponent());
 render(mainElement, new FilmsComponent());
 
 new FilmsSectionController(mainElement).render(arrayFilms);
