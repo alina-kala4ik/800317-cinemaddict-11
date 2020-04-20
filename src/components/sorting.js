@@ -2,16 +2,19 @@ import AbstractComponent from "./abstract-component.js";
 
 const SortType = {
   DEFAULT: `default`,
-  BY_DATE: `by_date`,
-  BY_RATING: `by_rating`,
+  BY_DATE: `date`,
+  BY_RATING: `rating`,
 };
 
 const createSortingTemplate = () => {
+  const sortItems = Object.values(SortType).map((type) => {
+    const activeSortClass = type === SortType.DEFAULT ? `sort__button--active` : ``;
+    return `<li><a href="#" class="sort__button ${activeSortClass}" data-sort="${type}">Sort by ${type}</a></li>`;
+  }).join(``);
+
   return (
     `<ul class="sort">
-      <li><a href="#" class="sort__button sort__button--active" data-sort="default">Sort by default</a></li>
-      <li><a href="#" class="sort__button" data-sort="by_date">Sort by date</a></li>
-      <li><a href="#" class="sort__button" data-sort="by_rating">Sort by rating</a></li>
+      ${sortItems}
     </ul>`
   );
 };
@@ -40,6 +43,9 @@ export default class Sorting extends AbstractComponent {
       if (selectedSortType === this._activeSort) {
         return;
       }
+
+      this.getElement().querySelector(`[data-sort="${this._activeSort}"]`).classList.remove(`sort__button--active`);
+      this.getElement().querySelector(`[data-sort="${selectedSortType}"]`).classList.add(`sort__button--active`);
 
       this._activeSort = selectedSortType;
 
