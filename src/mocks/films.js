@@ -1,5 +1,22 @@
 const MAX_SENTENCES_IN_DESCRIPTION = 5;
-const MAX_RAITING = 10;
+const MAX_RATING = 10;
+const MAX_GENERATED_YEAR = 2020;
+const MIN_GENERATED_YEAR = 1895;
+const QUANTITY_MONTHS = 12;
+const QUANTITY_DAYS = 31;
+const QUANTITY_HOURS = 24;
+const QUANTITY_MINUTES = 60;
+const MAX_RUN_TIME = 3;
+
+const FILM_TITLE = `The Dance of life`;
+const FILM_ORIGINAL_TITLE = `The Dance of life`;
+const FILM_DIRECTOR = `Anthony Mann`;
+const FILM_WRITERS = [`Anne Wigton`, `Heinz Herald`, `Richard Weil`];
+const FILM_ACTORS = [`Erich von Stroheim`, `Mary Beth Hughes`, `Dan Duryea`];
+const FILM_COUNTRY = `USA`;
+const FILM_GENRES = [`Drama`, `Film-Noir`, `Mystery`];
+const COMMENT_MESSAGE = `Lorem ipsum dolor sit amet, consectetur adipiscing elit.`;
+const COMMENT_AUTHOR = `John Doe`;
 
 const POSTERS_SRC = [
   `made-for-each-other.png`,
@@ -22,24 +39,22 @@ const getRandomNumber = (max = 1, min = 0) => {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
-const getRandomRating = () => {
-  return (Math.random() * (MAX_RAITING - 0) + 0).toFixed(1);
-};
+const getRandomRating = () => (Math.random() * (MAX_RATING - 0) + 0).toFixed(1);
 
 const generateDate = () => {
   const date = new Date();
-  date.setFullYear(getRandomNumber(2020, 1895));
-  date.setMonth(getRandomNumber(12));
-  date.setDate(getRandomNumber(31));
-  date.setHours(getRandomNumber(24));
-  date.setMinutes(getRandomNumber(60));
+  date.setFullYear(getRandomNumber(MAX_GENERATED_YEAR, MIN_GENERATED_YEAR));
+  date.setMonth(getRandomNumber(QUANTITY_MONTHS));
+  date.setDate(getRandomNumber(QUANTITY_DAYS));
+  date.setHours(getRandomNumber(QUANTITY_HOURS));
+  date.setMinutes(getRandomNumber(QUANTITY_MINUTES));
   return date;
 };
 
 const generateRunTime = () => {
   const runTime = new Date();
-  runTime.setHours(getRandomNumber(3));
-  runTime.setMinutes(getRandomNumber(60));
+  runTime.setHours(getRandomNumber(MAX_RUN_TIME));
+  runTime.setMinutes(getRandomNumber(QUANTITY_MINUTES));
   const hours = runTime.getHours();
   const minutes = runTime.getMinutes().toString().padStart(2, `0`);
   return `${hours}h ${minutes}m`;
@@ -49,8 +64,8 @@ const generateComment = () => {
   return {
     emoji: EMOJIS[getRandomNumber(EMOJIS.length - 1)],
     date: generateDate(),
-    author: `John Doe`,
-    message: `Lorem ipsum dolor sit amet, consectetur adipiscing elit.`
+    author: COMMENT_AUTHOR,
+    message: COMMENT_MESSAGE,
   };
 };
 
@@ -68,18 +83,18 @@ const generateFilm = () => {
 
 
   return {
-    title: `The Dance of life`,
-    originalTitle: `The Dance of life`,
+    title: FILM_TITLE,
+    originalTitle: FILM_ORIGINAL_TITLE,
     poster: POSTERS_SRC[getRandomNumber(POSTERS_SRC.length - 1)],
-    director: `Anthony Mann`,
-    writers: [`Anne Wigton`, `Heinz Herald`, `Richard Weil`],
+    director: FILM_DIRECTOR,
+    writers: FILM_WRITERS,
     releaseDate: generateDate(),
     runtime: generateRunTime(),
-    actors: [`Erich von Stroheim`, `Mary Beth Hughes`, `Dan Duryea`],
+    actors: FILM_ACTORS,
     description: DESCRIPTIONS_PHRASES.slice(randomNumber, maxNumberForSliceDescription).join(`.`),
     rating: getRandomRating(),
-    country: `USA`,
-    genres: [`Drama`, `Film-Noir`, `Mystery`],
+    country: FILM_COUNTRY,
+    genres: FILM_GENRES,
     comments: generateArrayComments(getRandomNumber(5)),
     ageLimit: getRandomNumber(18),
     isAddedToWatchlist: getRandomNumber(),

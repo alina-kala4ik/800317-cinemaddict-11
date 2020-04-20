@@ -15,9 +15,7 @@ const remove = (component) => {
   component.removeElement();
 };
 
-const appendChild = (component) => {
-  document.body.appendChild(component.getElement());
-};
+const appendChild = (component) => document.body.appendChild(component.getElement());
 
 const removeChild = (component) => {
   document.body.removeChild(component.getElement());
