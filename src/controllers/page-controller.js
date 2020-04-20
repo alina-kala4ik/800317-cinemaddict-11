@@ -1,11 +1,13 @@
-import FilmDetailsPopupComponent from "./../components/film-details-popup.js";
-import ButtonShowMoreComponent from "./../components/button-show-more.js";
-import CardFilmComponent from "./../components/card-film.js";
-import ExtraFilmsListComponent from "./../components/extra-films-list.js";
-import AllFilmsListComponent from "./../components/all-films-list.js";
-import NoFilmsComponent from "./../components/no-films.js";
+import FilmDetailsPopupComponent from "../components/film-details-popup.js";
+import ButtonShowMoreComponent from "../components/button-show-more.js";
+import CardFilmComponent from "../components/card-film.js";
+import ExtraFilmsListComponent from "../components/extra-films-list.js";
+import AllFilmsListComponent from "../components/all-films-list.js";
+import NoFilmsComponent from "../components/no-films.js";
+import FilmsComponent from "./../components/films.js";
+import SortingComponent from "./../components/sorting.js";
 
-import {render, remove, appendChild, removeChild} from "./../utils/render.js";
+import {render, remove, appendChild, removeChild} from "../utils/render.js";
 
 const EXTRA_FILMS_COUNT = 2;
 const EXTRA_CLASS_FILMS = [`Top rated`, `Most commented`];
@@ -83,7 +85,7 @@ const showExtraFilms = (filmsElement, arrayFilms, mainElement) => {
   }
 };
 
-export default class FilmsSectionController {
+export default class PageController {
   constructor(container) {
     this._container = container;
 
@@ -92,6 +94,9 @@ export default class FilmsSectionController {
     this._buttonShowMoreComponent = new ButtonShowMoreComponent();
   }
   render(arrayFilms) {
+    render(this._container, new SortingComponent());
+    render(this._container, new FilmsComponent());
+
     const filmsElement = this._container.querySelector(`.films`);
     render(filmsElement, this._allFilmsListComponent);
     const allFilmsListElement = filmsElement.querySelector(`.films-list`);
