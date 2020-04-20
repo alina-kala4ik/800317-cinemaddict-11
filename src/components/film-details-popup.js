@@ -29,9 +29,12 @@ const createComment = (comment) => {
   const {emoji, date, author, message} = comment;
 
   const now = new Date();
-  const today = new Intl.DateTimeFormat(`en-GB`, optionsCommentDate).format(new Date(now.getFullYear(), now.getMonth(), now.getDate()));
-  const yesterday = new Intl.DateTimeFormat(`en-GB`, optionsCommentDate).format(new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1));
-  const twoDaysAgo = new Intl.DateTimeFormat(`en-GB`, optionsCommentDate).format(new Date(now.getFullYear(), now.getMonth(), now.getDate() - 2));
+  const todayYear = now.getFullYear();
+  const todayMonth = now.getMonth();
+  const todayDate = now.getDate();
+  const today = new Intl.DateTimeFormat(`en-GB`, optionsCommentDate).format(new Date(todayYear, todayMonth, todayDate));
+  const yesterday = new Intl.DateTimeFormat(`en-GB`, optionsCommentDate).format(new Date(todayYear, todayMonth, todayDate - 1));
+  const twoDaysAgo = new Intl.DateTimeFormat(`en-GB`, optionsCommentDate).format(new Date(todayYear, todayMonth, todayDate - 2));
 
   let commentDate = new Intl.DateTimeFormat(`en-GB`, optionsCommentDate).format(date);
   switch (commentDate) {
@@ -39,6 +42,8 @@ const createComment = (comment) => {
     case yesterday: commentDate = `yesterday`; break;
     case twoDaysAgo: commentDate = `twoDaysAgo`; break;
   }
+
+  const commentTime = new Intl.DateTimeFormat(`en-GB`, optionsCommentTime).format(date);
 
   return (
     `<li class="film-details__comment">
@@ -51,7 +56,7 @@ const createComment = (comment) => {
           <span class="film-details__comment-author">${author}</span>
           <span class="film-details__comment-day">
           ${commentDate}
-          ${new Intl.DateTimeFormat(`en-GB`, optionsCommentTime).format(date)}</span>
+          ${commentTime}</span>
           <button class="film-details__comment-delete">Delete</button>
         </p>
       </div>
@@ -61,15 +66,24 @@ const createComment = (comment) => {
 
 const createComments = (comments) => {
   const commentsTemplate = [];
-  comments.forEach((comment) => {
-    commentsTemplate.push(createComment(comment));
-  });
+  comments.forEach((comment) => commentsTemplate.push(createComment(comment)));
   return commentsTemplate.join(``);
 };
 
 
 const createFilmDetailsPopupTemplate = (film) => {
   const {poster, title, ageLimit, originalTitle, rating, director, writers, actors, releaseDate, runtime, country, genres, description, isAddedToWatchlist, isMarkAsWatched, isMarkAsFavorite, comments} = film;
+
+  const stringWriters = writers.join(`, `);
+  const stringActors = actors.join(`, `);
+  const stringReleaseDate = new Intl.DateTimeFormat(`en-GB`, optionsReleaseDate).format(releaseDate);
+  const genresTitle = genres.length === 1 ? `Genre` : `Genres`;
+  const genresTemplate = createGenresTemplate(genres);
+  const checkChecklist = isAddedToWatchlist ? `checked` : ``;
+  const checkWatched = isMarkAsWatched ? `checked` : ``;
+  const checkFavorite = isMarkAsFavorite ? `checked` : ``;
+  const commentsLength = comments.length;
+  const commentsTemplate = createComments(comments);
 
   return (
     `<section class="film-details">
@@ -104,15 +118,15 @@ const createFilmDetailsPopupTemplate = (film) => {
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Writers</td>
-                  <td class="film-details__cell">${writers.join(`, `)}</td>
+                  <td class="film-details__cell">${stringWriters}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Actors</td>
-                  <td class="film-details__cell">${actors.join(`, `)}</td>
+                  <td class="film-details__cell">${stringActors}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Release Date</td>
-                  <td class="film-details__cell">${new Intl.DateTimeFormat(`en-GB`, optionsReleaseDate).format(releaseDate)}</td>
+                  <td class="film-details__cell">${stringReleaseDate}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Runtime</td>
@@ -123,9 +137,9 @@ const createFilmDetailsPopupTemplate = (film) => {
                   <td class="film-details__cell">${country}</td>
                 </tr>
                 <tr class="film-details__row">
-                  <td class="film-details__term">${genres.length === 1 ? `Genre` : `Genres`}</td>
+                  <td class="film-details__term">${genresTitle}</td>
                   <td class="film-details__cell">
-                    ${createGenresTemplate(genres)}
+                    ${genresTemplate}
                   </td>
                 </tr>
               </table>
@@ -137,15 +151,15 @@ const createFilmDetailsPopupTemplate = (film) => {
           </div>
 
           <section class="film-details__controls">
-            <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist" ${isAddedToWatchlist ? `checked` : ``}>
+            <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist" ${checkChecklist}>
             <label for="watchlist" class="film-details__control-label film-details__control-label--watchlist">Add to
               watchlist</label>
 
-            <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched" ${isMarkAsWatched ? `checked` : ``}>
+            <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched" ${checkWatched}>
             <label for="watched" class="film-details__control-label film-details__control-label--watched">Already
               watched</label>
 
-            <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite" ${isMarkAsFavorite ? `checked` : ``}>
+            <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite" ${checkFavorite}>
             <label for="favorite" class="film-details__control-label film-details__control-label--favorite">Add to
               favorites</label>
           </section>
@@ -153,10 +167,10 @@ const createFilmDetailsPopupTemplate = (film) => {
 
         <div class="form-details__bottom-container">
           <section class="film-details__comments-wrap">
-            <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${comments.length}</span></h3>
+            <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${commentsLength}</span></h3>
 
             <ul class="film-details__comments-list">
-              ${createComments(comments)}
+              ${commentsTemplate}
             </ul>
 
             <div class="film-details__new-comment">

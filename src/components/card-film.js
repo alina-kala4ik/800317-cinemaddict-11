@@ -8,6 +8,12 @@ const createCardFilmTemplate = (film) => {
   const filmYear = releaseDate.getFullYear();
   const showingDescription = description.length > MAX_DESCRIPTION_LENGTH ? `${description.substring(0, MAX_DESCRIPTION_LENGTH)}...` : description;
 
+  const genre = genres[0];
+  const titleComment = comments.length === 1 ? `comment` : `comments`;
+  const addedToWatchlistClass = isAddedToWatchlist ? `film-card__controls-item--active` : ``;
+  const markAsWatchedClass = isMarkAsWatched ? `film-card__controls-item--active` : ``;
+  const markAsFavoriteClass = isMarkAsFavorite ? `film-card__controls-item--active` : ``;
+
   return (
     `<article class="film-card">
       <h3 class="film-card__title">${title}</h3>
@@ -15,15 +21,15 @@ const createCardFilmTemplate = (film) => {
       <p class="film-card__info">
         <span class="film-card__year">${filmYear}</span>
         <span class="film-card__duration">${runtime}</span>
-        <span class="film-card__genre">${genres[0]}</span>
+        <span class="film-card__genre">${genre}</span>
       </p>
       <img src="./images/posters/${poster}" alt="${title}" class="film-card__poster">
       <p class="film-card__description">${showingDescription}</p>
-      <a class="film-card__comments">${comments.length} ${comments.length === 1 ? `comment` : `comments`}</a>
+      <a class="film-card__comments">${comments.length} ${titleComment}</a>
       <form class="film-card__controls">
-        <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist ${isAddedToWatchlist ? `film-card__controls-item--active` : ``}">Add to watchlist</button>
-        <button class="film-card__controls-item button film-card__controls-item--mark-as-watched ${isMarkAsWatched ? `film-card__controls-item--active` : ``}">Mark as watched</button>
-        <button class="film-card__controls-item button film-card__controls-item--favorite ${isMarkAsFavorite ? `film-card__controls-item--active` : ``}">Mark as favorite</button>
+        <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist ${addedToWatchlistClass}">Add to watchlist</button>
+        <button class="film-card__controls-item button film-card__controls-item--mark-as-watched ${markAsWatchedClass}">Mark as watched</button>
+        <button class="film-card__controls-item button film-card__controls-item--favorite ${markAsFavoriteClass}">Mark as favorite</button>
       </form>
     </article>`
   );
