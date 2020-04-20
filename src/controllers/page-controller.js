@@ -92,10 +92,12 @@ export default class PageController {
     this._allFilmsListComponent = new AllFilmsListComponent();
     this._noFilmsComponent = new NoFilmsComponent();
     this._buttonShowMoreComponent = new ButtonShowMoreComponent();
+    this._sortingComponent = new SortingComponent();
+    this.filmsComponent = new FilmsComponent();
   }
   render(arrayFilms) {
-    render(this._container, new SortingComponent());
-    render(this._container, new FilmsComponent());
+    render(this._container, this._sortingComponent);
+    render(this._container, this.filmsComponent);
 
     const filmsElement = this._container.querySelector(`.films`);
     render(filmsElement, this._allFilmsListComponent);
