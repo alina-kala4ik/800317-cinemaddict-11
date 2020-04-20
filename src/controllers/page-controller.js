@@ -104,6 +104,7 @@ export default class PageController {
       lastFilmForShowing = SHOWING_FILMS;
       const sortedFilms = getSortedFilms(activeSort, arrayFilms, 0, lastFilmForShowing);
       showFilms(sortedFilms, allFilmsContainerElement);
+      this._buttonShowMoreComponent.remove();
       renderButtonShowMore();
     });
 
