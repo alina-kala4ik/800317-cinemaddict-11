@@ -92,9 +92,7 @@ export default class PageController {
       .sort((max, min) => min.rating - max.rating);
 
     for (let i = 0; i < EXTRA_FILMS_COUNT; i++) {
-      const filmController = new FilmController(topRatedFilmsContainerElement);
-      filmController.render(topRatedFilms[i]);
-      this._showedFilmsControllers.push(filmController);
+      showFilms([topRatedFilms[i]], topRatedFilmsContainerElement, this._onDataChange);
     }
 
     const mostCommentedFilms = this._arrayFilms.slice()
@@ -102,9 +100,7 @@ export default class PageController {
 
 
     for (let i = 0; i < EXTRA_FILMS_COUNT; i++) {
-      const filmController = new FilmController(mostCommentedFilmsContainerElement);
-      filmController.render(mostCommentedFilms[i]);
-      this._showedFilmsControllers.push(filmController);
+      showFilms([mostCommentedFilms[i]], mostCommentedFilmsContainerElement, this._onDataChange);
     }
   }
 
