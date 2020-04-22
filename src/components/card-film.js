@@ -40,16 +40,41 @@ export default class CardFilm extends AbstractComponent {
     super();
     this._film = film;
   }
+
   getTemplate() {
     return createCardFilmTemplate(this._film);
   }
+
   setPosterClickHandler(handler) {
     this.getElement().querySelector(`.film-card__poster`).addEventListener(`click`, handler);
   }
+
   setTitleClickHandler(handler) {
     this.getElement().querySelector(`.film-card__title`).addEventListener(`click`, handler);
   }
+
   setCommentsClickHandler(handler) {
     this.getElement().querySelector(`.film-card__comments`).addEventListener(`click`, handler);
+  }
+
+  setAddToWatchlistClickHandler(handler) {
+    this.getElement().querySelector(`.film-card__controls-item--add-to-watchlist`).addEventListener(`click`, (evt) => {
+      evt.preventDefault();
+      handler();
+    });
+  }
+
+  setMarkAsWatchedClickHandler(handler) {
+    this.getElement().querySelector(`.film-card__controls-item--mark-as-watched`).addEventListener(`click`, (evt) => {
+      evt.preventDefault();
+      handler();
+    });
+  }
+
+  setMarkAsFavoriteClickHandler(handler) {
+    this.getElement().querySelector(`.film-card__controls-item--favorite`).addEventListener(`click`, (evt) => {
+      evt.preventDefault();
+      handler();
+    });
   }
 }
