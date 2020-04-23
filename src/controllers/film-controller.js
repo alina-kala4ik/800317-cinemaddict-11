@@ -49,13 +49,13 @@ export default class FilmController {
     this._cardFilmComponent.setCommentsClickHandler(this._openPopup);
 
     this._cardFilmComponent.setAddToWatchlistClickHandler(() =>
-      this._onDataChange(this, this._film, Object.assign({}, this._film, {isAddedToWatchlist: !this._film.isAddedToWatchlist})));
+      this._onDataChange(this._film, Object.assign({}, this._film, {isAddedToWatchlist: !this._film.isAddedToWatchlist})));
 
     this._cardFilmComponent.setMarkAsWatchedClickHandler(() =>
-      this._onDataChange(this, this._film, Object.assign({}, this._film, {isMarkAsWatched: !this._film.isMarkAsWatched})));
+      this._onDataChange(this._film, Object.assign({}, this._film, {isMarkAsWatched: !this._film.isMarkAsWatched})));
 
     this._cardFilmComponent.setMarkAsFavoriteClickHandler(() =>
-      this._onDataChange(this, this._film, Object.assign({}, this._film, {isMarkAsFavorite: !this._film.isMarkAsFavorite})));
+      this._onDataChange(this._film, Object.assign({}, this._film, {isMarkAsFavorite: !this._film.isMarkAsFavorite})));
   }
 
   _documentKeydownHandler(evt) {
@@ -76,13 +76,13 @@ export default class FilmController {
     document.addEventListener(`keydown`, this._documentKeydownHandler);
 
     this._filmDetailsPopupComponent.setAddToWatchlistClickHandler(() =>
-      this._onDataChange(this, this._film, Object.assign({}, this._film, {isAddedToWatchlist: !this._film.isAddedToWatchlist})));
+      this._onDataChange(this._film, Object.assign({}, this._film, {isAddedToWatchlist: !this._film.isAddedToWatchlist})));
 
     this._filmDetailsPopupComponent.setMarkAsWatchedClickHandler(() =>
-      this._onDataChange(this, this._film, Object.assign({}, this._film, {isMarkAsWatched: !this._film.isMarkAsWatched})));
+      this._onDataChange(this._film, Object.assign({}, this._film, {isMarkAsWatched: !this._film.isMarkAsWatched})));
 
     this._filmDetailsPopupComponent.setMarkAsFavoriteClickHandler(() =>
-      this._onDataChange(this, this._film, Object.assign({}, this._film, {isMarkAsFavorite: !this._film.isMarkAsFavorite})));
+      this._onDataChange(this._film, Object.assign({}, this._film, {isMarkAsFavorite: !this._film.isMarkAsFavorite})));
   }
 
   _updatesCardFilmComponent() {

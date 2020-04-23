@@ -140,7 +140,7 @@ export default class PageController {
     this._renderButtonShowMore();
   }
 
-  _onDataChange(controller, oldData, newData) {
+  _onDataChange(oldData, newData) {
     const index = this._arrayFilms.findIndex((film) => film === oldData);
 
     if (index === -1) {
@@ -148,7 +148,9 @@ export default class PageController {
     }
 
     this._arrayFilms = [].concat(this._arrayFilms.slice(0, index), newData, this._arrayFilms.slice(index + 1));
-    controller.render(newData);
+
+    const controllerIndex = this._showedFilmsControllers.findIndex((controller) => controller._film === oldData);
+    this._showedFilmsControllers[controllerIndex].render(newData);
   }
 
   _onViewChange() {
