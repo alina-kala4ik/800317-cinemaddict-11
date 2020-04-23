@@ -79,7 +79,7 @@ export default class FilmController {
   _updatesCardFilmComponent() {
     const oldCardFilmComponent = this._cardFilmComponent;
     this._cardFilmComponent = new CardFilmComponent(this._film);
-    replace(this._container, this._cardFilmComponent, oldCardFilmComponent);
+    replace(this._container, this._cardFilmComponent.getElement(), oldCardFilmComponent.getElement());
   }
 
   _updatesFilmDetailsPopupComponent() {
