@@ -8,10 +8,10 @@ export default class SmartAbstractComponent extends AbstractComponent {
   }
 
   rerender() {
-    const oldElement = this._getElement();
+    const oldElement = this.getElement();
     this.removeElement();
-    const newElement = this._getElement();
-    replace(this._container, newElement, oldElement);
+    const newElement = this.getElement();
+    replace(document.body, newElement, oldElement);
     this.recoveryListeners();
   }
 }
