@@ -220,18 +220,23 @@ export default class FilmDetailsPopup extends AbstractComponent {
     super();
     this._film = film;
   }
+
   getTemplate() {
     return createFilmDetailsPopupTemplate(this._film);
   }
+
   setCloseButtonClickHandler(handler) {
     this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, handler);
   }
+
   setAddToWatchlistClickHandler(handler) {
     this.getElement().querySelector(`.film-details__control-label--watchlist`).addEventListener(`click`, handler);
   }
+
   setMarkAsWatchedClickHandler(handler) {
     this.getElement().querySelector(`.film-details__control-label--watched`).addEventListener(`click`, handler);
   }
+
   setMarkAsFavoriteClickHandler(handler) {
     this.getElement().querySelector(`.film-details__control-label--favorite`).addEventListener(`click`, handler);
   }
