@@ -63,6 +63,7 @@ export default class FilmController {
   }
 
   _closePopup() {
+    this._mode = Mode.DEFAULT;
     removeChild(this._filmDetailsPopupComponent);
     document.removeEventListener(`keydown`, this._documentKeydownHandler);
   }
