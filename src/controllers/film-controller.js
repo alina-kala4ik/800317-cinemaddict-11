@@ -4,11 +4,18 @@ import FilmDetailsPopupComponent from "../components/film-details-popup.js";
 import {render, appendChild, removeChild, replace} from "../utils/render.js";
 import {checksKeydownEsc} from "./../utils/common.js";
 
+const Mode = {
+  DEFAULT: `default`,
+  POPUP_IS_OPEN: `popup is open`,
+};
+
 export default class FilmController {
-  constructor(container, onDataChange) {
+  constructor(container, onDataChange, onViewChange) {
     this._container = container;
     this._onDataChange = onDataChange;
+    this._onViewChange = onViewChange;
 
+    this._mode = Mode.DEFAULT;
     this._cardFilmComponent = null;
     this._filmDetailsPopupComponent = null;
     this._film = null;
@@ -61,6 +68,8 @@ export default class FilmController {
   }
 
   _openPopup() {
+    this._onViewChange();
+    this._mode = Mode.POPUP_IS_OPEN;
     this._updatesFilmDetailsPopupComponent();
     appendChild(this._filmDetailsPopupComponent);
     this._filmDetailsPopupComponent.setCloseButtonClickHandler(this._closePopup);
@@ -88,5 +97,11 @@ export default class FilmController {
 
   _isPopupOpen() {
     return Boolean(document.body.querySelector(`.film-details`));
+  }
+
+  setDefaultView() {
+    if (this._mode === Mode.POPUP_IS_OPEN) {
+      this._closePopup();
+    }
   }
 }
