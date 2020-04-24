@@ -4,4 +4,9 @@ const checksKeydownEsc = (evt, action) => {
   }
 };
 
-export {checksKeydownEsc};
+const ErrorMessage = {
+  INSTANTIATE_PROHIBITION: `Can't instantiate AbstractComponent, only concrete one.`,
+  UNREALIZED_METHOD: `Abstract method not implemented:`,
+};
+
+export {checksKeydownEsc, ErrorMessage};

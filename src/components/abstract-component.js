@@ -1,9 +1,6 @@
 import {createElement} from "./../utils/render.js";
+import {ErrorMessage} from "./../utils/common.js";
 
-const ErrorMessage = {
-  INSTANTIATE_PROHIBITION: `Can't instantiate AbstractComponent, only concrete one.`,
-  UNREALIZED_METHOD: `Abstract method not implemented:`,
-};
 
 export default class AbstractComponent {
   constructor() {
