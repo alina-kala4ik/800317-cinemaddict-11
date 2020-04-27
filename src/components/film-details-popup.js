@@ -12,10 +12,23 @@ const createGenresTemplate = (genres) => {
   .join(``);
 };
 
+
+moment.calendarFormat = (myMoment) => {
+  const daysDiff = moment(myMoment).diff(moment(), `days`);
+  let dateFormate;
+  switch (daysDiff) {
+    case 0: dateFormate = `Today`; break;
+    case -1: dateFormate = `Yesterday`; break;
+    case -2: dateFormate = `2 days ago`; break;
+    default: dateFormate = moment(myMoment).format(`DD/MM/YY hh:mm`);
+  }
+  return dateFormate;
+};
+
 const createComment = (comment) => {
   const {emoji, date, author, message} = comment;
 
-  const commentDate = moment(date).format(`DD/MM/YY hh:mm`);
+  const commentDate = moment.calendarFormat(date);
 
   return (
     `<li class="film-details__comment">
