@@ -1,13 +1,15 @@
 import AbstractComponent from "./../components/abstract-component.js";
+import moment from "moment";
+import {getTimeFromMins} from "./../utils/common.js"
 
 const MAX_DESCRIPTION_LENGTH = 140;
 
 const createCardFilmTemplate = (film) => {
   const {title, rating, releaseDate, runtime, genres, poster, description, comments, isAddedToWatchlist, isMarkAsWatched, isMarkAsFavorite} = film;
 
-  const filmYear = releaseDate.getFullYear();
+  const filmYear = moment(releaseDate).format(`YYYY`);
   const showingDescription = description.length > MAX_DESCRIPTION_LENGTH ? `${description.substring(0, MAX_DESCRIPTION_LENGTH)}...` : description;
-
+  const formatedRunTime = moment(getTimeFromMins(runtime), `h mm`).format(`h[h] mm[m]`);
   const genre = genres[0];
   const titleComment = comments.length === 1 ? `comment` : `comments`;
   const addedToWatchlistClass = isAddedToWatchlist ? `film-card__controls-item--active` : ``;
@@ -20,7 +22,7 @@ const createCardFilmTemplate = (film) => {
       <p class="film-card__rating">${rating}</p>
       <p class="film-card__info">
         <span class="film-card__year">${filmYear}</span>
-        <span class="film-card__duration">${runtime}</span>
+        <span class="film-card__duration">${formatedRunTime}</span>
         <span class="film-card__genre">${genre}</span>
       </p>
       <img src="./images/posters/${poster}" alt="${title}" class="film-card__poster">

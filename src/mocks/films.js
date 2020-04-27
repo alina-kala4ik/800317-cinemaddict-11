@@ -6,7 +6,8 @@ const QUANTITY_MONTHS = 12;
 const QUANTITY_DAYS = 31;
 const QUANTITY_HOURS = 24;
 const QUANTITY_MINUTES = 60;
-const MAX_RUN_TIME = 3;
+const MAX_RUN_TIME = 180;
+const MIN_RUN_TIME = 60;
 
 const FILM_TITLE = `The Dance of life`;
 const FILM_ORIGINAL_TITLE = `The Dance of life`;
@@ -52,12 +53,8 @@ const generateDate = () => {
 };
 
 const generateRunTime = () => {
-  const runTime = new Date();
-  runTime.setHours(getRandomNumber(MAX_RUN_TIME));
-  runTime.setMinutes(getRandomNumber(QUANTITY_MINUTES));
-  const hours = runTime.getHours();
-  const minutes = runTime.getMinutes().toString().padStart(2, `0`);
-  return `${hours}h ${minutes}m`;
+  const minutes = getRandomNumber(MAX_RUN_TIME, MIN_RUN_TIME);
+  return minutes;
 };
 
 const generateComment = () => {

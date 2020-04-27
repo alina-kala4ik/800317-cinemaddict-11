@@ -1,23 +1,8 @@
 import SmartAbstractComponent from "./../components/smart-abstract-component.js";
+import moment from "moment";
+import {getTimeFromMins} from "./../utils/common.js";
 
 const EMOJIS = [`smile`, `sleeping`, `puke`, `angry`];
-
-const optionsReleaseDate = {
-  year: `numeric`,
-  month: `long`,
-  day: `numeric`,
-};
-
-const optionsCommentDate = {
-  year: `numeric`,
-  month: `numeric`,
-  day: `numeric`,
-};
-
-const optionsCommentTime = {
-  hour: `numeric`,
-  minute: `numeric`,
-};
 
 const createGenresTemplate = (genres) => {
   return genres.map((genre, i) => {
@@ -30,22 +15,7 @@ const createGenresTemplate = (genres) => {
 const createComment = (comment) => {
   const {emoji, date, author, message} = comment;
 
-  const now = new Date();
-  const todayYear = now.getFullYear();
-  const todayMonth = now.getMonth();
-  const todayDate = now.getDate();
-  const today = new Intl.DateTimeFormat(`en-GB`, optionsCommentDate).format(new Date(todayYear, todayMonth, todayDate));
-  const yesterday = new Intl.DateTimeFormat(`en-GB`, optionsCommentDate).format(new Date(todayYear, todayMonth, todayDate - 1));
-  const twoDaysAgo = new Intl.DateTimeFormat(`en-GB`, optionsCommentDate).format(new Date(todayYear, todayMonth, todayDate - 2));
-
-  let commentDate = new Intl.DateTimeFormat(`en-GB`, optionsCommentDate).format(date);
-  switch (commentDate) {
-    case today: commentDate = `today`; break;
-    case yesterday: commentDate = `yesterday`; break;
-    case twoDaysAgo: commentDate = `twoDaysAgo`; break;
-  }
-
-  const commentTime = new Intl.DateTimeFormat(`en-GB`, optionsCommentTime).format(date);
+  const commentDate = moment(date).format(`DD/MM/YY hh:mm`);
 
   return (
     `<li class="film-details__comment">
@@ -56,9 +26,7 @@ const createComment = (comment) => {
         <p class="film-details__comment-text">${message}</p>
         <p class="film-details__comment-info">
           <span class="film-details__comment-author">${author}</span>
-          <span class="film-details__comment-day">
-          ${commentDate}
-          ${commentTime}</span>
+          <span class="film-details__comment-day">${commentDate}</span>
           <button class="film-details__comment-delete">Delete</button>
         </p>
       </div>
@@ -86,7 +54,8 @@ const createFilmDetailsPopupTemplate = (film, checkedEmoji) => {
 
   const stringWriters = writers.join(`, `);
   const stringActors = actors.join(`, `);
-  const stringReleaseDate = new Intl.DateTimeFormat(`en-GB`, optionsReleaseDate).format(releaseDate);
+  const formatedReleaseDate = moment(releaseDate).format(`DD MMMM YYYY`);
+  const formatedRuntime = moment(getTimeFromMins(runtime), `h mm`).format(`h[h] mm[m]`);
   const genresTitle = genres.length === 1 ? `Genre` : `Genres`;
   const genresTemplate = createGenresTemplate(genres);
   const checkChecklist = isAddedToWatchlist ? `checked` : ``;
@@ -140,11 +109,11 @@ const createFilmDetailsPopupTemplate = (film, checkedEmoji) => {
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Release Date</td>
-                  <td class="film-details__cell">${stringReleaseDate}</td>
+                  <td class="film-details__cell">${formatedReleaseDate}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Runtime</td>
-                  <td class="film-details__cell">${runtime}</td>
+                  <td class="film-details__cell">${formatedRuntime}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Country</td>
