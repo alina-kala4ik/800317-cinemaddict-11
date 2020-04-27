@@ -1,6 +1,6 @@
 import AbstractComponent from "./../components/abstract-component.js";
 import moment from "moment";
-import {getTimeFromMins} from "./../utils/common.js"
+import {getTimeFromMins} from "./../utils/common.js";
 
 const MAX_DESCRIPTION_LENGTH = 140;
 
