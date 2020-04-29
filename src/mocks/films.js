@@ -8,6 +8,8 @@ const QUANTITY_HOURS = 24;
 const QUANTITY_MINUTES = 60;
 const MAX_RUN_TIME = 180;
 const MIN_RUN_TIME = 60;
+const COUNT_COMMENTS_FILM = 5;
+const COUNT_GENERATE_COMMENTS = 50;
 
 const FILM_TITLE = `The Dance of life`;
 const FILM_ORIGINAL_TITLE = `The Dance of life`;
@@ -57,8 +59,9 @@ const generateRunTime = () => {
   return minutes;
 };
 
-const generateComment = () => {
+const generateComment = (i) => {
   return {
+    idComment: i,
     emoji: EMOJIS[getRandomNumber(EMOJIS.length - 1)],
     date: generateDate(),
     author: COMMENT_AUTHOR,
@@ -66,20 +69,21 @@ const generateComment = () => {
   };
 };
 
-const generateArrayComments = (countComments) => {
-  const arrayComments = [];
-  for (let i = 0; i < countComments; i++) {
-    arrayComments.push(generateComment());
+
+const generateCommentsId = () => {
+  const comments = [];
+  for (let i = 0; i < COUNT_COMMENTS_FILM; i++) {
+    comments.push(getRandomNumber(50));
   }
-  return arrayComments;
+  return comments;
 };
 
-const generateFilm = () => {
+const generateFilm = (i) => {
   const randomNumber = getRandomNumber(DESCRIPTIONS_PHRASES.length - 1);
   const maxNumberForSliceDescription = randomNumber + getRandomNumber(MAX_SENTENCES_IN_DESCRIPTION, 1);
 
-
   return {
+    id: i,
     title: FILM_TITLE,
     originalTitle: FILM_ORIGINAL_TITLE,
     poster: POSTERS_SRC[getRandomNumber(POSTERS_SRC.length - 1)],
@@ -92,7 +96,7 @@ const generateFilm = () => {
     rating: getRandomRating(),
     country: FILM_COUNTRY,
     genres: FILM_GENRES,
-    comments: generateArrayComments(getRandomNumber(5)),
+    comments: generateCommentsId(),
     ageLimit: getRandomNumber(18),
     isAddedToWatchlist: getRandomNumber(),
     isMarkAsWatched: getRandomNumber(),
@@ -103,9 +107,17 @@ const generateFilm = () => {
 const generateArrayFilms = (countFilms) => {
   const arrayFilms = [];
   for (let i = 0; i < countFilms; i++) {
-    arrayFilms.push(generateFilm());
+    arrayFilms.push(generateFilm(i));
   }
   return arrayFilms;
 };
 
-export {generateArrayFilms};
+const generateArrayComments = () => {
+  const arrayComments = [];
+  for (let i = 0; i < COUNT_GENERATE_COMMENTS; i++) {
+    arrayComments.push(generateComment(i));
+  }
+  return arrayComments;
+};
+
+export {generateArrayFilms, generateArrayComments};

@@ -2,6 +2,11 @@ import SmartAbstractComponent from "./../components/smart-abstract-component.js"
 import moment from "moment";
 import {getTimeFromMins} from "./../utils/common.js";
 
+import {generateArrayComments} from "./../mocks/films.js";
+import CommentsModel from "./../models/comments-model.js";
+const commentsModel = new CommentsModel();
+commentsModel.setComments(generateArrayComments());
+
 const EMOJIS = [`smile`, `sleeping`, `puke`, `angry`];
 
 const createGenresTemplate = (genres) => {
@@ -25,8 +30,8 @@ moment.calendarFormat = (myMoment) => {
   return dateFormate;
 };
 
-const createComment = (comment) => {
-  const {emoji, date, author, message} = comment;
+const createComment = (commentData) => {
+  const {emoji, date, author, message} = commentData;
 
   const commentDate = moment.calendarFormat(date);
 
@@ -47,9 +52,10 @@ const createComment = (comment) => {
   );
 };
 
-const createComments = (comments) => {
+const createComments = (commentIds) => {
   const commentsTemplate = [];
-  comments.forEach((comment) => commentsTemplate.push(createComment(comment)));
+  const commentsData = commentsModel.getDataByIds(commentIds);
+  commentsData.forEach((comment) => commentsTemplate.push(createComment(comment)));
   return commentsTemplate.join(``);
 };
 
