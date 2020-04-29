@@ -8,6 +8,8 @@ const QUANTITY_HOURS = 24;
 const QUANTITY_MINUTES = 60;
 const MAX_RUN_TIME = 180;
 const MIN_RUN_TIME = 60;
+const COUNT_COMMENTS = 50;
+const COUNT_COMMENTS_FROM_FILM = 5;
 
 const FILM_TITLE = `The Dance of life`;
 const FILM_ORIGINAL_TITLE = `The Dance of life`;
@@ -57,8 +59,9 @@ const generateRunTime = () => {
   return minutes;
 };
 
-const generateComment = () => {
+const generateComment = (i) => {
   return {
+    idComment: i,
     emoji: EMOJIS[getRandomNumber(EMOJIS.length - 1)],
     date: generateDate(),
     author: COMMENT_AUTHOR,
@@ -66,46 +69,61 @@ const generateComment = () => {
   };
 };
 
-const generateArrayComments = (countComments) => {
-  const arrayComments = [];
+const generateIdComments = () => {
+  const countComments = getRandomNumber(COUNT_COMMENTS_FROM_FILM);
+  const commentIds = [];
   for (let i = 0; i < countComments; i++) {
-    arrayComments.push(generateComment());
+    commentIds.push(getRandomNumber(COUNT_COMMENTS));
   }
-  return arrayComments;
+  return commentIds;
 };
 
-const generateFilm = () => {
+
+const generateFilm = (i) => {
   const randomNumber = getRandomNumber(DESCRIPTIONS_PHRASES.length - 1);
   const maxNumberForSliceDescription = randomNumber + getRandomNumber(MAX_SENTENCES_IN_DESCRIPTION, 1);
 
-
   return {
-    title: FILM_TITLE,
-    originalTitle: FILM_ORIGINAL_TITLE,
-    poster: POSTERS_SRC[getRandomNumber(POSTERS_SRC.length - 1)],
-    director: FILM_DIRECTOR,
-    writers: FILM_WRITERS,
-    releaseDate: generateDate(),
-    runtime: generateRunTime(),
-    actors: FILM_ACTORS,
-    description: DESCRIPTIONS_PHRASES.slice(randomNumber, maxNumberForSliceDescription).join(`.`),
-    rating: getRandomRating(),
-    country: FILM_COUNTRY,
-    genres: FILM_GENRES,
-    comments: generateArrayComments(getRandomNumber(5)),
-    ageLimit: getRandomNumber(18),
-    isAddedToWatchlist: getRandomNumber(),
-    isMarkAsWatched: getRandomNumber(),
-    isMarkAsFavorite: getRandomNumber(),
+    id: i,
+    filmInfo: {
+      title: FILM_TITLE,
+      originalTitle: FILM_ORIGINAL_TITLE,
+      poster: POSTERS_SRC[getRandomNumber(POSTERS_SRC.length - 1)],
+      director: FILM_DIRECTOR,
+      writers: FILM_WRITERS,
+      releaseDate: generateDate(),
+      runtime: generateRunTime(),
+      actors: FILM_ACTORS,
+      description: DESCRIPTIONS_PHRASES.slice(randomNumber, maxNumberForSliceDescription).join(`.`),
+      country: FILM_COUNTRY,
+      genres: FILM_GENRES,
+      ageLimit: getRandomNumber(18),
+
+    },
+    userDetails: {
+      isAddedToWatchlist: getRandomNumber(),
+      isMarkAsWatched: getRandomNumber(),
+      isMarkAsFavorite: getRandomNumber(),
+      rating: getRandomRating(),
+    },
+    comments: generateIdComments(),
   };
 };
 
 const generateArrayFilms = (countFilms) => {
   const arrayFilms = [];
   for (let i = 0; i < countFilms; i++) {
-    arrayFilms.push(generateFilm());
+    arrayFilms.push(generateFilm(i));
   }
   return arrayFilms;
 };
 
-export {generateArrayFilms};
+const generateArrayComments = () => {
+  const arrayComments = [];
+  for (let i = 0; i < COUNT_COMMENTS; i++) {
+    arrayComments.push(generateComment(i));
+  }
+  return arrayComments;
+};
+
+export {generateArrayFilms, generateArrayComments};
