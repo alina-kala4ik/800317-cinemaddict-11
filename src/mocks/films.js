@@ -114,7 +114,7 @@ const generateArrayFilms = (countFilms) => {
 
 const generateArrayComments = () => {
   const arrayComments = [];
-  for (let i = 0; i < COUNT_GENERATE_COMMENTS; i++) {
+  for (let i = 0; i < COUNT_GENERATE_COMMENTS + 1; i++) {
     arrayComments.push(generateComment(i));
   }
   return arrayComments;
