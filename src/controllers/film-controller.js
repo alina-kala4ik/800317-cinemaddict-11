@@ -10,10 +10,11 @@ const Mode = {
 };
 
 export default class FilmController {
-  constructor(container, onDataChange, onViewChange) {
+  constructor(container, onDataChange, onViewChange, commentsModel) {
     this._container = container;
     this._onDataChange = onDataChange;
     this._onViewChange = onViewChange;
+    this._commentsModel = commentsModel;
 
     this._mode = Mode.DEFAULT;
     this._cardFilmComponent = null;
@@ -39,7 +40,7 @@ export default class FilmController {
 
     if (!this._cardFilmComponent) {
       this._cardFilmComponent = new CardFilmComponent(film);
-      this._filmDetailsPopupComponent = new FilmDetailsPopupComponent(film);
+      this._filmDetailsPopupComponent = new FilmDetailsPopupComponent(film, this._commentsModel);
       render(this._container, this._cardFilmComponent);
     }
 
@@ -93,7 +94,7 @@ export default class FilmController {
   }
 
   _updatesFilmDetailsPopupComponent() {
-    this._filmDetailsPopupComponent = new FilmDetailsPopupComponent(this._film);
+    this._filmDetailsPopupComponent = new FilmDetailsPopupComponent(this._film, this._commentsModel);
   }
 
   _isPopupOpen() {

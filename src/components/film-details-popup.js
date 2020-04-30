@@ -2,11 +2,6 @@ import SmartAbstractComponent from "./../components/smart-abstract-component.js"
 import moment from "moment";
 import {getTimeFromMins} from "./../utils/common.js";
 
-import {generateArrayComments} from "./../mocks/films.js";
-import CommentsModel from "./../models/comments-model.js";
-const commentsModel = new CommentsModel();
-commentsModel.setComments(generateArrayComments());
-
 const EMOJIS = [`smile`, `sleeping`, `puke`, `angry`];
 
 const createGenresTemplate = (genres) => {
@@ -52,7 +47,7 @@ const createComment = (commentData) => {
   );
 };
 
-const createComments = (commentIds) => {
+const createComments = (commentIds, commentsModel) => {
   const commentsTemplate = [];
   const commentsData = commentsModel.getDataByIds(commentIds);
   commentsData.forEach((comment) => commentsTemplate.push(createComment(comment)));
@@ -68,7 +63,7 @@ const createEmojiItems = (checkedEmoji) =>
   ).join(``);
 
 
-const createFilmDetailsPopupTemplate = (film, checkedEmoji) => {
+const createFilmDetailsPopupTemplate = (film, checkedEmoji, commentsModel) => {
   const {poster, title, ageLimit, originalTitle, rating, director, writers, actors, releaseDate, runtime, country, genres, description, isAddedToWatchlist, isMarkAsWatched, isMarkAsFavorite, comments} = film;
 
   const stringWriters = writers.join(`, `);
@@ -81,7 +76,7 @@ const createFilmDetailsPopupTemplate = (film, checkedEmoji) => {
   const checkWatched = isMarkAsWatched ? `checked` : ``;
   const checkFavorite = isMarkAsFavorite ? `checked` : ``;
   const commentsLength = comments.length;
-  const commentsTemplate = createComments(comments);
+  const commentsTemplate = createComments(comments, commentsModel);
 
   const EmojiItemsTemplate = createEmojiItems(checkedEmoji);
 
@@ -198,9 +193,10 @@ const createFilmDetailsPopupTemplate = (film, checkedEmoji) => {
 
 
 export default class FilmDetailsPopup extends SmartAbstractComponent {
-  constructor(film) {
+  constructor(film, commentsModel) {
     super();
     this._film = film;
+    this._commentsModel = commentsModel;
 
     this._setEmojiListClickHandler();
 
@@ -209,7 +205,7 @@ export default class FilmDetailsPopup extends SmartAbstractComponent {
   }
 
   getTemplate() {
-    return createFilmDetailsPopupTemplate(this._film, this._checkedEmoji);
+    return createFilmDetailsPopupTemplate(this._film, this._checkedEmoji, this._commentsModel);
   }
 
   setCloseButtonClickHandler(handler) {
