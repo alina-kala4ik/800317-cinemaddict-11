@@ -49,6 +49,7 @@ export default class PageController {
     this._filmsComponent = new FilmsComponent();
 
     this._showedFilmsControllers = [];
+    this._showedExtraFilmsControllers = [];
     this._arrayFilms = null;
     this._lastFilmForShowing = SHOWING_FILMS;
 
@@ -106,7 +107,7 @@ export default class PageController {
 
     for (let i = 0; i < EXTRA_FILMS_COUNT; i++) {
       const filmController = showFilms([topRatedFilms[i]], topRatedFilmsContainerElement, this._onDataChange, this._onViewChange, this._commentsModel, this.onCommentChange);
-      // this._showedFilmsControllers = this._showedFilmsControllers.concat(filmController);
+      this._showedExtraFilmsControllers = this._showedExtraFilmsControllers.concat(filmController);
     }
 
     const mostCommentedFilms = arrayFilms.slice()
@@ -115,7 +116,7 @@ export default class PageController {
 
     for (let i = 0; i < EXTRA_FILMS_COUNT; i++) {
       const filmController = showFilms([mostCommentedFilms[i]], mostCommentedFilmsContainerElement, this._onDataChange, this._onViewChange, this._commentsModel, this.onCommentChange);
-      // this._showedFilmsControllers = this._showedFilmsControllers.concat(filmController);
+      this._showedExtraFilmsControllers = this._showedExtraFilmsControllers.concat(filmController);
     }
   }
 
@@ -165,6 +166,7 @@ export default class PageController {
 
   _onViewChange() {
     this._showedFilmsControllers.forEach((controller) => controller.setDefaultView());
+    this._showedExtraFilmsControllers.forEach((controller) => controller.setDefaultView());
   }
 
   _removeFilms() {
