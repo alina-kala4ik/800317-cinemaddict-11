@@ -88,6 +88,7 @@ export default class FilmController {
       this._onDataChange(this._film, Object.assign({}, this._film, {isMarkAsFavorite: !this._film.isMarkAsFavorite})));
 
     this._filmDetailsPopupComponent.setDeleteCommentClickHandler(this._onCommentChange);
+    this._filmDetailsPopupComponent.addCommentHandler(this._onCommentChange);
   }
 
   _updatesCardFilmComponent() {

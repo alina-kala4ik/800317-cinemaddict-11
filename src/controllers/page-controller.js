@@ -185,14 +185,14 @@ export default class PageController {
     this._updateFilms(SHOWING_FILMS);
   }
 
-  onCommentChange(newFilm, oldFilm, commentAdded) {
+  onCommentChange(newFilm, oldFilm, newComment) {
+    this._filmsModel.updateFIlm(oldFilm.id, newFilm);
 
-    if (commentAdded === null) {
+    const controllerIndex = this._showedFilmsControllers.findIndex((controller) => controller._film === oldFilm);
+    this._showedFilmsControllers[controllerIndex].render(newFilm);
 
-      this._filmsModel.updateFIlm(oldFilm.id, newFilm);
-
-      const controllerIndex = this._showedFilmsControllers.findIndex((controller) => controller._film === oldFilm);
-      this._showedFilmsControllers[controllerIndex].render(newFilm);
+    if (newComment) {
+      this._commentsModel.addComment(newComment);
     }
   }
 }

@@ -28,4 +28,9 @@ export default class CommentsModel {
     });
     return data;
   }
+
+  addComment(newComment) {
+    this._comments.push(newComment);
+    console.log(this._comments)
+  }
 }

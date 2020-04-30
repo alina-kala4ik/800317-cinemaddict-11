@@ -3,6 +3,24 @@ import moment from "moment";
 import {getTimeFromMins} from "./../utils/common.js";
 
 const EMOJIS = [`smile`, `sleeping`, `puke`, `angry`];
+const COMMAND_L_KEY = `MetaLeft`;
+const COMMAND_R_KEY = `MetaRight`;
+const CONTROL_L_KEY = `ControlLeft`;
+const CONTROL_R_KEY = `ControlRight`;
+const ENTER_KEY = `Enter`;
+
+let idForNewComment = 52;
+
+const createNewComment = (formData, emoji) => {
+  idForNewComment += 1;
+  return {
+    commentId: idForNewComment,
+    emoji,
+    date: new Date(),
+    author: `Jone Doo`,
+    message: formData.get(`comment`),
+  };
+};
 
 const createGenresTemplate = (genres) => {
   return genres.map((genre, i) => {
@@ -11,7 +29,6 @@ const createGenresTemplate = (genres) => {
   })
   .join(``);
 };
-
 
 moment.calendarFormat = (myMoment) => {
   const daysDiff = moment(myMoment).diff(moment(), `days`);
@@ -62,8 +79,9 @@ const createEmojiItems = (checkedEmoji) =>
   ).join(``);
 
 
-const createFilmDetailsPopupTemplate = (film, checkedEmoji, commentsData) => {
+const createFilmDetailsPopupTemplate = (film, options) => {
   const {poster, title, ageLimit, originalTitle, rating, director, writers, actors, releaseDate, runtime, country, genres, description, isAddedToWatchlist, isMarkAsWatched, isMarkAsFavorite, comments} = film;
+  const {checkedEmoji, newCommentText, commentsData} = options;
 
   const stringWriters = writers.join(`, `);
   const stringActors = actors.join(`, `);
@@ -76,6 +94,7 @@ const createFilmDetailsPopupTemplate = (film, checkedEmoji, commentsData) => {
   const checkFavorite = isMarkAsFavorite ? `checked` : ``;
   const commentsLength = comments.length;
   const commentsTemplate = createComments(commentsData);
+  const commentText = newCommentText ? newCommentText : ``;
 
   const EmojiItemsTemplate = createEmojiItems(checkedEmoji);
 
@@ -176,7 +195,7 @@ const createFilmDetailsPopupTemplate = (film, checkedEmoji, commentsData) => {
 
               <label class="film-details__comment-label">
                 <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here"
-                  name="comment"></textarea>
+                  name="comment">${commentText}</textarea>
               </label>
 
               <div class="film-details__emoji-list">
@@ -199,13 +218,20 @@ export default class FilmDetailsPopup extends SmartAbstractComponent {
     this._commentsData = commentsModel.getDataByIds(this._film.comments);
     this._deleteCommentHandler = null;
     this._setEmojiListClickHandler();
+    this._newCommentText = null;
+    this._setInputCommentHandler();
 
     this._checkedEmoji = null;
     this._closeHandler = null;
   }
 
   getTemplate() {
-    return createFilmDetailsPopupTemplate(this._film, this._checkedEmoji, this._commentsData);
+    const options = {
+      checkedEmoji: this._checkedEmoji,
+      newCommentText: this._newCommentText,
+      commentsData: this._commentsData,
+    };
+    return createFilmDetailsPopupTemplate(this._film, options);
   }
 
   setCloseButtonClickHandler(handler) {
@@ -232,6 +258,7 @@ export default class FilmDetailsPopup extends SmartAbstractComponent {
     allDeleteButton.forEach((button) => button.addEventListener(`click`, (evt) => {
       this._deleteComment(evt, this._deleteCommentHandler);
     }));
+    this._setInputCommentHandler();
   }
 
   _setEmojiListClickHandler() {
@@ -263,5 +290,32 @@ export default class FilmDetailsPopup extends SmartAbstractComponent {
       this._deleteComment(evt, handler);
     }));
     this._deleteCommentHandler = handler;
+  }
+
+  _setInputCommentHandler() {
+    this.getElement().querySelector(`.film-details__comment-input`).addEventListener(`input`, (evt) => {
+      this._newCommentText = evt.target.value;
+    });
+  }
+
+  addCommentHandler(handler) {
+    document.addEventListener(`keydown`, (evt) => {
+      if (evt.key === ENTER_KEY) {
+        const form = this.getElement().querySelector(`.film-details__inner`);
+        const formData = new FormData(form);
+        const newCommentData = createNewComment(formData, this._checkedEmoji);
+
+        const newCommentIds = this._film.comments.slice();
+        newCommentIds.push(newCommentData.commentId);
+
+        const newFilm = Object.assign({}, this._film, {comments: newCommentIds});
+        handler(newFilm, this._film, newCommentData);
+        this._film = newFilm;
+        this._commentsData = this._commentsModel.getDataByIds(this._film.comments);
+        this._newCommentText = null;
+        this._checkedEmoji = null;
+        this.rerender();
+      }
+    });
   }
 }

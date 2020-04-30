@@ -71,8 +71,9 @@ const generateComment = (i) => {
 
 
 const generateCommentsId = () => {
+  const countComments = getRandomNumber(COUNT_COMMENTS_FILM);
   const comments = [];
-  for (let i = 0; i < COUNT_COMMENTS_FILM; i++) {
+  for (let i = 0; i < countComments; i++) {
     comments.push(getRandomNumber(50));
   }
   return comments;
