@@ -5,6 +5,7 @@ export default class FilmsModel {
     this._films = [];
     this._activeFilter = FilterTypes.ALL;
     this._filterChangeHandlers = [];
+    this.filmsChangeHandlers = [];
   }
 
   setFilms(films) {
@@ -27,6 +28,7 @@ export default class FilmsModel {
     }
 
     this._films = [].concat(this._films.slice(0, index), newFilm, this._films.slice(index + 1));
+    this._callHandlers(this.filmsChangeHandlers);
   }
 
   setFilter(filterType) {
@@ -36,6 +38,10 @@ export default class FilmsModel {
 
   setFilterChangeHandlers(handler) {
     this._filterChangeHandlers.push(handler);
+  }
+
+  setFilmsChangeHandlers(handler) {
+    this.filmsChangeHandlers.push(handler);
   }
 
   _callHandlers(handlers) {
