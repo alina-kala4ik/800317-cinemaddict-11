@@ -31,6 +31,5 @@ export default class CommentsModel {
 
   addComment(newComment) {
     this._comments.push(newComment);
-    console.log(this._comments)
   }
 }

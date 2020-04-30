@@ -3,11 +3,9 @@ import moment from "moment";
 import {getTimeFromMins} from "./../utils/common.js";
 
 const EMOJIS = [`smile`, `sleeping`, `puke`, `angry`];
-const COMMAND_L_KEY = `MetaLeft`;
-const COMMAND_R_KEY = `MetaRight`;
-const CONTROL_L_KEY = `ControlLeft`;
-const CONTROL_R_KEY = `ControlRight`;
-const ENTER_KEY = `Enter`;
+
+// const WINDOW_SEND = [`ControlLeft`, `Enter`];
+const MAC_SEND = [`Enter`, `MetaLeft`];
 
 let idForNewComment = 52;
 
@@ -298,24 +296,35 @@ export default class FilmDetailsPopup extends SmartAbstractComponent {
     });
   }
 
+  _addComment(handler) {
+    const form = this.getElement().querySelector(`.film-details__inner`);
+    const formData = new FormData(form);
+    const newCommentData = createNewComment(formData, this._checkedEmoji);
+
+    const newCommentIds = this._film.comments.slice();
+    newCommentIds.push(newCommentData.commentId);
+
+    const newFilm = Object.assign({}, this._film, {comments: newCommentIds});
+    handler(newFilm, this._film, newCommentData);
+    this._film = newFilm;
+    this._commentsData = this._commentsModel.getDataByIds(this._film.comments);
+    this._newCommentText = null;
+    this._checkedEmoji = null;
+    this.rerender();
+  }
+
   addCommentHandler(handler) {
+    const pressed = new Set();
     document.addEventListener(`keydown`, (evt) => {
-      if (evt.key === ENTER_KEY) {
-        const form = this.getElement().querySelector(`.film-details__inner`);
-        const formData = new FormData(form);
-        const newCommentData = createNewComment(formData, this._checkedEmoji);
+      pressed.add(evt.code);
 
-        const newCommentIds = this._film.comments.slice();
-        newCommentIds.push(newCommentData.commentId);
-
-        const newFilm = Object.assign({}, this._film, {comments: newCommentIds});
-        handler(newFilm, this._film, newCommentData);
-        this._film = newFilm;
-        this._commentsData = this._commentsModel.getDataByIds(this._film.comments);
-        this._newCommentText = null;
-        this._checkedEmoji = null;
-        this.rerender();
+      for (let code of MAC_SEND) {
+        if (!pressed.has(code)) {
+          return;
+        }
       }
+      this._addComment(handler);
+      pressed.clear();
     });
   }
 }
