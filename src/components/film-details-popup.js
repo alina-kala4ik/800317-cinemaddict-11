@@ -1,6 +1,7 @@
 import SmartAbstractComponent from "./../components/smart-abstract-component.js";
 import moment from "moment";
 import {getTimeFromMins} from "./../utils/common.js";
+import {encode} from "he";
 
 const EMOJIS = [`smile`, `sleeping`, `puke`, `angry`];
 
@@ -43,6 +44,8 @@ moment.calendarFormat = (myMoment) => {
 const createComment = (commentData) => {
   const {commentId, emoji, date, author, message} = commentData;
 
+  const safeMessage = encode(message);
+
   const commentDate = moment.calendarFormat(date);
 
   return (
@@ -51,7 +54,7 @@ const createComment = (commentData) => {
         <img src="./images/emoji/${emoji}.png" width="55" height="55" alt="${emoji}">
       </span>
       <div>
-        <p class="film-details__comment-text">${message}</p>
+        <p class="film-details__comment-text">${safeMessage}</p>
         <p class="film-details__comment-info">
           <span class="film-details__comment-author">${author}</span>
           <span class="film-details__comment-day">${commentDate}</span>
