@@ -1,12 +1,13 @@
-import AbstractComponent from "./abstract-component.js";
+import SmartAbstractComponent from "./smart-abstract-component.js";
+import {FilterTypes} from "./../utils/filter.js";
 
 const HREF_PREFIX = `#`;
 
-const createMenuAndStatsTemplate = (stats) => {
+const createMenuAndStatsTemplate = (stats, activeFilter) => {
 
   const statsLinksTemplate = stats.map((statsItem) => {
-    const {title, count, isChecked} = statsItem;
-    const activeClass = isChecked ? `main-navigation__item--active` : ``;
+    const {title, count} = statsItem;
+    const activeClass = activeFilter === title ? `main-navigation__item--active` : ``;
     return (
       ` <a href="#${title}" class="main-navigation__item ${activeClass}">${title} <span
           class="main-navigation__item-count">${count}</span></a>`
@@ -24,13 +25,20 @@ const createMenuAndStatsTemplate = (stats) => {
   );
 };
 
-export default class MenuAndFilter extends AbstractComponent {
+export default class MenuAndFilter extends SmartAbstractComponent {
   constructor(stats) {
     super();
     this._stats = stats;
+    this._activeFilter = FilterTypes.ALL;
+    this.filterChangeHandler = null;
   }
+
   getTemplate() {
-    return createMenuAndStatsTemplate(this._stats);
+    return createMenuAndStatsTemplate(this._stats, this._activeFilter);
+  }
+
+  recoveryListeners() {
+    this.setFilterChangeClickHandler(this.filterChangeHandler);
   }
 
   setFilterChangeClickHandler(handler) {
@@ -39,7 +47,10 @@ export default class MenuAndFilter extends AbstractComponent {
         evt.preventDefault();
         const selectedFilter = evt.target.getAttribute(`href`).substring(HREF_PREFIX.length);
         handler(selectedFilter);
+        this._activeFilter = selectedFilter;
+        this.rerender();
       }
     });
+    this.filterChangeHandler = handler;
   }
 }
