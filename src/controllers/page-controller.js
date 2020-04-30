@@ -178,6 +178,7 @@ export default class PageController {
   }
 
   _onFilterChange() {
+    this._sortingComponent.setSortType(SortType.DEFAULT);
     this._updateFilms(SHOWING_FILMS);
   }
 }
