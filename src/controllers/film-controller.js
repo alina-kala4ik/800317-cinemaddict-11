@@ -1,7 +1,7 @@
 import CardFilmComponent from "../components/card-film.js";
 import FilmDetailsPopupComponent from "../components/film-details-popup.js";
 
-import {render, appendChild, removeChild, replace} from "../utils/render.js";
+import {render, appendChild, removeChild, replace, remove} from "../utils/render.js";
 import {checksKeydownEsc} from "./../utils/common.js";
 
 const Mode = {
@@ -104,5 +104,10 @@ export default class FilmController {
     if (this._mode === Mode.POPUP_IS_OPEN) {
       this._closePopup();
     }
+  }
+
+  destroy() {
+    remove(this._cardFilmComponent);
+    remove(this._filmDetailsPopupComponent);
   }
 }

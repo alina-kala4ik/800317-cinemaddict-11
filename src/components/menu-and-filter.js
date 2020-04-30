@@ -1,5 +1,7 @@
 import AbstractComponent from "./abstract-component.js";
 
+const HREF_PREFIX = `#`;
+
 const createMenuAndStatsTemplate = (stats) => {
 
   const statsLinksTemplate = stats.map((statsItem) => {
@@ -29,5 +31,15 @@ export default class MenuAndFilter extends AbstractComponent {
   }
   getTemplate() {
     return createMenuAndStatsTemplate(this._stats);
+  }
+
+  setFilterChangeClickHandler(handler) {
+    this.getElement().querySelector(`.main-navigation__items`).addEventListener(`click`, (evt) => {
+      if (evt.target.tagName === `A`) {
+        evt.preventDefault();
+        const selectedFilter = evt.target.getAttribute(`href`).substring(HREF_PREFIX.length);
+        handler(selectedFilter);
+      }
+    });
   }
 }

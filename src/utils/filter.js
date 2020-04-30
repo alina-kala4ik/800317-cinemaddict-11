@@ -8,10 +8,10 @@ const FilterTypes = {
   ALL: `All movies`,
   WATCHLIST: `Watchlist`,
   HISTORY: `History`,
-  FAVORITES: `Favorites,`
+  FAVORITES: `Favorites`
 };
 
-const getFilteredTasks = (activeFilter, films) => {
+const getFilteredFilms = (activeFilter, films) => {
   let filteredFilms;
   switch (activeFilter) {
     case FilterTypes.ALL:
@@ -30,5 +30,5 @@ const getFilteredTasks = (activeFilter, films) => {
   return filteredFilms;
 };
 
-export {getFilteredTasks, FilterTypes};
+export {getFilteredFilms, FilterTypes};
 
