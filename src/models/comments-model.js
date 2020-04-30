@@ -22,7 +22,7 @@ export default class CommentsModel {
   getDataById(id) {
     let data;
     this._comments.forEach((comment) => {
-      if (comment.idComment === id) {
+      if (comment.commentId === id) {
         data = comment;
       }
     });

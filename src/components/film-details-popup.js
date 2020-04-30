@@ -26,7 +26,7 @@ moment.calendarFormat = (myMoment) => {
 };
 
 const createComment = (commentData) => {
-  const {emoji, date, author, message} = commentData;
+  const {commentId, emoji, date, author, message} = commentData;
 
   const commentDate = moment.calendarFormat(date);
 
@@ -40,16 +40,15 @@ const createComment = (commentData) => {
         <p class="film-details__comment-info">
           <span class="film-details__comment-author">${author}</span>
           <span class="film-details__comment-day">${commentDate}</span>
-          <button class="film-details__comment-delete">Delete</button>
+          <button class="film-details__comment-delete" data-comment-id="${commentId}">Delete</button>
         </p>
       </div>
     </li>`
   );
 };
 
-const createComments = (commentIds, commentsModel) => {
+const createComments = (commentsData) => {
   const commentsTemplate = [];
-  const commentsData = commentsModel.getDataByIds(commentIds);
   commentsData.forEach((comment) => commentsTemplate.push(createComment(comment)));
   return commentsTemplate.join(``);
 };
@@ -63,7 +62,7 @@ const createEmojiItems = (checkedEmoji) =>
   ).join(``);
 
 
-const createFilmDetailsPopupTemplate = (film, checkedEmoji, commentsModel) => {
+const createFilmDetailsPopupTemplate = (film, checkedEmoji, commentsData) => {
   const {poster, title, ageLimit, originalTitle, rating, director, writers, actors, releaseDate, runtime, country, genres, description, isAddedToWatchlist, isMarkAsWatched, isMarkAsFavorite, comments} = film;
 
   const stringWriters = writers.join(`, `);
@@ -76,7 +75,7 @@ const createFilmDetailsPopupTemplate = (film, checkedEmoji, commentsModel) => {
   const checkWatched = isMarkAsWatched ? `checked` : ``;
   const checkFavorite = isMarkAsFavorite ? `checked` : ``;
   const commentsLength = comments.length;
-  const commentsTemplate = createComments(comments, commentsModel);
+  const commentsTemplate = createComments(commentsData);
 
   const EmojiItemsTemplate = createEmojiItems(checkedEmoji);
 
@@ -197,7 +196,8 @@ export default class FilmDetailsPopup extends SmartAbstractComponent {
     super();
     this._film = film;
     this._commentsModel = commentsModel;
-
+    this._commentsData = commentsModel.getDataByIds(this._film.comments);
+    this._deleteCommentHandler = null;
     this._setEmojiListClickHandler();
 
     this._checkedEmoji = null;
@@ -205,7 +205,7 @@ export default class FilmDetailsPopup extends SmartAbstractComponent {
   }
 
   getTemplate() {
-    return createFilmDetailsPopupTemplate(this._film, this._checkedEmoji, this._commentsModel);
+    return createFilmDetailsPopupTemplate(this._film, this._checkedEmoji, this._commentsData);
   }
 
   setCloseButtonClickHandler(handler) {
@@ -228,6 +228,10 @@ export default class FilmDetailsPopup extends SmartAbstractComponent {
   recoveryListeners() {
     this._setEmojiListClickHandler();
     this.setCloseButtonClickHandler(this._closeHandler);
+    const allDeleteButton = this.getElement().querySelectorAll(`.film-details__comment-delete`);
+    allDeleteButton.forEach((button) => button.addEventListener(`click`, (evt) => {
+      this._deleteComment(evt, this._deleteCommentHandler);
+    }));
   }
 
   _setEmojiListClickHandler() {
@@ -235,5 +239,29 @@ export default class FilmDetailsPopup extends SmartAbstractComponent {
       this._checkedEmoji = evt.target.value;
       this.rerender();
     });
+  }
+
+  _deleteComment(evt, handler) {
+    evt.preventDefault();
+    const commentId = evt.target.getAttribute(`data-comment-id`);
+    const commentIndex = this._film.comments.findIndex((comment) => comment.toString() === commentId.toString());
+    if (commentIndex === -1) {
+      return;
+    }
+    const newComments = [].concat(this._film.comments.slice(0, commentIndex), this._film.comments.slice(commentIndex + 1));
+    const newFilm = Object.assign({}, this._film, {comments: newComments});
+    this._commentsData = this._commentsModel.getDataByIds(newComments);
+
+    handler(newFilm, this._film, null);
+    this._film = newFilm;
+    this.rerender();
+  }
+
+  setDeleteCommentClickHandler(handler) {
+    const allDeleteButton = this.getElement().querySelectorAll(`.film-details__comment-delete`);
+    allDeleteButton.forEach((button) => button.addEventListener(`click`, (evt) => {
+      this._deleteComment(evt, handler);
+    }));
+    this._deleteCommentHandler = handler;
   }
 }

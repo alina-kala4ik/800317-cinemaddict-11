@@ -61,7 +61,7 @@ const generateRunTime = () => {
 
 const generateComment = (i) => {
   return {
-    idComment: i,
+    commentId: i,
     emoji: EMOJIS[getRandomNumber(EMOJIS.length - 1)],
     date: generateDate(),
     author: COMMENT_AUTHOR,

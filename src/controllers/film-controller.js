@@ -10,11 +10,12 @@ const Mode = {
 };
 
 export default class FilmController {
-  constructor(container, onDataChange, onViewChange, commentsModel) {
+  constructor(container, onDataChange, onViewChange, commentsModel, onCommentChange) {
     this._container = container;
     this._onDataChange = onDataChange;
     this._onViewChange = onViewChange;
     this._commentsModel = commentsModel;
+    this._onCommentChange = onCommentChange;
 
     this._mode = Mode.DEFAULT;
     this._cardFilmComponent = null;
@@ -85,6 +86,8 @@ export default class FilmController {
 
     this._filmDetailsPopupComponent.setMarkAsFavoriteClickHandler(() =>
       this._onDataChange(this._film, Object.assign({}, this._film, {isMarkAsFavorite: !this._film.isMarkAsFavorite})));
+
+    this._filmDetailsPopupComponent.setDeleteCommentClickHandler(this._onCommentChange);
   }
 
   _updatesCardFilmComponent() {
