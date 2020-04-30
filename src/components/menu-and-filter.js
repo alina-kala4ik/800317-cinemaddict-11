@@ -46,6 +46,9 @@ export default class MenuAndFilter extends SmartAbstractComponent {
       if (evt.target.tagName === `A`) {
         evt.preventDefault();
         const selectedFilter = evt.target.getAttribute(`href`).substring(HREF_PREFIX.length);
+        if (selectedFilter === this._activeFilter) {
+          return;
+        }
         handler(selectedFilter);
         this._activeFilter = selectedFilter;
         this.rerender();
