@@ -59,9 +59,9 @@ const generateRunTime = () => {
   return minutes;
 };
 
-const generateComment = (countFilms) => {
+const generateComment = (filmId) => {
   return {
-    filmId: getRandomNumber(countFilms - 1),
+    filmId,
     emoji: EMOJIS[getRandomNumber(EMOJIS.length - 1)],
     date: generateDate(),
     author: COMMENT_AUTHOR,
@@ -69,12 +69,26 @@ const generateComment = (countFilms) => {
   };
 };
 
-const generateFilm = (i) => {
+// const generateArrayComments = (countСomments) => {
+//   const arrayComments = [];
+//   for (let i = 0; i < COUNT_GENERATE_COMMENTS; i++) {
+//     arrayComments.push(generateComment(countFilms));
+//   }
+//   return arrayComments;
+// };
+
+const comments = [];
+
+const generateFilm = (id) => {
   const randomNumber = getRandomNumber(DESCRIPTIONS_PHRASES.length - 1);
   const maxNumberForSliceDescription = randomNumber + getRandomNumber(MAX_SENTENCES_IN_DESCRIPTION, 1);
 
+  for (let i = 0; i < getRandomNumber(5); i++) {
+    comments.push(generateComment(id));
+  }
+
   return {
-    id: i,
+    id,
     title: FILM_TITLE,
     originalTitle: FILM_ORIGINAL_TITLE,
     poster: POSTERS_SRC[getRandomNumber(POSTERS_SRC.length - 1)],
@@ -102,12 +116,4 @@ const generateArrayFilms = (countFilms) => {
   return arrayFilms;
 };
 
-const generateArrayComments = (countFilms) => {
-  const arrayComments = [];
-  for (let i = 0; i < COUNT_GENERATE_COMMENTS; i++) {
-    arrayComments.push(generateComment(countFilms));
-  }
-  return arrayComments;
-};
-
-export {generateArrayFilms, generateArrayComments};
+export {generateArrayFilms, comments};
