@@ -103,7 +103,7 @@ export default class PageController {
     const mostCommentedFilmsContainerElement = mostCommentedFilmsListElement.querySelector(`.films-list__container`);
 
     const topRatedFilms = arrayFilms.slice()
-      .sort((max, min) => min.rating - max.rating);
+      .sort((filmA, filmB) => filmB.rating - filmA.rating);
 
     for (let i = 0; i < EXTRA_FILMS_COUNT; i++) {
       const filmController = showFilms([topRatedFilms[i]], topRatedFilmsContainerElement, this._onDataChange, this._onViewChange, this._commentsModel, this.onCommentChange);
