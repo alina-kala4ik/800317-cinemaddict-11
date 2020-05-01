@@ -9,7 +9,6 @@ const QUANTITY_MINUTES = 60;
 const MAX_RUN_TIME = 180;
 const MIN_RUN_TIME = 60;
 const COUNT_COMMENTS_FILM = 5;
-const COUNT_GENERATE_COMMENTS = 50;
 
 const FILM_TITLE = `The Dance of life`;
 const FILM_ORIGINAL_TITLE = `The Dance of life`;
@@ -69,21 +68,13 @@ const generateComment = (filmId) => {
   };
 };
 
-// const generateArrayComments = (countСomments) => {
-//   const arrayComments = [];
-//   for (let i = 0; i < COUNT_GENERATE_COMMENTS; i++) {
-//     arrayComments.push(generateComment(countFilms));
-//   }
-//   return arrayComments;
-// };
-
 const comments = [];
 
 const generateFilm = (id) => {
   const randomNumber = getRandomNumber(DESCRIPTIONS_PHRASES.length - 1);
   const maxNumberForSliceDescription = randomNumber + getRandomNumber(MAX_SENTENCES_IN_DESCRIPTION, 1);
 
-  for (let i = 0; i < getRandomNumber(5); i++) {
+  for (let i = 0; i < getRandomNumber(COUNT_COMMENTS_FILM); i++) {
     comments.push(generateComment(id));
   }
 
