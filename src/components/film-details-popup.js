@@ -4,16 +4,11 @@ import {getTimeFromMins} from "./../utils/common.js";
 import {encode} from "he";
 
 const EMOJIS = [`smile`, `sleeping`, `puke`, `angry`];
+const ENTER_KEY_CODE = 13;
 
-// const WINDOW_SEND = [`ControlLeft`, `Enter`];
-const MAC_SEND = [`Enter`, `MetaLeft`];
-
-let idForNewComment = 20;
-
-const createNewComment = (formData, emoji) => {
-  idForNewComment += 1;
+const createNewComment = (formData, emoji, filmId) => {
   return {
-    commentId: idForNewComment,
+    filmId,
     emoji,
     date: new Date(),
     author: `Jone Doo`,
@@ -45,7 +40,6 @@ const createComment = (commentData) => {
   const {emoji, date, author, message, id} = commentData;
 
   const safeMessage = encode(message);
-
   const commentDate = moment.calendarFormat(date);
 
   return (
@@ -300,32 +294,25 @@ export default class FilmDetailsPopup extends SmartAbstractComponent {
   _addComment(handler) {
     const form = this.getElement().querySelector(`.film-details__inner`);
     const formData = new FormData(form);
-    const newCommentData = createNewComment(formData, this._checkedEmoji);
+    const newCommentData = createNewComment(formData, this._checkedEmoji, this._film.id);
 
-    const newCommentIds = this._film.comments.slice();
-    newCommentIds.push(newCommentData.commentId);
+    if (!newCommentData.emoji || newCommentData.message.lenght < 1) {
+      return;
+    }
 
-    const newFilm = Object.assign({}, this._film, {comments: newCommentIds});
-    handler(newFilm, this._film, newCommentData);
-    this._film = newFilm;
-    this._commentsData = this._commentsModel.getDataByIds(this._film.comments);
+    handler(this._film, null, newCommentData);
+    this._comments = this._commentsModel.getCommentsById(this._film.id);
     this._newCommentText = null;
     this._checkedEmoji = null;
     this.rerender();
   }
 
   addCommentHandler(handler) {
-    const pressed = new Set();
-    document.addEventListener(`keydown`, (evt) => {
-      pressed.add(evt.code);
 
-      for (let code of MAC_SEND) {
-        if (!pressed.has(code)) {
-          return;
-        }
+    document.addEventListener(`keydown`, (evt) => {
+      if (evt.ctrlKey || evt.metaKey && evt.keyCode === ENTER_KEY_CODE) {
+        this._addComment(handler);
       }
-      this._addComment(handler);
-      pressed.clear();
     });
   }
 }

@@ -22,6 +22,7 @@ export default class CommentsModel {
 
   addComment(newComment) {
     this._comments.push(newComment);
+    this._generatesIds();
   }
 
   deleteComment(commentId) {
