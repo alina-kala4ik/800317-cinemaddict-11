@@ -1,5 +1,5 @@
 import UserRankComponent from "./components/user-rank.js";
-import {generateArrayFilms, generateArrayComments} from "./mocks/films.js";
+import {generateArrayFilms, comments} from "./mocks/films.js";
 import {render} from "./utils/render.js";
 import PageController from "./controllers/page-controller.js";
 import FilmsModel from "./models/films-model.js";
@@ -13,7 +13,7 @@ const filmsModel = new FilmsModel();
 filmsModel.setFilms(arrayFilms);
 
 const commentsModel = new CommentsModel();
-commentsModel.setComments(generateArrayComments(ALL_FILMS_COUNT));
+commentsModel.setComments(comments);
 
 const headerElement = document.querySelector(`.header`);
 const mainElement = document.querySelector(`.main`);

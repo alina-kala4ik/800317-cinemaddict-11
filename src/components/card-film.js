@@ -38,10 +38,11 @@ const createCardFilmTemplate = (film, comments) => {
 };
 
 export default class CardFilm extends AbstractComponent {
-  constructor(film, comments) {
+  constructor(film, commentsModel) {
     super();
     this._film = film;
-    this._comments = comments;
+    this._commentsModel = commentsModel;
+    this._comments = this._commentsModel.getCommentsById(this._film.id);
   }
 
   getTemplate() {

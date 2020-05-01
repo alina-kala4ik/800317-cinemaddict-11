@@ -187,11 +187,11 @@ export default class PageController {
     this._updateFilms(SHOWING_FILMS);
   }
 
-  onCommentChange(newFilm, oldFilm, newComment) {
-    this._filmsModel.updateFIlm(oldFilm.id, newFilm);
+  onCommentChange(film, commentId, newComment) {
+    this._commentsModel.deleteComment(commentId);
 
-    const controllerIndex = this._showedFilmsControllers.findIndex((controller) => controller._film === oldFilm);
-    this._showedFilmsControllers[controllerIndex].render(newFilm);
+    const controllerIndex = this._showedFilmsControllers.findIndex((controller) => controller._film === film);
+    this._showedFilmsControllers[controllerIndex].render(film);
 
     if (newComment) {
       this._commentsModel.addComment(newComment);

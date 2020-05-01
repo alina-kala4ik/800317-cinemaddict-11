@@ -42,7 +42,7 @@ moment.calendarFormat = (myMoment) => {
 };
 
 const createComment = (commentData) => {
-  const {filmId, emoji, date, author, message} = commentData;
+  const {emoji, date, author, message, id} = commentData;
 
   const safeMessage = encode(message);
 
@@ -58,7 +58,7 @@ const createComment = (commentData) => {
         <p class="film-details__comment-info">
           <span class="film-details__comment-author">${author}</span>
           <span class="film-details__comment-day">${commentDate}</span>
-          <button class="film-details__comment-delete" data-comment-id="${filmId}">Delete</button>
+          <button class="film-details__comment-delete" data-comment-id="${id}">Delete</button>
         </p>
       </div>
     </li>`
@@ -212,10 +212,11 @@ const createFilmDetailsPopupTemplate = (film, options) => {
 
 
 export default class FilmDetailsPopup extends SmartAbstractComponent {
-  constructor(film, comments) {
+  constructor(film, commentsModel) {
     super();
     this._film = film;
-    this._comments = comments;
+    this._commentsModel = commentsModel;
+    this._comments = this._commentsModel.getCommentsById(this._film.id);
     this._deleteCommentHandler = null;
     this._setEmojiListClickHandler();
     this._newCommentText = null;
@@ -271,16 +272,8 @@ export default class FilmDetailsPopup extends SmartAbstractComponent {
   _deleteComment(evt, handler) {
     evt.preventDefault();
     const commentId = evt.target.getAttribute(`data-comment-id`);
-    const commentIndex = this._film.comments.findIndex((comment) => comment.toString() === commentId.toString());
-    if (commentIndex === -1) {
-      return;
-    }
-    const newComments = [].concat(this._film.comments.slice(0, commentIndex), this._film.comments.slice(commentIndex + 1));
-    const newFilm = Object.assign({}, this._film, {comments: newComments});
-    this._commentsData = this._commentsModel.getDataByIds(newComments);
-
-    handler(newFilm, this._film, null);
-    this._film = newFilm;
+    handler(this._film, commentId, null);
+    this._comments = this._commentsModel.getCommentsById(this._film.id);
     this.rerender();
   }
 
