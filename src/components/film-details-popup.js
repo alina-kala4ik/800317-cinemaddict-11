@@ -262,10 +262,16 @@ export default class FilmDetailsPopup extends SmartAbstractComponent {
     this._setInputCommentHandler();
   }
 
+  _rerenderEmoji() {
+    const emojiWrapper = this.getElement().querySelector(`.film-details__add-emoji-label`);
+    const newEmoji = `<img src="./images/emoji/${this._checkedEmoji}.png" width="55" height="55" alt="emoji-${this._checkedEmoji}"></img>`;
+    emojiWrapper.innerHTML = newEmoji;
+  }
+
   _setEmojiListClickHandler() {
     this.getElement().querySelector(`.film-details__emoji-list`).addEventListener(`change`, (evt) => {
       this._checkedEmoji = evt.target.value;
-      this.rerender();
+      this._rerenderEmoji();
     });
   }
 
