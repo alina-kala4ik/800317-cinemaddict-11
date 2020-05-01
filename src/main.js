@@ -13,7 +13,7 @@ const filmsModel = new FilmsModel();
 filmsModel.setFilms(arrayFilms);
 
 const commentsModel = new CommentsModel();
-commentsModel.setComments(generateArrayComments());
+commentsModel.setComments(generateArrayComments(ALL_FILMS_COUNT));
 
 const headerElement = document.querySelector(`.header`);
 const mainElement = document.querySelector(`.main`);

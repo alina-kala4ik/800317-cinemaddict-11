@@ -11,22 +11,8 @@ export default class CommentsModel {
     return this._comments;
   }
 
-  getDataByIds(arrayIds) {
-    const arrayData = [];
-    arrayIds.forEach((id) => {
-      arrayData.push(this.getDataById(id));
-    });
-    return arrayData;
-  }
-
-  getDataById(id) {
-    let data;
-    this._comments.forEach((comment) => {
-      if (comment.commentId === id) {
-        data = comment;
-      }
-    });
-    return data;
+  getCommentsById(id) {
+    return this._comments.filter((comment) => comment.filmId === id);
   }
 
   addComment(newComment) {

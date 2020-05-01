@@ -17,6 +17,8 @@ export default class FilmController {
     this._commentsModel = commentsModel;
     this._onCommentChange = onCommentChange;
 
+    this._comments = [];
+
     this._mode = Mode.DEFAULT;
     this._cardFilmComponent = null;
     this._filmDetailsPopupComponent = null;
@@ -29,6 +31,7 @@ export default class FilmController {
 
   render(film) {
     this._film = film;
+    this._comments = this._commentsModel.getCommentsById(this._film.id);
 
     if (this._cardFilmComponent && !this._isPopupOpen()) {
       this._updatesCardFilmComponent();
@@ -40,8 +43,8 @@ export default class FilmController {
     }
 
     if (!this._cardFilmComponent) {
-      this._cardFilmComponent = new CardFilmComponent(film);
-      this._filmDetailsPopupComponent = new FilmDetailsPopupComponent(film, this._commentsModel);
+      this._cardFilmComponent = new CardFilmComponent(film, this._comments);
+      this._filmDetailsPopupComponent = new FilmDetailsPopupComponent(film, this._comments);
       render(this._container, this._cardFilmComponent);
     }
 
@@ -93,12 +96,12 @@ export default class FilmController {
 
   _updatesCardFilmComponent() {
     const oldCardFilmComponent = this._cardFilmComponent;
-    this._cardFilmComponent = new CardFilmComponent(this._film);
+    this._cardFilmComponent = new CardFilmComponent(this._film, this._comments);
     replace(this._container, this._cardFilmComponent.getElement(), oldCardFilmComponent.getElement());
   }
 
   _updatesFilmDetailsPopupComponent() {
-    this._filmDetailsPopupComponent = new FilmDetailsPopupComponent(this._film, this._commentsModel);
+    this._filmDetailsPopupComponent = new FilmDetailsPopupComponent(this._film, this._comments);
   }
 
   _isPopupOpen() {

@@ -4,8 +4,8 @@ import {getTimeFromMins} from "./../utils/common.js";
 
 const MAX_DESCRIPTION_LENGTH = 140;
 
-const createCardFilmTemplate = (film) => {
-  const {title, rating, releaseDate, runtime, genres, poster, description, comments, isAddedToWatchlist, isMarkAsWatched, isMarkAsFavorite} = film;
+const createCardFilmTemplate = (film, comments) => {
+  const {title, rating, releaseDate, runtime, genres, poster, description, isAddedToWatchlist, isMarkAsWatched, isMarkAsFavorite} = film;
 
   const filmYear = moment(releaseDate).format(`YYYY`);
   const showingDescription = description.length > MAX_DESCRIPTION_LENGTH ? `${description.substring(0, MAX_DESCRIPTION_LENGTH)}...` : description;
@@ -38,13 +38,14 @@ const createCardFilmTemplate = (film) => {
 };
 
 export default class CardFilm extends AbstractComponent {
-  constructor(film) {
+  constructor(film, comments) {
     super();
     this._film = film;
+    this._comments = comments;
   }
 
   getTemplate() {
-    return createCardFilmTemplate(this._film);
+    return createCardFilmTemplate(this._film, this._comments);
   }
 
   setPosterClickHandler(handler) {

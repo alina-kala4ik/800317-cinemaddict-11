@@ -111,7 +111,7 @@ export default class PageController {
     }
 
     const mostCommentedFilms = arrayFilms.slice()
-      .sort((max, min) => min.comments.length - max.comments.length);
+      .sort((filmA, filmB) => this._commentsModel.getCommentsById(filmB.id).length - this._commentsModel.getCommentsById(filmA.id).length);
 
 
     for (let i = 0; i < EXTRA_FILMS_COUNT; i++) {

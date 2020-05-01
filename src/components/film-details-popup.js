@@ -8,7 +8,7 @@ const EMOJIS = [`smile`, `sleeping`, `puke`, `angry`];
 // const WINDOW_SEND = [`ControlLeft`, `Enter`];
 const MAC_SEND = [`Enter`, `MetaLeft`];
 
-let idForNewComment = 52;
+let idForNewComment = 20;
 
 const createNewComment = (formData, emoji) => {
   idForNewComment += 1;
@@ -42,7 +42,7 @@ moment.calendarFormat = (myMoment) => {
 };
 
 const createComment = (commentData) => {
-  const {commentId, emoji, date, author, message} = commentData;
+  const {filmId, emoji, date, author, message} = commentData;
 
   const safeMessage = encode(message);
 
@@ -58,7 +58,7 @@ const createComment = (commentData) => {
         <p class="film-details__comment-info">
           <span class="film-details__comment-author">${author}</span>
           <span class="film-details__comment-day">${commentDate}</span>
-          <button class="film-details__comment-delete" data-comment-id="${commentId}">Delete</button>
+          <button class="film-details__comment-delete" data-comment-id="${filmId}">Delete</button>
         </p>
       </div>
     </li>`
@@ -81,8 +81,8 @@ const createEmojiItems = (checkedEmoji) =>
 
 
 const createFilmDetailsPopupTemplate = (film, options) => {
-  const {poster, title, ageLimit, originalTitle, rating, director, writers, actors, releaseDate, runtime, country, genres, description, isAddedToWatchlist, isMarkAsWatched, isMarkAsFavorite, comments} = film;
-  const {checkedEmoji, newCommentText, commentsData} = options;
+  const {poster, title, ageLimit, originalTitle, rating, director, writers, actors, releaseDate, runtime, country, genres, description, isAddedToWatchlist, isMarkAsWatched, isMarkAsFavorite} = film;
+  const {checkedEmoji, newCommentText, comments} = options;
 
   const stringWriters = writers.join(`, `);
   const stringActors = actors.join(`, `);
@@ -94,7 +94,7 @@ const createFilmDetailsPopupTemplate = (film, options) => {
   const checkWatched = isMarkAsWatched ? `checked` : ``;
   const checkFavorite = isMarkAsFavorite ? `checked` : ``;
   const commentsLength = comments.length;
-  const commentsTemplate = createComments(commentsData);
+  const commentsTemplate = createComments(comments);
   const commentText = newCommentText ? newCommentText : ``;
 
   const EmojiItemsTemplate = createEmojiItems(checkedEmoji);
@@ -212,11 +212,10 @@ const createFilmDetailsPopupTemplate = (film, options) => {
 
 
 export default class FilmDetailsPopup extends SmartAbstractComponent {
-  constructor(film, commentsModel) {
+  constructor(film, comments) {
     super();
     this._film = film;
-    this._commentsModel = commentsModel;
-    this._commentsData = commentsModel.getDataByIds(this._film.comments);
+    this._comments = comments;
     this._deleteCommentHandler = null;
     this._setEmojiListClickHandler();
     this._newCommentText = null;
@@ -230,7 +229,7 @@ export default class FilmDetailsPopup extends SmartAbstractComponent {
     const options = {
       checkedEmoji: this._checkedEmoji,
       newCommentText: this._newCommentText,
-      commentsData: this._commentsData,
+      comments: this._comments,
     };
     return createFilmDetailsPopupTemplate(this._film, options);
   }
