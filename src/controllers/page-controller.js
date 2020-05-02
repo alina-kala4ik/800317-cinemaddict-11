@@ -192,9 +192,9 @@ export default class PageController {
       this._commentsModel.addComment(newComment);
     } else {
       this._commentsModel.deleteComment(commentId);
-      const controllerIndex = this._showedFilmsControllers.findIndex((controller) => controller._film === film);
-      this._showedFilmsControllers[controllerIndex].render(film);
     }
+    const controllerIndex = this._showedFilmsControllers.findIndex((controller) => controller._film === film);
+    this._showedFilmsControllers[controllerIndex].render(film);
   }
 }
 
