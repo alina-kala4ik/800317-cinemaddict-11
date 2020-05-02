@@ -159,8 +159,8 @@ export default class PageController {
   _onDataChange(oldData, newData) {
     this._filmsModel.updateFIlm(oldData.id, newData);
 
-    const controllerIndex = this._showedFilmsControllers.findIndex((controller) => controller._film === oldData);
-    this._showedFilmsControllers[controllerIndex].render(newData);
+    const filmController = this._showedFilmsControllers.find((controller) => controller._film.id === oldData.id);
+    filmController.render(newData);
   }
 
   _onViewChange() {
@@ -191,9 +191,9 @@ export default class PageController {
       this._commentsModel.addComment(newComment);
     } else {
       this._commentsModel.deleteComment(commentId);
-      const controllerIndex = this._showedFilmsControllers.findIndex((controller) => controller._film === film);
-      this._showedFilmsControllers[controllerIndex].render(film);
     }
+    const filmController = this._showedFilmsControllers.find((controller) => controller._film.id === film.id);
+    filmController.render(film);
   }
 }
 
