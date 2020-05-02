@@ -49,7 +49,6 @@ export default class PageController {
     this._filmsComponent = new FilmsComponent();
 
     this._showedFilmsControllers = [];
-    this._showedExtraFilmsControllers = [];
     this._arrayFilms = null;
     this._lastFilmForShowing = SHOWING_FILMS;
 
@@ -92,7 +91,7 @@ export default class PageController {
   }
 
   _renderExtraFilms() {
-    const arrayFilms = this._filmsModel.getAllFilms();
+    const arrayFilms = this._filmsModel.getFilteredFilms();
     EXTRA_CLASS_FILMS.forEach((title) =>
       render(this._filmsElement, new ExtraFilmsListComponent(title)));
 
@@ -107,7 +106,7 @@ export default class PageController {
 
     for (let i = 0; i < EXTRA_FILMS_COUNT; i++) {
       const filmController = showFilms([topRatedFilms[i]], topRatedFilmsContainerElement, this._onDataChange, this._onViewChange, this._commentsModel, this.onCommentChange);
-      this._showedExtraFilmsControllers = this._showedExtraFilmsControllers.concat(filmController);
+      this._showedFilmsControllers = this._showedFilmsControllers.concat(filmController);
     }
 
     const mostCommentedFilms = arrayFilms.slice()
@@ -116,7 +115,7 @@ export default class PageController {
 
     for (let i = 0; i < EXTRA_FILMS_COUNT; i++) {
       const filmController = showFilms([mostCommentedFilms[i]], mostCommentedFilmsContainerElement, this._onDataChange, this._onViewChange, this._commentsModel, this.onCommentChange);
-      this._showedExtraFilmsControllers = this._showedExtraFilmsControllers.concat(filmController);
+      this._showedFilmsControllers = this._showedFilmsControllers.concat(filmController);
     }
   }
 
@@ -166,7 +165,6 @@ export default class PageController {
 
   _onViewChange() {
     this._showedFilmsControllers.forEach((controller) => controller.setDefaultView());
-    this._showedExtraFilmsControllers.forEach((controller) => controller.setDefaultView());
   }
 
   _removeFilms() {
@@ -180,6 +178,7 @@ export default class PageController {
     this._removeFilms();
     this._renderAllFilms(this._filmsModel.getFilteredFilms().slice(0, count));
     this._renderButtonShowMore();
+    this._renderExtraFilms();
   }
 
   _onFilterChange() {
