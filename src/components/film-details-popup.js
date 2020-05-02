@@ -79,6 +79,7 @@ const createFilmDetailsPopupTemplate = (film, options) => {
   const {checkedEmoji, newCommentText, comments} = options;
 
   const stringWriters = writers.join(`, `);
+  const showWriters = writers.length > 0 ? `<tr class="film-details__row"><td class="film-details__term">Writers</td><td class="film-details__cell">${stringWriters}</td></tr>` : ``;
   const stringActors = actors.join(`, `);
   const formatedReleaseDate = moment(releaseDate).format(`DD MMMM YYYY`);
   const formatedRuntime = moment(getTimeFromMins(runtime), `h mm`).format(`h[h] mm[m]`);
@@ -104,7 +105,7 @@ const createFilmDetailsPopupTemplate = (film, options) => {
           </div>
           <div class="film-details__info-wrap">
             <div class="film-details__poster">
-              <img class="film-details__poster-img" src="./images/posters/${poster}" alt="${title}">
+              <img class="film-details__poster-img" src="./${poster}" alt="${title}">
 
               <p class="film-details__age">${ageLimit}+</p>
             </div>
@@ -126,10 +127,7 @@ const createFilmDetailsPopupTemplate = (film, options) => {
                   <td class="film-details__term">Director</td>
                   <td class="film-details__cell">${director}</td>
                 </tr>
-                <tr class="film-details__row">
-                  <td class="film-details__term">Writers</td>
-                  <td class="film-details__cell">${stringWriters}</td>
-                </tr>
+                ${showWriters}
                 <tr class="film-details__row">
                   <td class="film-details__term">Actors</td>
                   <td class="film-details__cell">${stringActors}</td>
