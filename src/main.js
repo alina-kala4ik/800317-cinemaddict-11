@@ -1,28 +1,30 @@
-import MenuAndStatsComponent from "./components/menu-and-stats.js";
 import UserRankComponent from "./components/user-rank.js";
-
-import {generateArrayFilms} from "./mocks/films.js";
-import {generateStats} from "./mocks/stats.js";
-
+import {generateArrayFilms, comments} from "./mocks/films.js";
 import {render} from "./utils/render.js";
-
 import PageController from "./controllers/page-controller.js";
+import FilmsModel from "./models/films-model.js";
+import FilterController from "./controllers/filter-controller.js";
+import CommentsModel from "./models/comments-model.js";
 
 const ALL_FILMS_COUNT = 20;
 
 const arrayFilms = generateArrayFilms(ALL_FILMS_COUNT);
-const stats = generateStats(arrayFilms);
+const filmsModel = new FilmsModel();
+filmsModel.setFilms(arrayFilms);
 
+const commentsModel = new CommentsModel();
+commentsModel.setComments(comments);
 
 const headerElement = document.querySelector(`.header`);
 const mainElement = document.querySelector(`.main`);
 
 
 render(headerElement, new UserRankComponent());
-render(mainElement, new MenuAndStatsComponent(stats));
+const filterController = new FilterController(mainElement, filmsModel);
+filterController.render();
 
 
-new PageController(mainElement).render(arrayFilms);
+new PageController(mainElement, filmsModel, commentsModel).render();
 
 const footerStatistics = document.body.querySelector(`.footer__statistics`);
 footerStatistics.innerHTML = `<p>${arrayFilms.length.toLocaleString()} movies inside</p>`;

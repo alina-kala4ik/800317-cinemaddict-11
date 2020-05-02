@@ -8,6 +8,7 @@ const QUANTITY_HOURS = 24;
 const QUANTITY_MINUTES = 60;
 const MAX_RUN_TIME = 180;
 const MIN_RUN_TIME = 60;
+const COUNT_COMMENTS_FILM = 5;
 
 const FILM_TITLE = `The Dance of life`;
 const FILM_ORIGINAL_TITLE = `The Dance of life`;
@@ -57,8 +58,9 @@ const generateRunTime = () => {
   return minutes;
 };
 
-const generateComment = () => {
+const generateComment = (filmId) => {
   return {
+    filmId,
     emoji: EMOJIS[getRandomNumber(EMOJIS.length - 1)],
     date: generateDate(),
     author: COMMENT_AUTHOR,
@@ -66,20 +68,18 @@ const generateComment = () => {
   };
 };
 
-const generateArrayComments = (countComments) => {
-  const arrayComments = [];
-  for (let i = 0; i < countComments; i++) {
-    arrayComments.push(generateComment());
-  }
-  return arrayComments;
-};
+const comments = [];
 
-const generateFilm = () => {
+const generateFilm = (id) => {
   const randomNumber = getRandomNumber(DESCRIPTIONS_PHRASES.length - 1);
   const maxNumberForSliceDescription = randomNumber + getRandomNumber(MAX_SENTENCES_IN_DESCRIPTION, 1);
 
+  for (let i = 0; i < getRandomNumber(COUNT_COMMENTS_FILM); i++) {
+    comments.push(generateComment(id));
+  }
 
   return {
+    id,
     title: FILM_TITLE,
     originalTitle: FILM_ORIGINAL_TITLE,
     poster: POSTERS_SRC[getRandomNumber(POSTERS_SRC.length - 1)],
@@ -92,7 +92,6 @@ const generateFilm = () => {
     rating: getRandomRating(),
     country: FILM_COUNTRY,
     genres: FILM_GENRES,
-    comments: generateArrayComments(getRandomNumber(5)),
     ageLimit: getRandomNumber(18),
     isAddedToWatchlist: getRandomNumber(),
     isMarkAsWatched: getRandomNumber(),
@@ -103,9 +102,9 @@ const generateFilm = () => {
 const generateArrayFilms = (countFilms) => {
   const arrayFilms = [];
   for (let i = 0; i < countFilms; i++) {
-    arrayFilms.push(generateFilm());
+    arrayFilms.push(generateFilm(i));
   }
   return arrayFilms;
 };
 
-export {generateArrayFilms};
+export {generateArrayFilms, comments};

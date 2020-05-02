@@ -1,7 +1,7 @@
 import CardFilmComponent from "../components/card-film.js";
 import FilmDetailsPopupComponent from "../components/film-details-popup.js";
 
-import {render, appendChild, removeChild, replace} from "../utils/render.js";
+import {render, appendChild, removeChild, replace, remove} from "../utils/render.js";
 import {checksKeydownEsc} from "./../utils/common.js";
 
 const Mode = {
@@ -10,10 +10,12 @@ const Mode = {
 };
 
 export default class FilmController {
-  constructor(container, onDataChange, onViewChange) {
+  constructor(container, onDataChange, onViewChange, commentsModel, onCommentChange) {
     this._container = container;
     this._onDataChange = onDataChange;
     this._onViewChange = onViewChange;
+    this._commentsModel = commentsModel;
+    this._onCommentChange = onCommentChange;
 
     this._mode = Mode.DEFAULT;
     this._cardFilmComponent = null;
@@ -27,6 +29,7 @@ export default class FilmController {
 
   render(film) {
     this._film = film;
+    // this._comments = this._commentsModel.getCommentsById(this._film.id);
 
     if (this._cardFilmComponent && !this._isPopupOpen()) {
       this._updatesCardFilmComponent();
@@ -38,8 +41,8 @@ export default class FilmController {
     }
 
     if (!this._cardFilmComponent) {
-      this._cardFilmComponent = new CardFilmComponent(film);
-      this._filmDetailsPopupComponent = new FilmDetailsPopupComponent(film);
+      this._cardFilmComponent = new CardFilmComponent(film, this._commentsModel);
+      this._filmDetailsPopupComponent = new FilmDetailsPopupComponent(film, this._commentsModel);
       render(this._container, this._cardFilmComponent);
     }
 
@@ -84,16 +87,19 @@ export default class FilmController {
 
     this._filmDetailsPopupComponent.setMarkAsFavoriteClickHandler(() =>
       this._onDataChange(this._film, Object.assign({}, this._film, {isMarkAsFavorite: !this._film.isMarkAsFavorite})));
+
+    this._filmDetailsPopupComponent.setDeleteCommentClickHandler(this._onCommentChange);
+    this._filmDetailsPopupComponent.addCommentHandler(this._onCommentChange);
   }
 
   _updatesCardFilmComponent() {
     const oldCardFilmComponent = this._cardFilmComponent;
-    this._cardFilmComponent = new CardFilmComponent(this._film);
+    this._cardFilmComponent = new CardFilmComponent(this._film, this._commentsModel);
     replace(this._container, this._cardFilmComponent.getElement(), oldCardFilmComponent.getElement());
   }
 
   _updatesFilmDetailsPopupComponent() {
-    this._filmDetailsPopupComponent = new FilmDetailsPopupComponent(this._film);
+    this._filmDetailsPopupComponent = new FilmDetailsPopupComponent(this._film, this._commentsModel);
   }
 
   _isPopupOpen() {
@@ -104,5 +110,10 @@ export default class FilmController {
     if (this._mode === Mode.POPUP_IS_OPEN) {
       this._closePopup();
     }
+  }
+
+  destroy() {
+    remove(this._cardFilmComponent);
+    remove(this._filmDetailsPopupComponent);
   }
 }

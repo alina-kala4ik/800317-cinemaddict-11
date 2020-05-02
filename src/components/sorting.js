@@ -1,4 +1,4 @@
-import AbstractComponent from "./abstract-component.js";
+import SmartAbstractComponent from "./smart-abstract-component.js";
 
 const SortType = {
   DEFAULT: `default`,
@@ -6,9 +6,9 @@ const SortType = {
   BY_RATING: `rating`,
 };
 
-const createSortingTemplate = () => {
+const createSortingTemplate = (activeSort) => {
   const sortItems = Object.values(SortType).map((type) => {
-    const activeSortClass = type === SortType.DEFAULT ? `sort__button--active` : ``;
+    const activeSortClass = type === activeSort ? `sort__button--active` : ``;
     return `<li><a href="#" class="sort__button ${activeSortClass}" data-sort="${type}">Sort by ${type}</a></li>`;
   }).join(``);
 
@@ -19,38 +19,45 @@ const createSortingTemplate = () => {
   );
 };
 
-export default class Sorting extends AbstractComponent {
+export default class Sorting extends SmartAbstractComponent {
   constructor() {
     super();
     this._activeSort = SortType.DEFAULT;
+    this._sortTypeChangeHandler = null;
   }
+
   getTemplate() {
-    return createSortingTemplate();
+    return createSortingTemplate(this._activeSort);
   }
+
   getSortType() {
     return this._activeSort;
   }
+
+  recoveryListeners() {
+    this.setSortTypeChangeHandler(this._sortTypeChangeHandler);
+  }
+
   setSortTypeChangeHandler(handler) {
     this.getElement().addEventListener(`click`, (evt) => {
       evt.preventDefault();
-
       if (evt.target.tagName !== `A`) {
         return;
       }
-
       const selectedSortType = evt.target.getAttribute(`data-sort`);
-
       if (selectedSortType === this._activeSort) {
         return;
       }
-
-      this.getElement().querySelector(`[data-sort="${this._activeSort}"]`).classList.remove(`sort__button--active`);
-      this.getElement().querySelector(`[data-sort="${selectedSortType}"]`).classList.add(`sort__button--active`);
-
       this._activeSort = selectedSortType;
-
+      this.rerender();
       handler(this._activeSort);
     });
+    this._sortTypeChangeHandler = handler;
+  }
+
+  setSortType(sortType) {
+    this._activeSort = sortType;
+    this.rerender();
   }
 }
 

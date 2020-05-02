@@ -1,8 +1,20 @@
 import SmartAbstractComponent from "./../components/smart-abstract-component.js";
 import moment from "moment";
 import {getTimeFromMins} from "./../utils/common.js";
+import {encode} from "he";
 
 const EMOJIS = [`smile`, `sleeping`, `puke`, `angry`];
+const ENTER_KEY_CODE = 13;
+
+const createNewComment = (formData, emoji, filmId) => {
+  return {
+    filmId,
+    emoji,
+    date: new Date(),
+    author: `Jone Doo`,
+    message: formData.get(`comment`),
+  };
+};
 
 const createGenresTemplate = (genres) => {
   return genres.map((genre, i) => {
@@ -11,7 +23,6 @@ const createGenresTemplate = (genres) => {
   })
   .join(``);
 };
-
 
 moment.calendarFormat = (myMoment) => {
   const daysDiff = moment(myMoment).diff(moment(), `days`);
@@ -25,9 +36,10 @@ moment.calendarFormat = (myMoment) => {
   return dateFormate;
 };
 
-const createComment = (comment) => {
-  const {emoji, date, author, message} = comment;
+const createComment = (commentData) => {
+  const {emoji, date, author, message, id} = commentData;
 
+  const safeMessage = encode(message);
   const commentDate = moment.calendarFormat(date);
 
   return (
@@ -36,20 +48,20 @@ const createComment = (comment) => {
         <img src="./images/emoji/${emoji}.png" width="55" height="55" alt="${emoji}">
       </span>
       <div>
-        <p class="film-details__comment-text">${message}</p>
+        <p class="film-details__comment-text">${safeMessage}</p>
         <p class="film-details__comment-info">
           <span class="film-details__comment-author">${author}</span>
           <span class="film-details__comment-day">${commentDate}</span>
-          <button class="film-details__comment-delete">Delete</button>
+          <button class="film-details__comment-delete" data-comment-id="${id}">Delete</button>
         </p>
       </div>
     </li>`
   );
 };
 
-const createComments = (comments) => {
+const createComments = (commentsData) => {
   const commentsTemplate = [];
-  comments.forEach((comment) => commentsTemplate.push(createComment(comment)));
+  commentsData.forEach((comment) => commentsTemplate.push(createComment(comment)));
   return commentsTemplate.join(``);
 };
 
@@ -62,8 +74,9 @@ const createEmojiItems = (checkedEmoji) =>
   ).join(``);
 
 
-const createFilmDetailsPopupTemplate = (film, checkedEmoji) => {
-  const {poster, title, ageLimit, originalTitle, rating, director, writers, actors, releaseDate, runtime, country, genres, description, isAddedToWatchlist, isMarkAsWatched, isMarkAsFavorite, comments} = film;
+const createFilmDetailsPopupTemplate = (film, options) => {
+  const {poster, title, ageLimit, originalTitle, rating, director, writers, actors, releaseDate, runtime, country, genres, description, isAddedToWatchlist, isMarkAsWatched, isMarkAsFavorite} = film;
+  const {checkedEmoji, newCommentText, comments} = options;
 
   const stringWriters = writers.join(`, `);
   const stringActors = actors.join(`, `);
@@ -76,6 +89,7 @@ const createFilmDetailsPopupTemplate = (film, checkedEmoji) => {
   const checkFavorite = isMarkAsFavorite ? `checked` : ``;
   const commentsLength = comments.length;
   const commentsTemplate = createComments(comments);
+  const commentText = newCommentText ? newCommentText : ``;
 
   const EmojiItemsTemplate = createEmojiItems(checkedEmoji);
 
@@ -176,7 +190,7 @@ const createFilmDetailsPopupTemplate = (film, checkedEmoji) => {
 
               <label class="film-details__comment-label">
                 <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here"
-                  name="comment"></textarea>
+                  name="comment">${commentText}</textarea>
               </label>
 
               <div class="film-details__emoji-list">
@@ -192,18 +206,27 @@ const createFilmDetailsPopupTemplate = (film, checkedEmoji) => {
 
 
 export default class FilmDetailsPopup extends SmartAbstractComponent {
-  constructor(film) {
+  constructor(film, commentsModel) {
     super();
     this._film = film;
-
+    this._commentsModel = commentsModel;
+    this._comments = this._commentsModel.getCommentsById(this._film.id);
+    this._deleteCommentHandler = null;
     this._setEmojiListClickHandler();
+    this._newCommentText = null;
+    this._setInputCommentHandler();
 
     this._checkedEmoji = null;
     this._closeHandler = null;
   }
 
   getTemplate() {
-    return createFilmDetailsPopupTemplate(this._film, this._checkedEmoji);
+    const options = {
+      checkedEmoji: this._checkedEmoji,
+      newCommentText: this._newCommentText,
+      comments: this._comments,
+    };
+    return createFilmDetailsPopupTemplate(this._film, options);
   }
 
   setCloseButtonClickHandler(handler) {
@@ -226,12 +249,70 @@ export default class FilmDetailsPopup extends SmartAbstractComponent {
   recoveryListeners() {
     this._setEmojiListClickHandler();
     this.setCloseButtonClickHandler(this._closeHandler);
+    const allDeleteButton = this.getElement().querySelectorAll(`.film-details__comment-delete`);
+    allDeleteButton.forEach((button) => button.addEventListener(`click`, (evt) => {
+      this._deleteComment(evt, this._deleteCommentHandler);
+    }));
+    this._setInputCommentHandler();
+  }
+
+  _rerenderEmoji() {
+    const emojiWrapper = this.getElement().querySelector(`.film-details__add-emoji-label`);
+    const newEmoji = `<img src="./images/emoji/${this._checkedEmoji}.png" width="55" height="55" alt="emoji-${this._checkedEmoji}"></img>`;
+    emojiWrapper.innerHTML = newEmoji;
   }
 
   _setEmojiListClickHandler() {
     this.getElement().querySelector(`.film-details__emoji-list`).addEventListener(`change`, (evt) => {
       this._checkedEmoji = evt.target.value;
-      this.rerender();
+      this._rerenderEmoji();
+    });
+  }
+
+  _deleteComment(evt, handler) {
+    evt.preventDefault();
+    const commentId = evt.target.getAttribute(`data-comment-id`);
+    handler(this._film, commentId, null);
+    this._comments = this._commentsModel.getCommentsById(this._film.id);
+    this.rerender();
+  }
+
+  setDeleteCommentClickHandler(handler) {
+    const allDeleteButton = this.getElement().querySelectorAll(`.film-details__comment-delete`);
+    allDeleteButton.forEach((button) => button.addEventListener(`click`, (evt) => {
+      this._deleteComment(evt, handler);
+    }));
+    this._deleteCommentHandler = handler;
+  }
+
+  _setInputCommentHandler() {
+    this.getElement().querySelector(`.film-details__comment-input`).addEventListener(`input`, (evt) => {
+      this._newCommentText = evt.target.value;
+    });
+  }
+
+  _addComment(handler) {
+    const form = this.getElement().querySelector(`.film-details__inner`);
+    const formData = new FormData(form);
+    const newCommentData = createNewComment(formData, this._checkedEmoji, this._film.id);
+
+    if (!newCommentData.emoji || newCommentData.message.lenght < 1) {
+      return;
+    }
+
+    handler(this._film, null, newCommentData);
+    this._comments = this._commentsModel.getCommentsById(this._film.id);
+    this._newCommentText = null;
+    this._checkedEmoji = null;
+    this.rerender();
+  }
+
+  addCommentHandler(handler) {
+
+    document.addEventListener(`keydown`, (evt) => {
+      if (evt.ctrlKey || evt.metaKey && evt.keyCode === ENTER_KEY_CODE) {
+        this._addComment(handler);
+      }
     });
   }
 }
