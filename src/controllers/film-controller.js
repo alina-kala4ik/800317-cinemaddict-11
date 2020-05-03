@@ -3,6 +3,7 @@ import FilmDetailsPopupComponent from "../components/film-details-popup.js";
 
 import {render, appendChild, removeChild, replace, remove} from "../utils/render.js";
 import {checksKeydownEsc} from "./../utils/common.js";
+import FilmModel from "./../models/film-model.js";
 
 const Mode = {
   DEFAULT: `default`,
@@ -49,14 +50,20 @@ export default class FilmController {
     this._cardFilmComponent.setTitleClickHandler(this._openPopup);
     this._cardFilmComponent.setCommentsClickHandler(this._openPopup);
 
-    this._cardFilmComponent.setAddToWatchlistClickHandler(() =>
-      this._onDataChange(this._film, Object.assign({}, this._film, {isAddedToWatchlist: !this._film.isAddedToWatchlist})));
+    this._cardFilmComponent.setAddToWatchlistClickHandler(() => this._callOnDataChange(`isAddedToWatchlist`));
 
-    this._cardFilmComponent.setMarkAsWatchedClickHandler(() =>
-      this._onDataChange(this._film, Object.assign({}, this._film, {isMarkAsWatched: !this._film.isMarkAsWatched})));
+    this._cardFilmComponent.setMarkAsWatchedClickHandler(() => this._callOnDataChange(`isMarkAsWatched`));
 
-    this._cardFilmComponent.setMarkAsFavoriteClickHandler(() =>
-      this._onDataChange(this._film, Object.assign({}, this._film, {isMarkAsFavorite: !this._film.isMarkAsFavorite})));
+    this._cardFilmComponent.setMarkAsFavoriteClickHandler(() => this._callOnDataChange(`isMarkAsFavorite`));
+  }
+
+  _callOnDataChange(variableParameter) {
+    const newFilm = FilmModel.clone(this._film);
+    newFilm[variableParameter] = !newFilm[variableParameter];
+    if (variableParameter === `isMarkAsWatched`) {
+      newFilm.watchingDate = new Date();
+    }
+    this._onDataChange(this._film, newFilm);
   }
 
   _documentKeydownHandler(evt) {
@@ -78,18 +85,15 @@ export default class FilmController {
       this._filmDetailsPopupComponent.setCloseButtonClickHandler(this._closePopup);
       document.addEventListener(`keydown`, this._documentKeydownHandler);
 
-      this._filmDetailsPopupComponent.setAddToWatchlistClickHandler(() =>
-        this._onDataChange(this._film, Object.assign({}, this._film, {isAddedToWatchlist: !this._film.isAddedToWatchlist})));
+      this._filmDetailsPopupComponent.setAddToWatchlistClickHandler(() => this._callOnDataChange(`isAddedToWatchlist`));
 
-      this._filmDetailsPopupComponent.setMarkAsWatchedClickHandler(() =>
-        this._onDataChange(this._film, Object.assign({}, this._film, {isMarkAsWatched: !this._film.isMarkAsWatched})));
+      this._filmDetailsPopupComponent.setMarkAsWatchedClickHandler(() => this._callOnDataChange(`isMarkAsWatched`));
 
-      this._filmDetailsPopupComponent.setMarkAsFavoriteClickHandler(() =>
-        this._onDataChange(this._film, Object.assign({}, this._film, {isMarkAsFavorite: !this._film.isMarkAsFavorite})));
+      this._filmDetailsPopupComponent.setMarkAsFavoriteClickHandler(() => this._callOnDataChange(`isMarkAsFavorite`));
 
       this._filmDetailsPopupComponent.setDeleteCommentClickHandler(this._onCommentChange);
       this._filmDetailsPopupComponent.addCommentHandler(this._onCommentChange);
-    })
+    });
   }
 
   _updatesCardFilmComponent() {

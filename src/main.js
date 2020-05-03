@@ -17,7 +17,7 @@ const api = new API(AUTHORIZATION);
 const filmsModel = new FilmsModel();
 const commentsModel = new CommentsModel(api);
 const filterController = new FilterController(mainElement, filmsModel);
-const pageController = new PageController(mainElement, filmsModel, commentsModel);
+const pageController = new PageController(mainElement, filmsModel, commentsModel, api);
 const footerStatistics = new FooterStatistics(filmsModel);
 
 render(headerElement, new UserRankComponent());

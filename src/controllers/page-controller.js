@@ -37,10 +37,11 @@ const getSortedFilms = (sortType, arrayFilms, from, to) => {
 };
 
 export default class PageController {
-  constructor(container, filmsModel, commentsModel) {
+  constructor(container, filmsModel, commentsModel, api) {
     this._container = container;
     this._filmsModel = filmsModel;
     this._commentsModel = commentsModel;
+    this._api = api;
 
     this._allFilmsListComponent = new AllFilmsListComponent();
     this._noFilmsComponent = new NoFilmsComponent();
@@ -157,9 +158,11 @@ export default class PageController {
   }
 
   _onDataChange(oldData, newData) {
-    this._filmsModel.updateFIlm(oldData.id, newData);
-
-    this._rerenderFilm(newData);
+    this._api.updateFilm(oldData.id, newData)
+      .then((film) => {
+        this._filmsModel.updateFIlm(oldData.id, film);
+        this._rerenderFilm(film);
+      });
   }
 
   _onViewChange() {

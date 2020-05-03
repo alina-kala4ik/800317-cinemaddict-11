@@ -22,4 +22,18 @@ export default class API {
       .then((response) => response.json())
       .then(CommentModel.parseComments);
   }
+
+  updateFilm(filmId, data) {
+    const headers = new Headers();
+    headers.append(`Authorization`, this._authorization);
+    headers.append(`Content-Type`, `application/json`);
+
+    return fetch(`https://11.ecmascript.pages.academy/cinemaddict/movies/${filmId}`, {
+      method: `PUT`,
+      body: JSON.stringify(data.toRAW()),
+      headers,
+    })
+      .then((response) => response.json())
+      .then(FilmModel.parseFilm);
+  }
 }
