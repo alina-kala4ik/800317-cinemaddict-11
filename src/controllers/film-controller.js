@@ -74,6 +74,7 @@ export default class FilmController {
     this._mode = Mode.DEFAULT;
     removeChild(this._filmDetailsPopupComponent);
     document.removeEventListener(`keydown`, this._documentKeydownHandler);
+    remove(this._filmDetailsPopupComponent);
   }
 
   _openPopup() {
@@ -118,6 +119,5 @@ export default class FilmController {
 
   destroy() {
     remove(this._cardFilmComponent);
-    remove(this._filmDetailsPopupComponent);
   }
 }
