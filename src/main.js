@@ -1,30 +1,36 @@
 import UserRankComponent from "./components/user-rank.js";
-import {generateArrayFilms, comments} from "./mocks/films.js";
-import {render} from "./utils/render.js";
+import {render, remove} from "./utils/render.js";
 import PageController from "./controllers/page-controller.js";
 import FilmsModel from "./models/films-model.js";
 import FilterController from "./controllers/filter-controller.js";
+import FooterStatistics from "./components/footer-statistics.js";
 import CommentsModel from "./models/comments-model.js";
+import API from "./api.js";
 
-const ALL_FILMS_COUNT = 20;
-
-const arrayFilms = generateArrayFilms(ALL_FILMS_COUNT);
-const filmsModel = new FilmsModel();
-filmsModel.setFilms(arrayFilms);
-
-const commentsModel = new CommentsModel();
-commentsModel.setComments(comments);
+const AUTHORIZATION = `Basic eo0w680ik93889a=`;
 
 const headerElement = document.querySelector(`.header`);
 const mainElement = document.querySelector(`.main`);
+const footerStatisticsElement = document.body.querySelector(`.footer__statistics`);
+
+const api = new API(AUTHORIZATION);
+const filmsModel = new FilmsModel();
+const commentsModel = new CommentsModel(api);
+const filterController = new FilterController(mainElement, filmsModel);
+const pageController = new PageController(mainElement, filmsModel, commentsModel, api);
+const footerStatistics = new FooterStatistics(filmsModel);
 
 
 render(headerElement, new UserRankComponent());
-const filterController = new FilterController(mainElement, filmsModel);
-filterController.render();
+filterController.onLoading();
+pageController.onLoading();
+render(footerStatisticsElement, footerStatistics);
 
-
-new PageController(mainElement, filmsModel, commentsModel).render();
-
-const footerStatistics = document.body.querySelector(`.footer__statistics`);
-footerStatistics.innerHTML = `<p>${arrayFilms.length.toLocaleString()} movies inside</p>`;
+api.getFilms()
+  .then((films) => {
+    filmsModel.setFilms(films);
+    filterController.render();
+    pageController.render();
+    remove(footerStatistics);
+    render(footerStatisticsElement, new FooterStatistics(filmsModel));
+  });

@@ -4,8 +4,8 @@ import {getTimeFromMins} from "./../utils/common.js";
 
 const MAX_DESCRIPTION_LENGTH = 140;
 
-const createCardFilmTemplate = (film, comments) => {
-  const {title, rating, releaseDate, runtime, genres, poster, description, isAddedToWatchlist, isMarkAsWatched, isMarkAsFavorite} = film;
+const createCardFilmTemplate = (film) => {
+  const {title, rating, releaseDate, runtime, genres, poster, description, isAddedToWatchlist, isMarkAsWatched, isMarkAsFavorite, comments} = film;
 
   const filmYear = moment(releaseDate).format(`YYYY`);
   const showingDescription = description.length > MAX_DESCRIPTION_LENGTH ? `${description.substring(0, MAX_DESCRIPTION_LENGTH)}...` : description;
@@ -25,7 +25,7 @@ const createCardFilmTemplate = (film, comments) => {
         <span class="film-card__duration">${formatedRunTime}</span>
         <span class="film-card__genre">${genre}</span>
       </p>
-      <img src="./images/posters/${poster}" alt="${title}" class="film-card__poster">
+      <img src="./${poster}" alt="${title}" class="film-card__poster">
       <p class="film-card__description">${showingDescription}</p>
       <a class="film-card__comments">${comments.length} ${titleComment}</a>
       <form class="film-card__controls">
@@ -38,15 +38,13 @@ const createCardFilmTemplate = (film, comments) => {
 };
 
 export default class CardFilm extends AbstractComponent {
-  constructor(film, commentsModel) {
+  constructor(film) {
     super();
     this._film = film;
-    this._commentsModel = commentsModel;
-    this._comments = this._commentsModel.getCommentsById(this._film.id);
   }
 
   getTemplate() {
-    return createCardFilmTemplate(this._film, this._comments);
+    return createCardFilmTemplate(this._film);
   }
 
   setPosterClickHandler(handler) {
