@@ -41,7 +41,6 @@ export default class FilmController {
 
     if (!this._cardFilmComponent) {
       this._cardFilmComponent = new CardFilmComponent(film);
-      this._filmDetailsPopupComponent = new FilmDetailsPopupComponent(film, this._commentsModel);
       render(this._container, this._cardFilmComponent);
     }
 
@@ -71,24 +70,26 @@ export default class FilmController {
   }
 
   _openPopup() {
-    this._onViewChange();
-    this._mode = Mode.POPUP_IS_OPEN;
-    this._updatesFilmDetailsPopupComponent();
-    appendChild(this._filmDetailsPopupComponent);
-    this._filmDetailsPopupComponent.setCloseButtonClickHandler(this._closePopup);
-    document.addEventListener(`keydown`, this._documentKeydownHandler);
+    this._commentsModel.setCommentsByFilmId(this._film.id, () => {
+      this._filmDetailsPopupComponent = new FilmDetailsPopupComponent(this._film, this._commentsModel);
+      this._onViewChange();
+      this._mode = Mode.POPUP_IS_OPEN;
+      appendChild(this._filmDetailsPopupComponent);
+      this._filmDetailsPopupComponent.setCloseButtonClickHandler(this._closePopup);
+      document.addEventListener(`keydown`, this._documentKeydownHandler);
 
-    this._filmDetailsPopupComponent.setAddToWatchlistClickHandler(() =>
-      this._onDataChange(this._film, Object.assign({}, this._film, {isAddedToWatchlist: !this._film.isAddedToWatchlist})));
+      this._filmDetailsPopupComponent.setAddToWatchlistClickHandler(() =>
+        this._onDataChange(this._film, Object.assign({}, this._film, {isAddedToWatchlist: !this._film.isAddedToWatchlist})));
 
-    this._filmDetailsPopupComponent.setMarkAsWatchedClickHandler(() =>
-      this._onDataChange(this._film, Object.assign({}, this._film, {isMarkAsWatched: !this._film.isMarkAsWatched})));
+      this._filmDetailsPopupComponent.setMarkAsWatchedClickHandler(() =>
+        this._onDataChange(this._film, Object.assign({}, this._film, {isMarkAsWatched: !this._film.isMarkAsWatched})));
 
-    this._filmDetailsPopupComponent.setMarkAsFavoriteClickHandler(() =>
-      this._onDataChange(this._film, Object.assign({}, this._film, {isMarkAsFavorite: !this._film.isMarkAsFavorite})));
+      this._filmDetailsPopupComponent.setMarkAsFavoriteClickHandler(() =>
+        this._onDataChange(this._film, Object.assign({}, this._film, {isMarkAsFavorite: !this._film.isMarkAsFavorite})));
 
-    this._filmDetailsPopupComponent.setDeleteCommentClickHandler(this._onCommentChange);
-    this._filmDetailsPopupComponent.addCommentHandler(this._onCommentChange);
+      this._filmDetailsPopupComponent.setDeleteCommentClickHandler(this._onCommentChange);
+      this._filmDetailsPopupComponent.addCommentHandler(this._onCommentChange);
+    })
   }
 
   _updatesCardFilmComponent() {

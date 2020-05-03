@@ -208,7 +208,7 @@ export default class FilmDetailsPopup extends SmartAbstractComponent {
     super();
     this._film = film;
     this._commentsModel = commentsModel;
-    this._comments = this._commentsModel.getCommentsById(this._film.id);
+    this._comments = this._commentsModel.getComments();
     this._deleteCommentHandler = null;
     this._setEmojiListClickHandler();
     this._newCommentText = null;
@@ -222,7 +222,7 @@ export default class FilmDetailsPopup extends SmartAbstractComponent {
     const options = {
       checkedEmoji: this._checkedEmoji,
       newCommentText: this._newCommentText,
-      comments: this._comments,
+      comments: this._commentsModel.getComments(),
     };
     return createFilmDetailsPopupTemplate(this._film, options);
   }
