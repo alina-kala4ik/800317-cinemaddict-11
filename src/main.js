@@ -21,11 +21,12 @@ const pageController = new PageController(mainElement, filmsModel, commentsModel
 const footerStatistics = new FooterStatistics(filmsModel);
 
 render(headerElement, new UserRankComponent());
-filterController.render();
+
 
 api.getFilms()
   .then((films) => {
     filmsModel.setFilms(films);
+    filterController.render();
     pageController.render();
     render(footerStatisticsElement, footerStatistics);
   });
