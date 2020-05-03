@@ -11,7 +11,8 @@ export default class API {
 
     return fetch(`https://11.ecmascript.pages.academy/cinemaddict/movies`, {headers})
       .then((response) => response.json())
-      .then(FilmModel.parseFilms);
+      .then(FilmModel.parseFilms)
+      .catch(() => []);
   }
 
   getComments(filmId) {

@@ -8,6 +8,7 @@ import SortingComponent, {SortType} from "./../components/sorting.js";
 import {render, remove} from "../utils/render.js";
 
 import FilmController from "./film-controller.js";
+import LoadingComponent from "./../components/load.js";
 
 
 const EXTRA_FILMS_COUNT = 2;
@@ -49,6 +50,7 @@ export default class PageController {
     this._sortingComponent = new SortingComponent();
     this._filmsComponent = new FilmsComponent();
     this._extraFilmsListComponents = [];
+    this._loadingComponent = new LoadingComponent();
 
     this._showedFilmsControllers = [];
     this._arrayFilms = null;
@@ -68,7 +70,15 @@ export default class PageController {
     this.onCommentChange = this.onCommentChange.bind(this);
   }
 
+  onLoading() {
+    render(this._container, this._sortingComponent);
+    render(this._container, this._filmsComponent);
+    render(this._filmsElement, this._allFilmsListComponent);
+    render(this._allFilmsListElement, this._loadingComponent);
+  }
+
   render() {
+    remove(this._loadingComponent);
     const arrayFilms = this._filmsModel.getFilteredFilms();
 
     render(this._container, this._sortingComponent);

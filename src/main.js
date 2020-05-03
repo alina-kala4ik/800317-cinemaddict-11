@@ -1,5 +1,5 @@
 import UserRankComponent from "./components/user-rank.js";
-import {render} from "./utils/render.js";
+import {render, remove} from "./utils/render.js";
 import PageController from "./controllers/page-controller.js";
 import FilmsModel from "./models/films-model.js";
 import FilterController from "./controllers/filter-controller.js";
@@ -20,13 +20,17 @@ const filterController = new FilterController(mainElement, filmsModel);
 const pageController = new PageController(mainElement, filmsModel, commentsModel, api);
 const footerStatistics = new FooterStatistics(filmsModel);
 
-render(headerElement, new UserRankComponent());
 
+render(headerElement, new UserRankComponent());
+filterController.onLoading();
+pageController.onLoading();
+render(footerStatisticsElement, footerStatistics);
 
 api.getFilms()
   .then((films) => {
     filmsModel.setFilms(films);
     filterController.render();
     pageController.render();
-    render(footerStatisticsElement, footerStatistics);
+    remove(footerStatistics);
+    render(footerStatisticsElement, new FooterStatistics(filmsModel));
   });
