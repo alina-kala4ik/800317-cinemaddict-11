@@ -207,16 +207,32 @@ export default class PageController {
     this._updateFilms(SHOWING_FILMS);
   }
 
-  onCommentChange(filmId, commentId, newComment, rerenderPopup) {
+  onCommentChange(film, idOfDeletedComment, newComment, rerenderPopup) {
     if (newComment) {
-      this._api.addComment(newComment, filmId)
+      this._api.addComment(newComment, film.id)
         .then((answer) => {
           this._commentsModel.addComment(CommentModel.parseComments(answer.comments));
-          rerenderPopup();
-          this._rerenderFilm(FilmModel.parseFilm(answer.movie));
+          const newFilmData = FilmModel.parseFilm(answer.movie);
+          this._filmsModel.updateFIlm(film.id, newFilmData);
+          this._rerenderFilm(newFilmData);
+          rerenderPopup(newFilmData);
         });
     } else {
-      this._commentsModel.deleteComment(commentId);
+      this._api.deleteComment(idOfDeletedComment)
+        .then(() => {
+          this._commentsModel.deleteComment(idOfDeletedComment);
+
+          const oldCommentsIds = film.comments;
+          const indexOfDeletedComment = oldCommentsIds.findIndex((id) => id === idOfDeletedComment);
+          if (indexOfDeletedComment === -1) {
+            return;
+          }
+          const newCommentsIds = [].concat(oldCommentsIds.slice(0, indexOfDeletedComment), oldCommentsIds.slice(indexOfDeletedComment + 1));
+          const newFilmData = Object.assign({}, film, {comments: newCommentsIds});
+          this._filmsModel.updateFIlm(film.id, newFilmData);
+          this._rerenderFilm(newFilmData);
+          rerenderPopup(newFilmData);
+        });
     }
   }
 

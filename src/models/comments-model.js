@@ -21,6 +21,7 @@ export default class CommentsModel {
   }
 
   deleteComment(commentId) {
-    this._comments = [].concat(this._comments.slice(0, commentId), this._comments.slice(commentId + 1));
+    const commentIndex = this._comments.findIndex((comment) => comment.id === commentId);
+    this._comments = [].concat(this._comments.slice(0, commentIndex), this._comments.slice(commentIndex + 1));
   }
 }

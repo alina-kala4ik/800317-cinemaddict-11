@@ -268,9 +268,7 @@ export default class FilmDetailsPopup extends SmartAbstractComponent {
   _deleteComment(evt, handler) {
     evt.preventDefault();
     const commentId = evt.target.getAttribute(`data-comment-id`);
-    handler(this._film, commentId, null);
-    this._comments = this._commentsModel.getCommentsById(this._film.id);
-    this.rerender();
+    handler(this._film, commentId, null, this.rerender);
   }
 
   setDeleteCommentClickHandler(handler) {
@@ -290,7 +288,7 @@ export default class FilmDetailsPopup extends SmartAbstractComponent {
       return;
     }
 
-    handler(this._film.id, null, newComment, this.rerender);
+    handler(this._film, null, newComment, this.rerender);
   }
 
   addCommentHandler(handler) {
@@ -301,7 +299,8 @@ export default class FilmDetailsPopup extends SmartAbstractComponent {
     });
   }
 
-  rerender() {
+  rerender(newFilmData) {
+    this._film = newFilmData;
     this._checkedEmoji = null;
     super.rerender();
   }
