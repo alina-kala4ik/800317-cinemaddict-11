@@ -9,6 +9,8 @@ import {render, remove} from "../utils/render.js";
 
 import FilmController from "./film-controller.js";
 import LoadingComponent from "./../components/load.js";
+import FilmModel from "./../models/film-model.js";
+import CommentModel from "./../models/comment-model.js";
 
 
 const EXTRA_FILMS_COUNT = 2;
@@ -205,13 +207,17 @@ export default class PageController {
     this._updateFilms(SHOWING_FILMS);
   }
 
-  onCommentChange(film, commentId, newComment) {
+  onCommentChange(filmId, commentId, newComment, rerenderPopup) {
     if (newComment) {
-      this._commentsModel.addComment(newComment);
+      this._api.addComment(newComment, filmId)
+        .then((answer) => {
+          this._commentsModel.addComment(CommentModel.parseComments(answer.comments));
+          rerenderPopup();
+          this._rerenderFilm(FilmModel.parseFilm(answer.movie));
+        });
     } else {
       this._commentsModel.deleteComment(commentId);
     }
-    this._rerenderFilm(film);
   }
 
   _rerenderFilm(updatedFilm) {

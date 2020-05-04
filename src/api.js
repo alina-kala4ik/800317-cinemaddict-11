@@ -38,4 +38,21 @@ export default class API {
       .then((response) => response.json())
       .then(FilmModel.parseFilm);
   }
+
+  addComment(newComment, filmId) {
+    const headers = new Headers();
+    headers.append(`Authorization`, this._authorization);
+    headers.append(`Content-Type`, `application/json`);
+
+    return fetch(`https://11.ecmascript.pages.academy/cinemaddict/comments/${filmId}`, {
+      method: `POST`,
+      body: JSON.stringify(newComment.toRAW()),
+      headers,
+    })
+      .then((response) => response.json());
+  }
+
+  deleteComment() {
+
+  }
 }

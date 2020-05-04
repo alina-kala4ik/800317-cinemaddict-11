@@ -2,18 +2,20 @@ import SmartAbstractComponent from "./../components/smart-abstract-component.js"
 import moment from "moment";
 import {getTimeFromMins} from "./../utils/common.js";
 import {encode} from "he";
+import CommentModel from "./../models/comment-model.js";
 
 const EMOJIS = [`smile`, `sleeping`, `puke`, `angry`];
 const ENTER_KEY_CODE = 13;
 
-const createNewComment = (formData, emoji, filmId) => {
-  return {
-    filmId,
-    emoji,
-    date: new Date(),
-    author: `Jone Doo`,
-    message: formData.get(`comment`),
-  };
+const createNewComment = (formData, emoji) => {
+  const newComment = new CommentModel({
+    "emotion": emoji,
+    "date": new Date().toISOString(),
+    "comment": formData.get(`comment`),
+  });
+  delete newComment.author;
+  delete newComment.id;
+  return newComment;
 };
 
 const createGenresTemplate = (genres) => {
@@ -76,7 +78,7 @@ const createEmojiItems = (checkedEmoji) =>
 
 const createFilmDetailsPopupTemplate = (film, options) => {
   const {poster, title, ageLimit, originalTitle, rating, director, writers, actors, releaseDate, runtime, country, genres, description, isAddedToWatchlist, isMarkAsWatched, isMarkAsFavorite} = film;
-  const {checkedEmoji, newCommentText, comments} = options;
+  const {checkedEmoji, comments} = options;
 
   const stringWriters = writers.join(`, `);
   const showWriters = writers.length > 0 ? `<tr class="film-details__row"><td class="film-details__term">Writers</td><td class="film-details__cell">${stringWriters}</td></tr>` : ``;
@@ -90,7 +92,6 @@ const createFilmDetailsPopupTemplate = (film, options) => {
   const checkFavorite = isMarkAsFavorite ? `checked` : ``;
   const commentsLength = comments.length;
   const commentsTemplate = createComments(comments);
-  const commentText = newCommentText ? newCommentText : ``;
 
   const EmojiItemsTemplate = createEmojiItems(checkedEmoji);
 
@@ -188,7 +189,7 @@ const createFilmDetailsPopupTemplate = (film, options) => {
 
               <label class="film-details__comment-label">
                 <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here"
-                  name="comment">${commentText}</textarea>
+                  name="comment"></textarea>
               </label>
 
               <div class="film-details__emoji-list">
@@ -208,20 +209,18 @@ export default class FilmDetailsPopup extends SmartAbstractComponent {
     super();
     this._film = film;
     this._commentsModel = commentsModel;
-    this._comments = this._commentsModel.getComments();
+    this._comments = [];
     this._deleteCommentHandler = null;
     this._setEmojiListClickHandler();
-    this._newCommentText = null;
-    this._setInputCommentHandler();
 
     this._checkedEmoji = null;
     this._closeHandler = null;
+    this.rerender = this.rerender.bind(this);
   }
 
   getTemplate() {
     const options = {
       checkedEmoji: this._checkedEmoji,
-      newCommentText: this._newCommentText,
       comments: this._commentsModel.getComments(),
     };
     return createFilmDetailsPopupTemplate(this._film, options);
@@ -251,7 +250,6 @@ export default class FilmDetailsPopup extends SmartAbstractComponent {
     allDeleteButton.forEach((button) => button.addEventListener(`click`, (evt) => {
       this._deleteComment(evt, this._deleteCommentHandler);
     }));
-    this._setInputCommentHandler();
   }
 
   _rerenderEmoji() {
@@ -283,34 +281,28 @@ export default class FilmDetailsPopup extends SmartAbstractComponent {
     this._deleteCommentHandler = handler;
   }
 
-  _setInputCommentHandler() {
-    this.getElement().querySelector(`.film-details__comment-input`).addEventListener(`input`, (evt) => {
-      this._newCommentText = evt.target.value;
-    });
-  }
-
   _addComment(handler) {
     const form = this.getElement().querySelector(`.film-details__inner`);
     const formData = new FormData(form);
-    const newCommentData = createNewComment(formData, this._checkedEmoji, this._film.id);
+    const newComment = createNewComment(formData, this._checkedEmoji);
 
-    if (!newCommentData.emoji || newCommentData.message.lenght < 1) {
+    if (!newComment.emoji || newComment.message.length < 1) {
       return;
     }
 
-    handler(this._film, null, newCommentData);
-    this._comments = this._commentsModel.getCommentsById(this._film.id);
-    this._newCommentText = null;
-    this._checkedEmoji = null;
-    this.rerender();
+    handler(this._film.id, null, newComment, this.rerender);
   }
 
   addCommentHandler(handler) {
-
     document.addEventListener(`keydown`, (evt) => {
       if (evt.ctrlKey || evt.metaKey && evt.keyCode === ENTER_KEY_CODE) {
         this._addComment(handler);
       }
     });
+  }
+
+  rerender() {
+    this._checkedEmoji = null;
+    super.rerender();
   }
 }

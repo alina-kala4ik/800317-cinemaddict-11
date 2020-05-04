@@ -16,8 +16,8 @@ export default class CommentsModel {
       });
   }
 
-  addComment(newComment) {
-    this._comments.push(newComment);
+  addComment(newComments) {
+    this._comments.push(newComments[newComments.length - 1]);
   }
 
   deleteComment(commentId) {
