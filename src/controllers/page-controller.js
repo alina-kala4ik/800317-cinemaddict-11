@@ -9,10 +9,15 @@ import {render, remove} from "../utils/render.js";
 
 import FilmController from "./film-controller.js";
 import LoadingComponent from "./../components/load.js";
+import FilmModel from "./../models/film-model.js";
+import CommentModel from "./../models/comment-model.js";
 
 
 const EXTRA_FILMS_COUNT = 2;
-const EXTRA_CLASS_FILMS = [`Top rated`, `Most commented`];
+const ExtraClassFilms = {
+  RATING: `Top rated`,
+  COMMENTS: `Most commented`
+};
 const SHOWING_FILMS = 5;
 
 
@@ -68,6 +73,11 @@ export default class PageController {
     this._filmsModel.setFilterChangeHandlers(this._onFilterChange);
 
     this.onCommentChange = this.onCommentChange.bind(this);
+
+    this._mostCommentedFilmsListComponent = null;
+    this._topRatedFilmsListComponent = null;
+    this.renderMostCommentedFilms = this.renderMostCommentedFilms.bind(this);
+    this._filmsModel.setFilmsChangeHandlers(this.renderMostCommentedFilms);
   }
 
   onLoading() {
@@ -94,7 +104,8 @@ export default class PageController {
     this._renderAllFilms(arrayFilms);
     this._renderButtonShowMore();
 
-    this._renderExtraFilms();
+    this._renderTopRatedFilms();
+    this.renderMostCommentedFilms();
   }
 
   _renderAllFilms(arrayFilms) {
@@ -102,32 +113,53 @@ export default class PageController {
     this._showedFilmsControllers = this._showedFilmsControllers.concat(filmsControllers);
   }
 
-  _renderExtraFilms() {
+  renderMostCommentedFilms() {
     const arrayFilms = this._filmsModel.getFilteredFilms();
+    const isNoValuesToSort = arrayFilms.every((film) => film.comments.length === 0);
 
-    const isAllFilmsZeroRating = arrayFilms.every((film) => film.rating === 0);
-    const isAllFilmsHaveNoComments = arrayFilms.every((film) => film.comments.length === 0);
-
-    if (arrayFilms.length < EXTRA_FILMS_COUNT || isAllFilmsZeroRating || isAllFilmsHaveNoComments) {
+    if (arrayFilms.length < EXTRA_FILMS_COUNT || isNoValuesToSort) {
       return;
     }
 
-    EXTRA_CLASS_FILMS.forEach((title) => {
-      const extraFilmsListComponent = new ExtraFilmsListComponent(title);
-      this._extraFilmsListComponents.push(extraFilmsListComponent);
-      render(this._filmsElement, extraFilmsListComponent);
-    });
+    if (this._mostCommentedFilmsListComponent) {
+      remove(this._mostCommentedFilmsListComponent);
+      this._mostCommentedFilmsListComponent = new ExtraFilmsListComponent(ExtraClassFilms.COMMENTS);
+    } else {
+      this._mostCommentedFilmsListComponent = new ExtraFilmsListComponent(ExtraClassFilms.COMMENTS);
+    }
 
-    const topRatedFilmsElement = this._container.querySelector(`.top-rated .films-list__container`);
-    const mostCommentedFilmsElement = this._container.querySelector(`.most-commented .films-list__container`);
+    render(this._filmsElement, this._mostCommentedFilmsListComponent);
 
-    this._renderSortedExtraFilms(arrayFilms, `rating`, topRatedFilmsElement);
-    this._renderSortedExtraFilms(arrayFilms, `comments.length`, mostCommentedFilmsElement);
+    const container = this._container.querySelector(`.most-commented .films-list__container`);
+    const sortedFilms = arrayFilms.slice().sort((filmA, filmB) =>filmB.comments.length - filmA.comments.length);
+
+
+    for (let i = 0; i < EXTRA_FILMS_COUNT; i++) {
+      const filmController = showFilms([sortedFilms[i]], container, this._onDataChange, this._onViewChange, this._commentsModel, this.onCommentChange);
+      this._showedFilmsControllers = this._showedFilmsControllers.concat(filmController);
+    }
   }
 
-  _renderSortedExtraFilms(films, valueByWhichToSort, container) {
-    const sortedFilms = films.slice().sort((filmA, filmB) =>
-      filmB[valueByWhichToSort] - filmA[valueByWhichToSort]);
+  _renderTopRatedFilms() {
+    const arrayFilms = this._filmsModel.getFilteredFilms();
+    const isNoValuesToSort = arrayFilms.every((film) => film.rating === 0);
+
+    if (arrayFilms.length < EXTRA_FILMS_COUNT || isNoValuesToSort) {
+      return;
+    }
+
+    if (this._topRatedFilmsListComponent) {
+      remove(this._topRatedFilmsListComponent);
+      this._topRatedFilmsListComponent = new ExtraFilmsListComponent(ExtraClassFilms.RATING);
+    } else {
+      this._topRatedFilmsListComponent = new ExtraFilmsListComponent(ExtraClassFilms.RATING);
+    }
+
+    render(this._filmsElement, this._topRatedFilmsListComponent);
+
+    const container = this._container.querySelector(`.top-rated .films-list__container`);
+    const sortedFilms = arrayFilms.slice().sort((filmA, filmB) =>filmB.rating - filmA.rating);
+
 
     for (let i = 0; i < EXTRA_FILMS_COUNT; i++) {
       const filmController = showFilms([sortedFilms[i]], container, this._onDataChange, this._onViewChange, this._commentsModel, this.onCommentChange);
@@ -197,7 +229,8 @@ export default class PageController {
     this._removeFilms();
     this._renderAllFilms(this._filmsModel.getFilteredFilms().slice(0, count));
     this._renderButtonShowMore();
-    this._renderExtraFilms();
+    this._renderTopRatedFilms();
+    this.renderMostCommentedFilms();
   }
 
   _onFilterChange() {
@@ -205,13 +238,42 @@ export default class PageController {
     this._updateFilms(SHOWING_FILMS);
   }
 
-  onCommentChange(film, commentId, newComment) {
+  onCommentChange(film, idOfDeletedComment, newComment, popup) {
     if (newComment) {
-      this._commentsModel.addComment(newComment);
+      this._api.addComment(newComment, film.id)
+        .then((answer) => {
+          this._commentsModel.addComment(CommentModel.parseComments(answer.comments));
+          const newFilmData = FilmModel.parseFilm(answer.movie);
+          this._filmsModel.updateFIlm(film.id, newFilmData);
+          this._rerenderFilm(newFilmData);
+          popup.rerender(newFilmData);
+        })
+        .catch(() => {
+          popup.returnsTextFieldToDefaultState();
+          popup.shake();
+          popup.addRedBorderToTextField();
+        });
     } else {
-      this._commentsModel.deleteComment(commentId);
+      this._api.deleteComment(idOfDeletedComment)
+        .then(() => {
+          this._commentsModel.deleteComment(idOfDeletedComment);
+
+          const oldCommentsIds = film.comments;
+          const indexOfDeletedComment = oldCommentsIds.findIndex((id) => id === idOfDeletedComment);
+          if (indexOfDeletedComment === -1) {
+            return;
+          }
+          const newCommentsIds = [].concat(oldCommentsIds.slice(0, indexOfDeletedComment), oldCommentsIds.slice(indexOfDeletedComment + 1));
+          const newFilmData = Object.assign({}, film, {comments: newCommentsIds});
+          this._filmsModel.updateFIlm(film.id, newFilmData);
+          this._rerenderFilm(newFilmData);
+          popup.rerender(newFilmData);
+        })
+        .catch(() => {
+          popup.shake();
+          popup.returnsDeleteButtonToDefaultState();
+        });
     }
-    this._rerenderFilm(film);
   }
 
   _rerenderFilm(updatedFilm) {

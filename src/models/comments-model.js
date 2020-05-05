@@ -16,11 +16,12 @@ export default class CommentsModel {
       });
   }
 
-  addComment(newComment) {
-    this._comments.push(newComment);
+  addComment(newComments) {
+    this._comments.push(newComments[newComments.length - 1]);
   }
 
   deleteComment(commentId) {
-    this._comments = [].concat(this._comments.slice(0, commentId), this._comments.slice(commentId + 1));
+    const commentIndex = this._comments.findIndex((comment) => comment.id === commentId);
+    this._comments = [].concat(this._comments.slice(0, commentIndex), this._comments.slice(commentIndex + 1));
   }
 }

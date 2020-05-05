@@ -2,7 +2,7 @@ export default class CommentModel {
   constructor(data) {
     this.id = data.id;
     this.emoji = data.emotion;
-    this.date = data.date ? new Date(data.date) : null;
+    this.date = new Date(data.date);
     this.author = data.author;
     this.message = data.comment;
   }
@@ -13,5 +13,17 @@ export default class CommentModel {
 
   static parseComments(data) {
     return data.map(CommentModel.parseComment);
+  }
+
+  toRAW() {
+    return {
+      "emotion": this.emoji,
+      "date": this.date,
+      "comment": this.message,
+    };
+  }
+
+  static clone(data) {
+    return new CommentModel(data.toRAW());
   }
 }

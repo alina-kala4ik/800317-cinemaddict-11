@@ -7,7 +7,7 @@ export default class FilmModel {
     this.poster = data.film_info.poster;
     this.director = data.film_info.director;
     this.writers = data.film_info.writers;
-    this.releaseDate = data.film_info.release.date ? new Date(data.film_info.release.date) : null;
+    this.releaseDate = new Date(data.film_info.release.date);
     this.runtime = data.film_info.runtime;
     this.actors = data.film_info.actors;
     this.description = data.film_info.description;
