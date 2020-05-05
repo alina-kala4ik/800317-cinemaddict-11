@@ -16,12 +16,13 @@ const footerStatisticsElement = document.body.querySelector(`.footer__statistics
 const api = new API(AUTHORIZATION);
 const filmsModel = new FilmsModel();
 const commentsModel = new CommentsModel(api);
+const userRankComponent = new UserRankComponent(filmsModel);
 const filterController = new FilterController(mainElement, filmsModel);
 const pageController = new PageController(mainElement, filmsModel, commentsModel, api);
 const footerStatistics = new FooterStatistics(filmsModel);
 
 
-render(headerElement, new UserRankComponent());
+render(headerElement, userRankComponent);
 filterController.onLoading();
 pageController.onLoading();
 render(footerStatisticsElement, footerStatistics);
@@ -29,6 +30,7 @@ render(footerStatisticsElement, footerStatistics);
 api.getFilms()
   .then((films) => {
     filmsModel.setFilms(films);
+    userRankComponent.rerender();
     filterController.render();
     pageController.render();
     remove(footerStatistics);
