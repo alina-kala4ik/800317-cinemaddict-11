@@ -216,6 +216,9 @@ export default class FilmDetailsPopup extends SmartAbstractComponent {
     this._checkedEmoji = null;
     this._closeHandler = null;
     this.rerender = this.rerender.bind(this);
+
+    this._commentInputField = null;
+    this._activeDeleteButton = null;
   }
 
   getTemplate() {
@@ -267,8 +270,11 @@ export default class FilmDetailsPopup extends SmartAbstractComponent {
 
   _deleteComment(evt, handler) {
     evt.preventDefault();
+    this._activeDeleteButton = evt.target;
+    this._activeDeleteButton.setAttribute(`disabled`, `disabled`);
+    this._activeDeleteButton.innerText = `Deleting…`;
     const commentId = evt.target.getAttribute(`data-comment-id`);
-    handler(this._film, commentId, null, this.rerender);
+    handler(this._film, commentId, null, this);
   }
 
   setDeleteCommentClickHandler(handler) {
@@ -287,8 +293,11 @@ export default class FilmDetailsPopup extends SmartAbstractComponent {
     if (!newComment.emoji || newComment.message.length < 1) {
       return;
     }
+    this._commentInputField = this.getElement().querySelector(`.film-details__comment-input`);
+    this._commentInputField.setAttribute(`disabled`, `disabled`);
+    this._commentInputField.style.border = `none`;
 
-    handler(this._film, null, newComment, this.rerender);
+    handler(this._film, null, newComment, this);
   }
 
   addCommentHandler(handler) {
@@ -303,5 +312,26 @@ export default class FilmDetailsPopup extends SmartAbstractComponent {
     this._film = newFilmData;
     this._checkedEmoji = null;
     super.rerender();
+  }
+
+  shake() {
+    this.getElement().classList.add(`shake`);
+
+    setTimeout(() => {
+      this.getElement().classList.remove(`shake`);
+    }, 600);
+  }
+
+  addRedBorderToTextField() {
+    this._commentInputField.style.border = `1px solid red`;
+  }
+
+  returnsTextFieldToDefaultState() {
+    this._commentInputField.removeAttribute(`disabled`);
+  }
+
+  returnsDeleteButtonToDefaultState() {
+    this._activeDeleteButton.innerText = `Delete`;
+    this._activeDeleteButton.removeAttribute(`disabled`);
   }
 }

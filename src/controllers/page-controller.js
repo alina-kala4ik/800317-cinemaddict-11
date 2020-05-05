@@ -238,7 +238,7 @@ export default class PageController {
     this._updateFilms(SHOWING_FILMS);
   }
 
-  onCommentChange(film, idOfDeletedComment, newComment, rerenderPopup) {
+  onCommentChange(film, idOfDeletedComment, newComment, popup) {
     if (newComment) {
       this._api.addComment(newComment, film.id)
         .then((answer) => {
@@ -246,7 +246,12 @@ export default class PageController {
           const newFilmData = FilmModel.parseFilm(answer.movie);
           this._filmsModel.updateFIlm(film.id, newFilmData);
           this._rerenderFilm(newFilmData);
-          rerenderPopup(newFilmData);
+          popup.rerender(newFilmData);
+        })
+        .catch(() => {
+          popup.returnsTextFieldToDefaultState();
+          popup.shake();
+          popup.addRedBorderToTextField();
         });
     } else {
       this._api.deleteComment(idOfDeletedComment)
@@ -262,7 +267,11 @@ export default class PageController {
           const newFilmData = Object.assign({}, film, {comments: newCommentsIds});
           this._filmsModel.updateFIlm(film.id, newFilmData);
           this._rerenderFilm(newFilmData);
-          rerenderPopup(newFilmData);
+          popup.rerender(newFilmData);
+        })
+        .catch(() => {
+          popup.shake();
+          popup.returnsDeleteButtonToDefaultState();
         });
     }
   }
