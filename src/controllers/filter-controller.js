@@ -1,4 +1,4 @@
-import MenuAndFilterComponent from "./../components/menu-and-filter.js";
+import FilterComponent from "../components/filter.js";
 import {render, replace} from "./../utils/render.js";
 import {getFilteredFilms, FilterTypes} from "./../utils/filter.js";
 
@@ -9,7 +9,7 @@ export default class FilterController {
 
     this._activeFilter = FilterTypes.ALL;
 
-    this._menuAndStatsComponent = null;
+    this._filterComponent = null;
 
     this.onFilterChange = this.onFilterChange.bind(this);
     this.onDataChange = this.onDataChange.bind(this);
@@ -24,8 +24,8 @@ export default class FilterController {
         isChecked: filter === this._activeFilter,
       };
     });
-    this._menuAndStatsComponent = new MenuAndFilterComponent(filterData);
-    render(this._container, this._menuAndStatsComponent);
+    this._filterComponent = new FilterComponent(filterData);
+    render(this._container, this._filterComponent, `afterbegin`);
   }
 
   render() {
@@ -38,15 +38,15 @@ export default class FilterController {
       };
     });
 
-    if (!this._menuAndStatsComponent) {
-      this._menuAndStatsComponent = new MenuAndFilterComponent(filterData);
-      render(this._container, this._menuAndStatsComponent);
+    if (!this._filterComponent) {
+      this._filterComponent = new FilterComponent(filterData);
+      render(this._container, this._filterComponent, `afterbegin`);
     } else {
-      const newComponent = new MenuAndFilterComponent(filterData);
-      replace(this._container, newComponent.getElement(), this._menuAndStatsComponent.getElement());
-      this._menuAndStatsComponent = newComponent;
+      const newComponent = new FilterComponent(filterData);
+      replace(this._container, newComponent.getElement(), this._filterComponent.getElement());
+      this._filterComponent = newComponent;
     }
-    this._menuAndStatsComponent.setFilterChangeClickHandler(this.onFilterChange);
+    this._filterComponent.setFilterChangeHandler(this.onFilterChange);
   }
 
   onFilterChange(filterType) {
@@ -56,5 +56,13 @@ export default class FilterController {
 
   onDataChange() {
     this.render();
+  }
+
+  setFilterClickHandler(handler) {
+    this._filterComponent.setFilterClickHandler(handler);
+  }
+
+  removeActiveFilter() {
+    this._filterComponent.removeActiveFilter();
   }
 }

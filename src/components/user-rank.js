@@ -1,27 +1,13 @@
 import SmartAbstractComponent from "./../components/smart-abstract-component.js";
 import {getFilteredFilms, FilterTypes} from "./../utils/filter.js";
+import {determinesUserRank} from "./../utils/rank.js";
 
-const RatioOfCountFilmsWatchedUserRank = {
-  NONE: 0,
-  NOVICE: 10,
-  FAN: 20,
-};
 
 export const createUserRankTemplate = (countFilmsWatched) => {
-  let profileRating;
-  if (countFilmsWatched === RatioOfCountFilmsWatchedUserRank.NONE) {
-    profileRating = ``;
-  } else if (countFilmsWatched <= RatioOfCountFilmsWatchedUserRank.NOVICE) {
-    profileRating = `Novice`;
-  } else if (countFilmsWatched <= RatioOfCountFilmsWatchedUserRank.FAN) {
-    profileRating = `Fan`;
-  } else {
-    profileRating = `Movie Buff`;
-  }
-
+  const rank = determinesUserRank(countFilmsWatched);
   return (
     `<section class="header__profile profile">
-      <p class="profile__rating">${profileRating}</p>
+      <p class="profile__rating">${rank}</p>
       <img class="profile__avatar" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
     </section>`
   );
