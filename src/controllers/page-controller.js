@@ -280,5 +280,14 @@ export default class PageController {
     const filmsControllers = this._showedFilmsControllers.filter((controller) => controller._film.id === updatedFilm.id);
     filmsControllers.forEach((controller) => controller.render(updatedFilm));
   }
+
+  show() {
+    this._sortingComponent.getElement().classList.remove(`visually-hidden`);
+    this._filmsComponent.getElement().classList.remove(`visually-hidden`);
+  }
+  hide() {
+    this._sortingComponent.getElement().classList.add(`visually-hidden`);
+    this._filmsComponent.getElement().classList.add(`visually-hidden`);
+  }
 }
 

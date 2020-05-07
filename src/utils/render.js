@@ -6,7 +6,12 @@ const createElement = (template) => {
 
 const render = (container, component, place = `beforeend`) => {
   switch (place) {
-    case `beforeend`: container.append(component.getElement()); break;
+    case `beforeend`:
+      container.append(component.getElement());
+      break;
+    case `afterbegin`:
+      container.prepend(component.getElement());
+      break;
   }
 };
 
