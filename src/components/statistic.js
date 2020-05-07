@@ -1,18 +1,10 @@
 import SmartAbstractComponent from "./smart-abstract-component.js";
 import {determinesUserRank} from "./../utils/rank.js";
 import {getFilteredFilms, FilterTypes} from "./../utils/filter.js";
-import {getTimeFromMins} from "./../utils/common.js";
+import {getTimeFromMins, StatisticsSortType} from "./../utils/common.js";
 import moment from "moment";
 import Chart from "chart.js";
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-
-const SortTypes = {
-  ALL: `All time`,
-  TODAY: `Today`,
-  WEEK: `Week`,
-  MONTH: `Month`,
-  YEAR: `Year`,
-};
 
 const calculatesCountOfWatchedMoviesByGenre = (films) => {
   const ratioOfGenreToCountOfRepetitions = {};
@@ -32,7 +24,7 @@ const lookingTopGenreFromUser = (ratioOfGenreToCountViews) => {
 };
 
 const createStatisticInputsTemplate = (activeSortType) => {
-  return Object.values(SortTypes).map((sortType) =>
+  return Object.values(StatisticsSortType).map((sortType) =>
     `<input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-${sortType}"
     value="${sortType}" ${sortType === activeSortType ? `checked=""` : `` } >
     <label for="statistic-${sortType}" class="statistic__filters-label">${sortType}</label>`
@@ -148,7 +140,7 @@ export default class Statistic extends SmartAbstractComponent {
     super();
     this._filmsModel = filmsModel;
     this._statisticsData = {};
-    this._activeSortType = SortTypes.ALL;
+    this._activeSortType = StatisticsSortType.DEFAULT;
     this.setSortChangeHandler();
     this._genreCharts = null;
   }
@@ -176,19 +168,19 @@ export default class Statistic extends SmartAbstractComponent {
 
     let filmsViewedOverSelectedTime;
     switch (this._activeSortType) {
-      case SortTypes.ALL:
+      case StatisticsSortType.DEFAULT:
         filmsViewedOverSelectedTime = filmsWatched;
         break;
-      case SortTypes.TODAY:
+      case StatisticsSortType.TODAY:
         filmsViewedOverSelectedTime = filmsWatched.filter((film) => moment(film.watchingDate).diff(moment(), `days`) === 0);
         break;
-      case SortTypes.WEEK:
+      case StatisticsSortType.WEEK:
         filmsViewedOverSelectedTime = filmsWatched.filter((film) => moment(film.watchingDate).diff(moment(), `weeks`) === 0);
         break;
-      case SortTypes.MONTH:
+      case StatisticsSortType.MONTH:
         filmsViewedOverSelectedTime = filmsWatched.filter((film) => moment(film.watchingDate).diff(moment(), `months`) === 0);
         break;
-      case SortTypes.YEAR:
+      case StatisticsSortType.YEAR:
         filmsViewedOverSelectedTime = filmsWatched.filter((film) => moment(film.watchingDate).diff(moment(), `years`) === 0);
         break;
     }
@@ -233,5 +225,9 @@ export default class Statistic extends SmartAbstractComponent {
     }
 
     this._genreCharts = renderGenreCharts(statisticCtx, this._statisticsData.ratioOfGenreToCountViews);
+  }
+
+  setSortType(sortType) {
+    this._activeSortType = sortType;
   }
 }

@@ -8,6 +8,7 @@ import CommentsModel from "./models/comments-model.js";
 import API from "./api.js";
 import StatisticComponent from "./components/statistic.js";
 import MenuComponent from "./components/menu.js";
+import {StatisticsSortType} from "./utils/common.js";
 
 const AUTHORIZATION = `Basic eo0w680ik93889a=`;
 
@@ -40,12 +41,12 @@ api.getFilms()
 
     render(mainElement, menuComponent);
     menuComponent.setStatsClickHandler(() => {
+      statisticComponent.setSortType(StatisticsSortType.DEFAULT);
       statisticComponent.rerender();
       statisticComponent.show();
       pageController.hide();
       menuComponent.getElement().querySelector(`.main-navigation__additional`).classList.add(`main-navigation__additional--active`);
       filterController.removeActiveFilter();
-
     });
 
     filterController.render();
