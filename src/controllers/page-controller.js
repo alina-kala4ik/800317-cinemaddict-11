@@ -126,12 +126,8 @@ export default class PageController {
       return;
     }
 
-    if (this._mostCommentedFilmsListComponent) {
-      remove(this._mostCommentedFilmsListComponent);
-      this._mostCommentedFilmsListComponent = new ExtraFilmsListComponent(ExtraClassFilms.COMMENTS);
-    } else {
-      this._mostCommentedFilmsListComponent = new ExtraFilmsListComponent(ExtraClassFilms.COMMENTS);
-    }
+    this._mostCommentedFilmsListComponent = new ExtraFilmsListComponent(ExtraClassFilms.COMMENTS);
+
 
     render(this._filmsElement, this._mostCommentedFilmsListComponent);
 
@@ -157,12 +153,8 @@ export default class PageController {
       return;
     }
 
-    if (this._topRatedFilmsListComponent) {
-      remove(this._topRatedFilmsListComponent);
-      this._topRatedFilmsListComponent = new ExtraFilmsListComponent(ExtraClassFilms.RATING);
-    } else {
-      this._topRatedFilmsListComponent = new ExtraFilmsListComponent(ExtraClassFilms.RATING);
-    }
+    this._topRatedFilmsListComponent = new ExtraFilmsListComponent(ExtraClassFilms.RATING);
+
 
     render(this._filmsElement, this._topRatedFilmsListComponent);
 
