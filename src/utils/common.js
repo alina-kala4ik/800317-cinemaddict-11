@@ -15,4 +15,12 @@ const getTimeFromMins = (mins) => {
   return `${hours} ${minutes}`;
 };
 
-export {checksKeydownEsc, ErrorMessage, getTimeFromMins};
+const StatisticsSortType = {
+  DEFAULT: `All time`,
+  TODAY: `Today`,
+  WEEK: `Week`,
+  MONTH: `Month`,
+  YEAR: `Year`,
+};
+
+export {checksKeydownEsc, ErrorMessage, getTimeFromMins, StatisticsSortType};

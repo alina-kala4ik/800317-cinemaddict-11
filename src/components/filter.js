@@ -1,5 +1,5 @@
-import SmartAbstractComponent from "./smart-abstract-component.js";
 import {FilterTypes} from "../utils/filter.js";
+import SmartAbstractComponent from "./smart-abstract-component.js";
 
 const HREF_PREFIX = `#`;
 
@@ -44,7 +44,7 @@ export default class Filter extends SmartAbstractComponent {
         }
         handler(selectedFilter);
         this._activeFilter = selectedFilter;
-        this.rerender();
+        this.rerender(this._filterData);
       }
     });
     this.filterChangeHandler = handler;
@@ -57,6 +57,11 @@ export default class Filter extends SmartAbstractComponent {
 
   removeActiveFilter() {
     this._activeFilter = null;
-    this.rerender();
+    this.rerender(this._filterData);
+  }
+
+  rerender(filterData) {
+    this._filterData = filterData;
+    super.rerender();
   }
 }

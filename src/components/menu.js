@@ -14,7 +14,14 @@ export default class Menu extends AbstractComponent {
   }
 
   setStatsClickHandler(handler) {
-    this.getElement().querySelector(`.main-navigation__additional`).addEventListener(`click`, handler);
+    this.getElement().querySelector(`.main-navigation__additional`).addEventListener(`click`, () => {
+      this.getElement().querySelector(`.main-navigation__additional`).classList.add(`main-navigation__additional--active`);
+      handler();
+    });
+  }
+
+  removesLinkSelection() {
+    this.getElement().querySelector(`.main-navigation__additional`).classList.remove(`main-navigation__additional--active`);
   }
 
 }

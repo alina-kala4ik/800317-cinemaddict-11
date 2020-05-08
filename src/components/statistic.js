@@ -1,18 +1,11 @@
-import SmartAbstractComponent from "./smart-abstract-component.js";
-import {determinesUserRank} from "./../utils/rank.js";
-import {getFilteredFilms, FilterTypes} from "./../utils/filter.js";
-import {getTimeFromMins} from "./../utils/common.js";
-import moment from "moment";
 import Chart from "chart.js";
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+import {determinesUserRank} from "./../utils/rank.js";
+import moment from "moment";
+import SmartAbstractComponent from "./smart-abstract-component.js";
+import {getFilteredFilms, FilterTypes} from "./../utils/filter.js";
+import {getTimeFromMins, StatisticsSortType} from "./../utils/common.js";
 
-const SortTypes = {
-  ALL: `All time`,
-  TODAY: `Today`,
-  WEEK: `Week`,
-  MONTH: `Month`,
-  YEAR: `Year`,
-};
 
 const calculatesCountOfWatchedMoviesByGenre = (films) => {
   const ratioOfGenreToCountOfRepetitions = {};
@@ -32,7 +25,7 @@ const lookingTopGenreFromUser = (ratioOfGenreToCountViews) => {
 };
 
 const createStatisticInputsTemplate = (activeSortType) => {
-  return Object.values(SortTypes).map((sortType) =>
+  return Object.values(StatisticsSortType).map((sortType) =>
     `<input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-${sortType}"
     value="${sortType}" ${sortType === activeSortType ? `checked=""` : `` } >
     <label for="statistic-${sortType}" class="statistic__filters-label">${sortType}</label>`
@@ -41,10 +34,9 @@ const createStatisticInputsTemplate = (activeSortType) => {
 
 const createStatisticTemplate = (options) => {
   const {countFilmsWatched, totalDuration, topGenre, activeSortType, rank} = options;
-
-  const formatedTotalDuration = getTimeFromMins(totalDuration);
-  const totalHours = totalDuration === 0 ? 0 : moment(formatedTotalDuration, `h mm`).format(`hh`);
-  const totalMinutes = totalDuration === 0 ? 0 : moment(formatedTotalDuration, `h mm`).format(`mm`);
+  const formatedTotalDuration = getTimeFromMins(totalDuration).split(` `);
+  const totalHours = formatedTotalDuration[0];
+  const totalMinutes = formatedTotalDuration[1];
 
   const statisticInputs = createStatisticInputsTemplate(activeSortType);
 
@@ -55,12 +47,10 @@ const createStatisticTemplate = (options) => {
         <img class="statistic__img" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
         <span class="statistic__rank-label">${rank}</span>
       </p>
-
       <form action="https://echo.htmlacademy.ru/" method="get" class="statistic__filters">
         <p class="statistic__filters-description">Show stats:</p>
         ${statisticInputs}
       </form>
-
       <ul class="statistic__text-list">
         <li class="statistic__text-item">
           <h4 class="statistic__item-title">You watched</h4>
@@ -76,7 +66,6 @@ const createStatisticTemplate = (options) => {
           <p class="statistic__item-text">${topGenre}</p>
         </li>
       </ul>
-
       <div class="statistic__chart-wrap">
         <canvas class="statistic__chart" width="1000"></canvas>
       </div>
@@ -85,6 +74,13 @@ const createStatisticTemplate = (options) => {
 };
 
 const renderGenreCharts = (statisticCtx, ratioOfGenreToCountViews) => {
+  const sortedRatioOfGenreToCountViews = Object.entries(ratioOfGenreToCountViews).sort((a, b) => b[1] - a[1]);
+  const films = [];
+  const countsOfViews = [];
+  sortedRatioOfGenreToCountViews.forEach((ratio) => {
+    films.push(ratio[0]);
+    countsOfViews.push(ratio[1]);
+  });
   const BAR_HEIGHT = 50;
   statisticCtx.height = BAR_HEIGHT * Object.keys(ratioOfGenreToCountViews).length;
 
@@ -92,9 +88,9 @@ const renderGenreCharts = (statisticCtx, ratioOfGenreToCountViews) => {
     plugins: [ChartDataLabels],
     type: `horizontalBar`,
     data: {
-      labels: Object.keys(ratioOfGenreToCountViews),
+      labels: films,
       datasets: [{
-        data: Object.values(ratioOfGenreToCountViews),
+        data: countsOfViews,
         backgroundColor: `#ffe800`,
         hoverBackgroundColor: `#ffe800`,
         anchor: `start`
@@ -151,7 +147,7 @@ export default class Statistic extends SmartAbstractComponent {
     super();
     this._filmsModel = filmsModel;
     this._statisticsData = {};
-    this._activeSortType = SortTypes.ALL;
+    this._activeSortType = StatisticsSortType.DEFAULT;
     this.setSortChangeHandler();
     this._genreCharts = null;
   }
@@ -171,25 +167,27 @@ export default class Statistic extends SmartAbstractComponent {
         totalDuration: 0,
         topGenre: ``,
         activeSortType: this._activeSortType,
+        rank: determinesUserRank(filmsWatched.length),
+        ratioOfGenreToCountViews: {},
       };
       return;
     }
 
     let filmsViewedOverSelectedTime;
     switch (this._activeSortType) {
-      case SortTypes.ALL:
+      case StatisticsSortType.DEFAULT:
         filmsViewedOverSelectedTime = filmsWatched;
         break;
-      case SortTypes.TODAY:
+      case StatisticsSortType.TODAY:
         filmsViewedOverSelectedTime = filmsWatched.filter((film) => moment(film.watchingDate).diff(moment(), `days`) === 0);
         break;
-      case SortTypes.WEEK:
+      case StatisticsSortType.WEEK:
         filmsViewedOverSelectedTime = filmsWatched.filter((film) => moment(film.watchingDate).diff(moment(), `weeks`) === 0);
         break;
-      case SortTypes.MONTH:
+      case StatisticsSortType.MONTH:
         filmsViewedOverSelectedTime = filmsWatched.filter((film) => moment(film.watchingDate).diff(moment(), `months`) === 0);
         break;
-      case SortTypes.YEAR:
+      case StatisticsSortType.YEAR:
         filmsViewedOverSelectedTime = filmsWatched.filter((film) => moment(film.watchingDate).diff(moment(), `years`) === 0);
         break;
     }
@@ -198,6 +196,7 @@ export default class Statistic extends SmartAbstractComponent {
     let genresOfAllWatchedFilms = [];
     filmsViewedOverSelectedTime.forEach((film) => genresOfAllWatchedFilms.push(...film.genres));
     const ratioOfGenreToCountViews = calculatesCountOfWatchedMoviesByGenre(genresOfAllWatchedFilms);
+
 
     this._statisticsData = {
       countFilmsWatched: filmsViewedOverSelectedTime.length,
@@ -235,6 +234,8 @@ export default class Statistic extends SmartAbstractComponent {
 
     this._genreCharts = renderGenreCharts(statisticCtx, this._statisticsData.ratioOfGenreToCountViews);
   }
+
+  setSortType(sortType) {
+    this._activeSortType = sortType;
+  }
 }
-
-

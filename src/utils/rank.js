@@ -19,4 +19,3 @@ const determinesUserRank = (countFilmsWatched) => {
 };
 
 export {RatioOfCountFilmsWatchedUserRank, determinesUserRank};
-

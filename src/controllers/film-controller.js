@@ -1,9 +1,9 @@
 import CardFilmComponent from "../components/card-film.js";
-import FilmDetailsPopupComponent from "../components/film-details-popup.js";
-
-import {render, appendChild, removeChild, replace, remove} from "../utils/render.js";
 import {checksKeydownEsc} from "./../utils/common.js";
+import FilmDetailsPopupComponent from "../components/film-details-popup.js";
 import FilmModel from "./../models/film-model.js";
+import {render, appendChild, removeChild, replace, remove} from "../utils/render.js";
+
 
 const Mode = {
   DEFAULT: `default`,

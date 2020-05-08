@@ -28,7 +28,7 @@ export default class FilterController {
     render(this._container, this._filterComponent, `afterbegin`);
   }
 
-  render() {
+  _generateFilterData() {
     const films = this._filmsModel.getAllFilms();
     const filterData = Object.values(FilterTypes).map((filter) => {
       return {
@@ -37,6 +37,11 @@ export default class FilterController {
         isChecked: filter === this._activeFilter,
       };
     });
+    return filterData;
+  }
+
+  render() {
+    const filterData = this._generateFilterData();
 
     if (!this._filterComponent) {
       this._filterComponent = new FilterComponent(filterData);
@@ -55,7 +60,16 @@ export default class FilterController {
   }
 
   onDataChange() {
-    this.render();
+    const filterData = this._generateFilterData();
+    this._filterComponent.rerender(filterData);
+  }
+
+  setFilterClickHandler(handler) {
+    this._filterComponent.setFilterClickHandler(handler);
+  }
+
+  removeActiveFilter() {
+    this._filterComponent.removeActiveFilter();
   }
 
   setFilterClickHandler(handler) {
