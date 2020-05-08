@@ -71,4 +71,12 @@ export default class FilterController {
   removeActiveFilter() {
     this._filterComponent.removeActiveFilter();
   }
+
+  setFilterClickHandler(handler) {
+    this._filterComponent.setFilterClickHandler(handler);
+  }
+
+  removeActiveFilter() {
+    this._filterComponent.removeActiveFilter();
+  }
 }
