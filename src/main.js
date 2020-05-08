@@ -52,7 +52,6 @@ api.getFilms()
     filmsModel.setFilms(films);
     userRankComponent.rerender();
 
-    render(mainElement, menuComponent);
     menuComponent.setStatsClickHandler(statisticClickHandler);
 
     filterController.render();
@@ -62,6 +61,5 @@ api.getFilms()
     render(mainElement, statisticComponent);
     statisticComponent.hide();
 
-    remove(footerStatisticsComponent);
-    render(footerStatisticsElement, new FooterStatisticsComponent(filmsModel));
+    footerStatisticsComponent.rerender();
   });

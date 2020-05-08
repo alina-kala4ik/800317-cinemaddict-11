@@ -1,5 +1,6 @@
 import {determinesUserRank} from "./../utils/rank.js";
 import SmartAbstractComponent from "./../components/smart-abstract-component.js";
+import {replace} from "./../utils/render.js";
 import {getFilteredFilms, FilterTypes} from "./../utils/filter.js";
 
 
@@ -27,5 +28,10 @@ export default class UserRank extends SmartAbstractComponent {
     return createUserRankTemplate(this._countFilmsWatched);
   }
 
-  recoveryListeners() {}
+  rerender() {
+    const oldElement = this.getElement();
+    this.removeElement();
+    const newElement = this.getElement();
+    replace(oldElement.parentNode, newElement, oldElement);
+  }
 }
