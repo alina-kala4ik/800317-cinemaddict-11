@@ -1,5 +1,5 @@
-import CommentModel from "./models/comment-model.js";
-import FilmModel from "./models/film-model.js";
+import CommentModel from "./../models/comment-model.js";
+import FilmModel from "./../models/film-model.js";
 
 
 const checkStatus = (response) => {
@@ -88,5 +88,22 @@ export default class API {
       .catch((err) => {
         throw err;
       });
+  }
+
+  sync(films) {
+    const headers = new Headers();
+    headers.append(`Authorization`, this._authorization);
+    headers.append(`Content-Type`, `application/json`);
+
+    return fetch(`${Urls.FILMS}/sync`, {
+      method: `POST`,
+      body: JSON.stringify(films),
+      headers,
+    })
+    .then(checkStatus)
+    .then((response) => response.json())
+    .catch((err) => {
+      throw err;
+    });
   }
 }
