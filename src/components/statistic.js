@@ -33,10 +33,9 @@ const createStatisticInputsTemplate = (activeSortType) => {
 
 const createStatisticTemplate = (options) => {
   const {countFilmsWatched, totalDuration, topGenre, activeSortType, rank} = options;
-
-  const formatedTotalDuration = getTimeFromMins(totalDuration);
-  const totalHours = totalDuration === 0 ? 0 : moment(formatedTotalDuration, `h mm`).format(`hh`);
-  const totalMinutes = totalDuration === 0 ? 0 : moment(formatedTotalDuration, `h mm`).format(`mm`);
+  const formatedTotalDuration = getTimeFromMins(totalDuration).split(` `);
+  const totalHours = formatedTotalDuration[0];
+  const totalMinutes = formatedTotalDuration[1];
 
   const statisticInputs = createStatisticInputsTemplate(activeSortType);
 
@@ -74,6 +73,13 @@ const createStatisticTemplate = (options) => {
 };
 
 const renderGenreCharts = (statisticCtx, ratioOfGenreToCountViews) => {
+  const sortedRatioOfGenreToCountViews = Object.entries(ratioOfGenreToCountViews).sort((a, b) => b[1] - a[1]);
+  const films = [];
+  const countsOfViews = [];
+  sortedRatioOfGenreToCountViews.forEach((ratio) => {
+    films.push(ratio[0]);
+    countsOfViews.push(ratio[1]);
+  });
   const BAR_HEIGHT = 50;
   statisticCtx.height = BAR_HEIGHT * Object.keys(ratioOfGenreToCountViews).length;
 
@@ -81,9 +87,9 @@ const renderGenreCharts = (statisticCtx, ratioOfGenreToCountViews) => {
     plugins: [ChartDataLabels],
     type: `horizontalBar`,
     data: {
-      labels: Object.keys(ratioOfGenreToCountViews),
+      labels: films,
       datasets: [{
-        data: Object.values(ratioOfGenreToCountViews),
+        data: countsOfViews,
         backgroundColor: `#ffe800`,
         hoverBackgroundColor: `#ffe800`,
         anchor: `start`
@@ -189,6 +195,7 @@ export default class Statistic extends SmartAbstractComponent {
     let genresOfAllWatchedFilms = [];
     filmsViewedOverSelectedTime.forEach((film) => genresOfAllWatchedFilms.push(...film.genres));
     const ratioOfGenreToCountViews = calculatesCountOfWatchedMoviesByGenre(genresOfAllWatchedFilms);
+
 
     this._statisticsData = {
       countFilmsWatched: filmsViewedOverSelectedTime.length,

@@ -10,7 +10,7 @@ import StatisticComponent from "./components/statistic.js";
 import MenuComponent from "./components/menu.js";
 import {StatisticsSortType} from "./utils/common.js";
 
-const AUTHORIZATION = `Basic eo0w680ik93889a=`;
+const AUTHORIZATION = `Basic eo0w650ik93889a=`;
 
 const headerElement = document.querySelector(`.header`);
 const mainElement = document.querySelector(`.main`);
