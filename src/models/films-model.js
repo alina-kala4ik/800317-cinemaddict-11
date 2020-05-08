@@ -36,6 +36,10 @@ export default class FilmsModel {
     this._callHandlers(this._filterChangeHandlers);
   }
 
+  getFilter() {
+    return this._activeFilter;
+  }
+
   setFilterChangeHandlers(handler) {
     this._filterChangeHandlers.push(handler);
   }
