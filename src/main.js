@@ -8,7 +8,11 @@ import PageController from "./controllers/page-controller.js";
 import StatisticComponent from "./components/statistic.js";
 import UserRankComponent from "./components/user-rank.js";
 import {StatisticsSortType} from "./utils/common.js";
-import {render, remove} from "./utils/render.js";
+import {render} from "./utils/render.js";
+
+window.addEventListener(`load`, () => {
+  navigator.serviceWorker.register(`/sw.js`);
+});
 
 const AUTHORIZATION = `Basic eo0w650ik93889a=`;
 
@@ -33,7 +37,7 @@ const api = new API(AUTHORIZATION);
 const filmsModel = new FilmsModel();
 const commentsModel = new CommentsModel(api);
 const userRankComponent = new UserRankComponent(filmsModel);
-let menuComponent = new MenuComponent();
+const menuComponent = new MenuComponent();
 const filterController = new FilterController(menuComponent.getElement(), filmsModel);
 const pageController = new PageController(mainElement, filmsModel, commentsModel, api);
 const footerStatisticsComponent = new FooterStatisticsComponent(filmsModel);
