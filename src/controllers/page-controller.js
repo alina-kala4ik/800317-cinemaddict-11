@@ -1,18 +1,15 @@
-import ButtonShowMoreComponent from "../components/button-show-more.js";
-import ExtraFilmsListComponent from "../components/extra-films-list.js";
 import AllFilmsListComponent from "../components/all-films-list.js";
-import NoFilmsComponent from "../components/no-films.js";
-import FilmsComponent from "./../components/films.js";
-import SortingComponent, {SortType} from "./../components/sorting.js";
-
-import {render, remove} from "../utils/render.js";
-
-import FilmController from "./film-controller.js";
-import LoadingComponent from "./../components/load.js";
-import FilmModel from "./../models/film-model.js";
+import ButtonShowMoreComponent from "../components/button-show-more.js";
 import CommentModel from "./../models/comment-model.js";
+import ExtraFilmsListComponent from "../components/extra-films-list.js";
+import FilmController from "./film-controller.js";
+import FilmsComponent from "./../components/films.js";
+import FilmModel from "./../models/film-model.js";
 import {FilterTypes} from "./../utils/filter.js";
-import { timingSafeEqual } from "crypto";
+import LoadingComponent from "./../components/load.js";
+import NoFilmsComponent from "../components/no-films.js";
+import SortingComponent, {SortType} from "./../components/sorting.js";
+import {render, remove} from "../utils/render.js";
 
 
 const EXTRA_FILMS_COUNT = 2;

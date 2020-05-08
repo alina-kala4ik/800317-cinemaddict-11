@@ -1,8 +1,8 @@
-import SmartAbstractComponent from "./../components/smart-abstract-component.js";
-import moment from "moment";
-import {getTimeFromMins} from "./../utils/common.js";
-import {encode} from "he";
 import CommentModel from "./../models/comment-model.js";
+import {encode} from "he";
+import {getTimeFromMins} from "./../utils/common.js";
+import moment from "moment";
+import SmartAbstractComponent from "./../components/smart-abstract-component.js";
 
 const EMOJIS = [`smile`, `sleeping`, `puke`, `angry`];
 const ENTER_KEY_CODE = 13;

@@ -1,5 +1,5 @@
-import {createElement} from "./../utils/render.js";
 import {ErrorMessage} from "./../utils/common.js";
+import {createElement} from "./../utils/render.js";
 
 
 export default class AbstractComponent {

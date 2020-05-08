@@ -1,6 +1,6 @@
+import {determinesUserRank} from "./../utils/rank.js";
 import SmartAbstractComponent from "./../components/smart-abstract-component.js";
 import {getFilteredFilms, FilterTypes} from "./../utils/filter.js";
-import {determinesUserRank} from "./../utils/rank.js";
 
 
 export const createUserRankTemplate = (countFilmsWatched) => {

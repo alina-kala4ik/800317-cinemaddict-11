@@ -1,10 +1,11 @@
-import SmartAbstractComponent from "./smart-abstract-component.js";
-import {determinesUserRank} from "./../utils/rank.js";
-import {getFilteredFilms, FilterTypes} from "./../utils/filter.js";
-import {getTimeFromMins, StatisticsSortType} from "./../utils/common.js";
-import moment from "moment";
 import Chart from "chart.js";
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+import {determinesUserRank} from "./../utils/rank.js";
+import moment from "moment";
+import SmartAbstractComponent from "./smart-abstract-component.js";
+import {getFilteredFilms, FilterTypes} from "./../utils/filter.js";
+import {getTimeFromMins, StatisticsSortType} from "./../utils/common.js";
+
 
 const calculatesCountOfWatchedMoviesByGenre = (films) => {
   const ratioOfGenreToCountOfRepetitions = {};

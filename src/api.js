@@ -1,5 +1,6 @@
-import FilmModel from "./models/film-model.js";
 import CommentModel from "./models/comment-model.js";
+import FilmModel from "./models/film-model.js";
+
 
 const checkStatus = (response) => {
   if (response.status >= 200 && response.status < 300) {

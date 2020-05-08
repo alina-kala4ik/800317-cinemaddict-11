@@ -1,5 +1,5 @@
-import SmartAbstractComponent from "./smart-abstract-component.js";
 import {FilterTypes} from "../utils/filter.js";
+import SmartAbstractComponent from "./smart-abstract-component.js";
 
 const HREF_PREFIX = `#`;
 

@@ -1,14 +1,14 @@
-import UserRankComponent from "./components/user-rank.js";
-import {render, remove} from "./utils/render.js";
-import PageController from "./controllers/page-controller.js";
+import API from "./api.js";
+import CommentsModel from "./models/comments-model.js";
 import FilmsModel from "./models/films-model.js";
 import FilterController from "./controllers/filter-controller.js";
 import FooterStatisticsComponent from "./components/footer-statistics.js";
-import CommentsModel from "./models/comments-model.js";
-import API from "./api.js";
-import StatisticComponent from "./components/statistic.js";
 import MenuComponent from "./components/menu.js";
+import PageController from "./controllers/page-controller.js";
+import StatisticComponent from "./components/statistic.js";
+import UserRankComponent from "./components/user-rank.js";
 import {StatisticsSortType} from "./utils/common.js";
+import {render, remove} from "./utils/render.js";
 
 const AUTHORIZATION = `Basic eo0w650ik93889a=`;
 
