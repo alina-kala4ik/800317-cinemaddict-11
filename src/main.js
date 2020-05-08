@@ -12,6 +12,19 @@ import {StatisticsSortType} from "./utils/common.js";
 
 const AUTHORIZATION = `Basic eo0w650ik93889a=`;
 
+const statisticClickHandler = () => {
+  statisticComponent.setSortType(StatisticsSortType.DEFAULT);
+  statisticComponent.rerender();
+  statisticComponent.show();
+  pageController.hide();
+  filterController.removeActiveFilter();
+};
+const filterClickHandler = () => {
+  statisticComponent.hide();
+  pageController.show();
+  menuComponent.removesLinkSelection();
+};
+
 const headerElement = document.querySelector(`.header`);
 const mainElement = document.querySelector(`.main`);
 const footerStatisticsElement = document.body.querySelector(`.footer__statistics`);
@@ -40,21 +53,10 @@ api.getFilms()
     userRankComponent.rerender();
 
     render(mainElement, menuComponent);
-    menuComponent.setStatsClickHandler(() => {
-      statisticComponent.setSortType(StatisticsSortType.DEFAULT);
-      statisticComponent.rerender();
-      statisticComponent.show();
-      pageController.hide();
-      menuComponent.getElement().querySelector(`.main-navigation__additional`).classList.add(`main-navigation__additional--active`);
-      filterController.removeActiveFilter();
-    });
+    menuComponent.setStatsClickHandler(statisticClickHandler);
 
     filterController.render();
-    filterController.setFilterClickHandler(() => {
-      statisticComponent.hide();
-      pageController.show();
-      menuComponent.getElement().querySelector(`.main-navigation__additional`).classList.remove(`main-navigation__additional--active`);
-    });
+    filterController.setFilterClickHandler(filterClickHandler);
 
     pageController.render();
     render(mainElement, statisticComponent);
