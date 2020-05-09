@@ -115,14 +115,14 @@ export default class PageController {
 
   renderMostCommentedFilms() {
     const films = this._filmsModel.getFilteredFilms();
-    const isNoValuesToSort = films.every((film) => film.comments.length === 0);
+    const filteredFilms = films.filter((film) => film.comments.length > 0);
 
     if (this._mostCommentedFilmsListComponent) {
       remove(this._mostCommentedFilmsListComponent);
       this._showedMostCommentedFilmsControllers = [];
     }
 
-    if (films.length < MIN_SHOWED_COUNT_EXTRA_FILMS || isNoValuesToSort) {
+    if (filteredFilms.length < MIN_SHOWED_COUNT_EXTRA_FILMS) {
       return;
     }
 
@@ -132,7 +132,7 @@ export default class PageController {
     render(this._filmsElement, this._mostCommentedFilmsListComponent);
 
     const container = this._container.querySelector(`.most-commented .films-list__container`);
-    const sortedFilms = films.slice().sort((filmA, filmB) =>filmB.comments.length - filmA.comments.length);
+    const sortedFilms = filteredFilms.slice().sort((filmA, filmB) =>filmB.comments.length - filmA.comments.length);
     const shownCountOfSortedFilms = sortedFilms.slice(0, EXTRA_FILMS_COUNT);
 
     const filmController = showFilms(shownCountOfSortedFilms, container, this._onDataChange, this._onViewChange, this._commentsModel, this.onCommentChange);
@@ -141,13 +141,13 @@ export default class PageController {
 
   _renderTopRatedFilms() {
     const films = this._filmsModel.getFilteredFilms();
-    const isNoValuesToSort = films.every((film) => film.rating === 0);
+    const filteredFilms = films.filter((film) => film.rating > 0);
 
     if (this._topRatedFilmsListComponent) {
       remove(this._topRatedFilmsListComponent);
     }
 
-    if (films.length < MIN_SHOWED_COUNT_EXTRA_FILMS || isNoValuesToSort) {
+    if (filteredFilms.length < MIN_SHOWED_COUNT_EXTRA_FILMS) {
       return;
     }
 
@@ -157,7 +157,7 @@ export default class PageController {
     render(this._filmsElement, this._topRatedFilmsListComponent);
 
     const container = this._container.querySelector(`.top-rated .films-list__container`);
-    const sortedFilms = films.slice().sort((filmA, filmB) =>filmB.rating - filmA.rating);
+    const sortedFilms = filteredFilms.slice().sort((filmA, filmB) =>filmB.rating - filmA.rating);
     const shownCountOfSortedFilms = sortedFilms.slice(0, EXTRA_FILMS_COUNT);
 
 
