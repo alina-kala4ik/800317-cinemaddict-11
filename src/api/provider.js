@@ -59,17 +59,11 @@ export default class Provider {
   }
 
   addComment(newComment, filmId) {
-    if (isOnline()) {
-      return this._api.addComment(newComment, filmId);
-    }
-    return false;
+    return this._api.addComment(newComment, filmId);
   }
 
   deleteComment(commentId) {
-    if (isOnline()) {
-      return this._api.deleteComment(commentId);
-    }
-    return false;
+    return this._api.deleteComment(commentId);
   }
 
   sync() {
