@@ -13,6 +13,7 @@ import {render, remove} from "../utils/render.js";
 
 
 const EXTRA_FILMS_COUNT = 2;
+const MIN_SHOWED_COUNT_EXTRA_FILMS = 1;
 const ExtraClassFilms = {
   RATING: `Top rated`,
   COMMENTS: `Most commented`
@@ -122,7 +123,7 @@ export default class PageController {
       this._showedMostCommentedFilmsControllers = [];
     }
 
-    if (arrayFilms.length < EXTRA_FILMS_COUNT || isNoValuesToSort) {
+    if (arrayFilms.length < MIN_SHOWED_COUNT_EXTRA_FILMS || isNoValuesToSort) {
       return;
     }
 
@@ -133,12 +134,10 @@ export default class PageController {
 
     const container = this._container.querySelector(`.most-commented .films-list__container`);
     const sortedFilms = arrayFilms.slice().sort((filmA, filmB) =>filmB.comments.length - filmA.comments.length);
+    const shownCountOfSortedFilms = sortedFilms.slice(0, EXTRA_FILMS_COUNT);
 
-
-    for (let i = 0; i < EXTRA_FILMS_COUNT; i++) {
-      const filmController = showFilms([sortedFilms[i]], container, this._onDataChange, this._onViewChange, this._commentsModel, this.onCommentChange);
-      this._showedMostCommentedFilmsControllers = this._showedMostCommentedFilmsControllers.concat(filmController);
-    }
+    const filmController = showFilms(shownCountOfSortedFilms, container, this._onDataChange, this._onViewChange, this._commentsModel, this.onCommentChange);
+    this._showedMostCommentedFilmsControllers = this._showedMostCommentedFilmsControllers.concat(filmController);
   }
 
   _renderTopRatedFilms() {
@@ -149,7 +148,7 @@ export default class PageController {
       remove(this._topRatedFilmsListComponent);
     }
 
-    if (arrayFilms.length < EXTRA_FILMS_COUNT || isNoValuesToSort) {
+    if (arrayFilms.length < MIN_SHOWED_COUNT_EXTRA_FILMS || isNoValuesToSort) {
       return;
     }
 
@@ -160,12 +159,11 @@ export default class PageController {
 
     const container = this._container.querySelector(`.top-rated .films-list__container`);
     const sortedFilms = arrayFilms.slice().sort((filmA, filmB) =>filmB.rating - filmA.rating);
+    const shownCountOfSortedFilms = sortedFilms.slice(0, EXTRA_FILMS_COUNT);
 
 
-    for (let i = 0; i < EXTRA_FILMS_COUNT; i++) {
-      const filmController = showFilms([sortedFilms[i]], container, this._onDataChange, this._onViewChange, this._commentsModel, this.onCommentChange);
-      this._showedTopRatedFilmsControllers = this._showedTopRatedFilmsControllers.concat(filmController);
-    }
+    const filmController = showFilms(shownCountOfSortedFilms, container, this._onDataChange, this._onViewChange, this._commentsModel, this.onCommentChange);
+    this._showedTopRatedFilmsControllers = this._showedTopRatedFilmsControllers.concat(filmController);
   }
 
   _renderButtonShowMore() {

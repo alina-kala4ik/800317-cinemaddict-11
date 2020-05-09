@@ -16,7 +16,7 @@ window.addEventListener(`load`, () => {
   navigator.serviceWorker.register(`/sw.js`);
 });
 
-const AUTHORIZATION = `Basic eo0w650ik93889a=`;
+const AUTHORIZATION = `Basic eo0w839ikh749a=`;
 const STORE_PREFIX = `cinemaddict-localstorage`;
 const STORE_VER = `v1`;
 const STORE_NAME = `${STORE_PREFIX}-${STORE_VER}`;
