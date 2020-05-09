@@ -7,6 +7,11 @@ import SmartAbstractComponent from "./../components/smart-abstract-component.js"
 const EMOJIS = [`smile`, `sleeping`, `puke`, `angry`];
 const ENTER_KEY_CODE = 13;
 
+const CommentPlaceholder = {
+  ONLINE: `Select reaction below and write comment here`,
+  OFFLINE: `You can not leave a comment offline`,
+};
+
 const createNewComment = (formData, emoji) => {
   const newComment = new CommentModel({
     "emotion": emoji,
@@ -219,6 +224,9 @@ export default class FilmDetailsPopup extends SmartAbstractComponent {
 
     this._commentInputField = null;
     this._activeDeleteButton = null;
+
+    window.addEventListener(`online`, this._onOnline);
+    window.addEventListener(`offline`, this._onOffline);
   }
 
   getTemplate() {
@@ -333,5 +341,27 @@ export default class FilmDetailsPopup extends SmartAbstractComponent {
   returnsDeleteButtonToDefaultState() {
     this._activeDeleteButton.innerText = `Delete`;
     this._activeDeleteButton.removeAttribute(`disabled`);
+  }
+
+  _onOnline() {
+    const commentInputField = document.body.querySelector(`.film-details__comment-input`);
+    const allDeleteButton = document.body.querySelectorAll(`.film-details__comment-delete`);
+
+    commentInputField.removeAttribute(`disabled`);
+    commentInputField.setAttribute(`placeholder`, CommentPlaceholder.ONLINE);
+    allDeleteButton.forEach((button) => {
+      button.removeAttribute(`disabled`);
+    });
+  }
+
+  _onOffline() {
+    const commentInputField = document.body.querySelector(`.film-details__comment-input`);
+    const allDeleteButton = document.body.querySelectorAll(`.film-details__comment-delete`);
+
+    commentInputField.setAttribute(`disabled`, `disabled`);
+    commentInputField.setAttribute(`placeholder`, CommentPlaceholder.OFFLINE);
+    allDeleteButton.forEach((button) => {
+      button.setAttribute(`disabled`, `disabled`);
+    });
   }
 }

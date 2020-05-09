@@ -14,6 +14,7 @@ export default class ExtraFilmsList extends AbstractComponent {
     super();
     this._title = title;
   }
+
   getTemplate() {
     return createExtraFilmsListTemplate(this._title);
   }

@@ -23,5 +23,4 @@ export default class Menu extends AbstractComponent {
   removesLinkSelection() {
     this.getElement().querySelector(`.main-navigation__additional`).classList.remove(`main-navigation__additional--active`);
   }
-
 }
