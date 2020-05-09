@@ -287,6 +287,7 @@ export default class PageController {
     this._sortingComponent.getElement().classList.remove(`visually-hidden`);
     this._filmsComponent.getElement().classList.remove(`visually-hidden`);
   }
+
   hide() {
     this._sortingComponent.getElement().classList.add(`visually-hidden`);
     this._filmsComponent.getElement().classList.add(`visually-hidden`);
