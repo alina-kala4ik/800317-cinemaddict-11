@@ -267,10 +267,10 @@ export default class PageController {
             return;
           }
           const newCommentsIds = [].concat(oldCommentsIds.slice(0, indexOfDeletedComment), oldCommentsIds.slice(indexOfDeletedComment + 1));
-          const newFilmData = Object.assign({}, film, {comments: newCommentsIds});
-          this._filmsModel.updateFIlm(film.id, newFilmData);
-          this._rerenderFilm(newFilmData);
-          popup.rerender(newFilmData);
+          film.comments = newCommentsIds;
+          this._filmsModel.updateFIlm(film.id, film);
+          this._rerenderFilm(film);
+          popup.rerender(film);
         })
         .catch(() => {
           popup.shake();
