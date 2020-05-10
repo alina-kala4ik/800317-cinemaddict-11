@@ -12,7 +12,7 @@ export default class CommentsModel {
     this._api.getComments(filmId)
       .then((comments) => {
         this._comments = comments;
-        handler();
+        handler(comments);
       });
   }
 

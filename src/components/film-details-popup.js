@@ -225,8 +225,9 @@ export default class FilmDetailsPopup extends SmartAbstractComponent {
     this._commentInputField = null;
     this._activeDeleteButton = null;
 
-    window.addEventListener(`online`, this._onOnline);
-    window.addEventListener(`offline`, this._onOffline);
+    this.onOnline = this.onOnline.bind(this);
+    window.addEventListener(`online`, this.onOnline);
+    window.addEventListener(`offline`, this.onOffline);
   }
 
   getTemplate() {
@@ -343,25 +344,23 @@ export default class FilmDetailsPopup extends SmartAbstractComponent {
     this._activeDeleteButton.removeAttribute(`disabled`);
   }
 
-  _onOnline() {
-    const commentInputField = document.body.querySelector(`.film-details__comment-input`);
-    const allDeleteButton = document.body.querySelectorAll(`.film-details__comment-delete`);
-
-    commentInputField.removeAttribute(`disabled`);
-    commentInputField.setAttribute(`placeholder`, CommentPlaceholder.ONLINE);
-    allDeleteButton.forEach((button) => {
-      button.removeAttribute(`disabled`);
+  onOnline() {
+    this._commentsModel.setCommentsByFilmId(this._film.id, (comments) => {
+      this._comments = comments;
+      this.rerender(this._film);
     });
   }
 
-  _onOffline() {
+  onOffline() {
     const commentInputField = document.body.querySelector(`.film-details__comment-input`);
     const allDeleteButton = document.body.querySelectorAll(`.film-details__comment-delete`);
 
     commentInputField.setAttribute(`disabled`, `disabled`);
     commentInputField.setAttribute(`placeholder`, CommentPlaceholder.OFFLINE);
-    allDeleteButton.forEach((button) => {
-      button.setAttribute(`disabled`, `disabled`);
-    });
+    if (allDeleteButton) {
+      allDeleteButton.forEach((button) => {
+        button.setAttribute(`disabled`, `disabled`);
+      });
+    }
   }
 }

@@ -23,9 +23,9 @@ const StatisticsSortType = {
   YEAR: `Year`,
 };
 
-const Status = {
-  ONLINE: `online`,
-  OFFLINE: `offline`,
+const PageTitle = {
+  ONLINE: `Cinemaddict`,
+  OFFLINE: `Cinemaddict [OFFLINE]`,
 };
 
-export {checksKeydownEsc, ErrorMessage, getTimeFromMins, StatisticsSortType, Status};
+export {checksKeydownEsc, ErrorMessage, getTimeFromMins, StatisticsSortType, PageTitle};

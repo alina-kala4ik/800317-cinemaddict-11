@@ -50,7 +50,7 @@ export default class PageController {
     this._api = api;
 
     this._allFilmsListComponent = new AllFilmsListComponent();
-    this._noFilmsComponent = new NoFilmsComponent();
+    this._noFilmsComponent = null;
     this._buttonShowMoreComponent = new ButtonShowMoreComponent();
     this._sortingComponent = new SortingComponent();
     this._filmsComponent = new FilmsComponent();
@@ -104,7 +104,12 @@ export default class PageController {
   }
 
   _renderAllFilms(films) {
+    if (this._noFilmsComponent) {
+      remove(this._noFilmsComponent);
+      this._noFilmsComponent = null;
+    }
     if (!films.length) {
+      this._noFilmsComponent = new NoFilmsComponent();
       render(this._allFilmsListElement, this._noFilmsComponent);
       return;
     }

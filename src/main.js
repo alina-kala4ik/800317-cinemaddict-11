@@ -9,7 +9,7 @@ import PageController from "./controllers/page-controller.js";
 import StatisticComponent from "./components/statistic.js";
 import Store from "./api/store.js";
 import UserRankComponent from "./components/user-rank.js";
-import {StatisticsSortType, Status} from "./utils/common.js";
+import {StatisticsSortType, PageTitle} from "./utils/common.js";
 import {render} from "./utils/render.js";
 
 window.addEventListener(`load`, () => {
@@ -76,10 +76,10 @@ apiWithProvider.getFilms()
   });
 
 window.addEventListener(`online`, () => {
-  document.title = document.title.replace(` [${Status.ONLINE}]`, ``);
+  document.title = PageTitle.ONLINE;
   apiWithProvider.sync();
 });
 
 window.addEventListener(`offline`, () => {
-  document.title += ` [${Status.OFFLINE}]`;
+  document.title = PageTitle.OFFLINE;
 });
