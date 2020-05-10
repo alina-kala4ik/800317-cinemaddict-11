@@ -1,16 +1,10 @@
-const RatioOfCountFilmsWatchedUserRank = {
-  NONE: 0,
-  NOVICE: 10,
-  FAN: 20,
-};
-
 const determinesUserRank = (countFilmsWatched) => {
   let rank;
-  if (countFilmsWatched === RatioOfCountFilmsWatchedUserRank.NONE) {
+  if (countFilmsWatched === 0) {
     rank = ``;
-  } else if (countFilmsWatched <= RatioOfCountFilmsWatchedUserRank.NOVICE) {
+  } else if (countFilmsWatched <= 10) {
     rank = `Novice`;
-  } else if (countFilmsWatched <= RatioOfCountFilmsWatchedUserRank.FAN) {
+  } else if (countFilmsWatched <= 20) {
     rank = `Fan`;
   } else {
     rank = `Movie Buff`;
@@ -18,4 +12,4 @@ const determinesUserRank = (countFilmsWatched) => {
   return rank;
 };
 
-export {RatioOfCountFilmsWatchedUserRank, determinesUserRank};
+export {determinesUserRank};

@@ -1,5 +1,5 @@
 import FilterComponent from "../components/filter.js";
-import {render, replace} from "./../utils/render.js";
+import {render, replace, InsertionPoint} from "./../utils/render.js";
 import {getFilteredFilms, FilterTypes} from "./../utils/filter.js";
 
 export default class FilterController {
@@ -25,7 +25,7 @@ export default class FilterController {
       };
     });
     this._filterComponent = new FilterComponent(filterData);
-    render(this._container, this._filterComponent, `afterbegin`);
+    render(this._container, this._filterComponent, InsertionPoint.AFTERBEGIN);
   }
 
   _generateFilterData() {

@@ -161,7 +161,7 @@ export default class Statistic extends SmartAbstractComponent {
     const films = this._filmsModel.getAllFilms();
     const filmsWatched = getFilteredFilms(FilterTypes.HISTORY, films);
 
-    if (filmsWatched.length === 0) {
+    if (!filmsWatched.length) {
       this._statisticsData = {
         countFilmsWatched: 0,
         totalDuration: 0,

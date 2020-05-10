@@ -36,9 +36,9 @@ export default class Filter extends SmartAbstractComponent {
 
   setFilterChangeHandler(handler) {
     this.getElement().addEventListener(`click`, (evt) => {
-      if (evt.target.tagName === `A`) {
+      if (evt.target.tagName === `A` || evt.target.parentNode.tagName === `A`) {
         evt.preventDefault();
-        const selectedFilter = evt.target.getAttribute(`href`).substring(HREF_PREFIX.length);
+        const selectedFilter = evt.target.parentNode.tagName === `A` ? evt.target.parentNode.getAttribute(`href`).substring(HREF_PREFIX.length) : evt.target.getAttribute(`href`).substring(HREF_PREFIX.length);
         if (selectedFilter === this._activeFilter) {
           return;
         }

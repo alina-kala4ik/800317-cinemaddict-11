@@ -23,4 +23,9 @@ const StatisticsSortType = {
   YEAR: `Year`,
 };
 
-export {checksKeydownEsc, ErrorMessage, getTimeFromMins, StatisticsSortType};
+const Status = {
+  ONLINE: `online`,
+  OFFLINE: `offline`,
+};
+
+export {checksKeydownEsc, ErrorMessage, getTimeFromMins, StatisticsSortType, Status};

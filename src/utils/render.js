@@ -1,15 +1,20 @@
+const InsertionPoint = {
+  BEFOREEND: `beforeend`,
+  AFTERBEGIN: `afterbegin`,
+};
+
 const createElement = (template) => {
   const newElement = document.createElement(`div`);
   newElement.innerHTML = template;
   return newElement.firstChild;
 };
 
-const render = (container, component, place = `beforeend`) => {
+const render = (container, component, place = InsertionPoint.BEFOREEND) => {
   switch (place) {
-    case `beforeend`:
+    case InsertionPoint.BEFOREEND:
       container.append(component.getElement());
       break;
-    case `afterbegin`:
+    case InsertionPoint.AFTERBEGIN:
       container.prepend(component.getElement());
       break;
   }
@@ -29,4 +34,4 @@ const removeChild = (component) => {
 
 const replace = (parent, newElement, oldElement) => parent.replaceChild(newElement, oldElement);
 
-export {createElement, render, remove, appendChild, removeChild, replace};
+export {createElement, render, remove, appendChild, removeChild, replace, InsertionPoint};

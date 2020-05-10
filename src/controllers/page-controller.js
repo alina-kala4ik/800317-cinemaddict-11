@@ -96,11 +96,6 @@ export default class PageController {
 
     render(this._filmsElement, this._allFilmsListComponent);
 
-    if (films.length === 0) {
-      render(this._allFilmsListElement, this._noFilmsComponent);
-      return;
-    }
-
     this._renderAllFilms(films);
     this._renderButtonShowMore();
 
@@ -109,6 +104,10 @@ export default class PageController {
   }
 
   _renderAllFilms(films) {
+    if (!films.length) {
+      render(this._allFilmsListElement, this._noFilmsComponent);
+      return;
+    }
     const filmsControllers = showFilms(films.slice(0, this._lastFilmForShowing), this._allFilmsContainerElement, this._onDataChange, this._onViewChange, this._commentsModel, this.onCommentChange);
     this._showedFilmsControllers = this._showedFilmsControllers.concat(filmsControllers);
   }
