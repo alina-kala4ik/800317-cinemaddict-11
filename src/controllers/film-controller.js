@@ -103,10 +103,6 @@ export default class FilmController {
     replace(this._container, this._cardFilmComponent.getElement(), oldCardFilmComponent.getElement());
   }
 
-  _updatesFilmDetailsPopupComponent() {
-    this._filmDetailsPopupComponent = new FilmDetailsPopupComponent(this._film, this._commentsModel);
-  }
-
   setDefaultView() {
     if (this._mode === Mode.POPUP_IS_OPEN) {
       this._closePopup();
