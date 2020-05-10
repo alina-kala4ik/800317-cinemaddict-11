@@ -33,7 +33,6 @@ export default class FilmController {
 
     if (this._cardFilmComponent && !this._isPopupOpen()) {
       this._updatesCardFilmComponent();
-      this._updatesFilmDetailsPopupComponent();
     }
 
     if (this._cardFilmComponent && this._isPopupOpen()) {
