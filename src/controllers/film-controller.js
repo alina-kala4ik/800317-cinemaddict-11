@@ -31,11 +31,7 @@ export default class FilmController {
   render(film) {
     this._film = film;
 
-    if (this._cardFilmComponent && !this._isPopupOpen()) {
-      this._updatesCardFilmComponent();
-    }
-
-    if (this._cardFilmComponent && this._isPopupOpen()) {
+    if (this._cardFilmComponent) {
       this._updatesCardFilmComponent();
     }
 
@@ -109,10 +105,6 @@ export default class FilmController {
 
   _updatesFilmDetailsPopupComponent() {
     this._filmDetailsPopupComponent = new FilmDetailsPopupComponent(this._film, this._commentsModel);
-  }
-
-  _isPopupOpen() {
-    return Boolean(document.body.querySelector(`.film-details`));
   }
 
   setDefaultView() {
