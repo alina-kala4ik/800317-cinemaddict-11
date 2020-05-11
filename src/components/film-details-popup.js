@@ -321,7 +321,7 @@ export default class FilmDetailsPopup extends SmartAbstractComponent {
 
   addCommentHandler(handler) {
     document.addEventListener(`keydown`, (evt) => {
-      if (evt.ctrlKey || evt.metaKey && evt.keyCode === ENTER_KEY_CODE) {
+      if (evt.ctrlKey && evt.keyCode === ENTER_KEY_CODE || evt.metaKey && evt.keyCode === ENTER_KEY_CODE) {
         this._addComment(handler);
       }
     });
