@@ -49,7 +49,7 @@ export default class Sorting extends SmartAbstractComponent {
         return;
       }
       this._activeSort = selectedSortType;
-      this.rerender();
+      this.reRender();
       handler(this._activeSort);
     });
     this._sortTypeChangeHandler = handler;
@@ -57,7 +57,7 @@ export default class Sorting extends SmartAbstractComponent {
 
   setSortType(sortType) {
     this._activeSort = sortType;
-    this.rerender();
+    this.reRender();
   }
 }
 

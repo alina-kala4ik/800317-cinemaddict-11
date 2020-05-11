@@ -44,7 +44,7 @@ export default class Filter extends SmartAbstractComponent {
         }
         handler(selectedFilter);
         this._activeFilter = selectedFilter;
-        this.rerender(this._filterData);
+        this.reRender(this._filterData);
       }
     });
     this.filterChangeHandler = handler;
@@ -57,11 +57,11 @@ export default class Filter extends SmartAbstractComponent {
 
   removeActiveFilter() {
     this._activeFilter = null;
-    this.rerender(this._filterData);
+    this.reRender(this._filterData);
   }
 
-  rerender(filterData) {
+  reRender(filterData) {
     this._filterData = filterData;
-    super.rerender();
+    super.reRender();
   }
 }

@@ -211,7 +211,7 @@ export default class Statistic extends SmartAbstractComponent {
   setSortChangeHandler() {
     this.getElement().querySelector(`.statistic__filters`).addEventListener(`change`, (evt) => {
       this._activeSortType = evt.target.value;
-      this.rerender();
+      this.reRender();
     });
   }
 
@@ -219,8 +219,8 @@ export default class Statistic extends SmartAbstractComponent {
     this.setSortChangeHandler();
   }
 
-  rerender() {
-    super.rerender();
+  reRender() {
+    super.reRender();
     this._renderCharts();
   }
 

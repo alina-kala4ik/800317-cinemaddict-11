@@ -7,7 +7,7 @@ export default class SmartAbstractComponent extends AbstractComponent {
     throw new Error(`${ErrorMessage.UNREALIZED_METHOD} recoveryListeners`);
   }
 
-  rerender() {
+  reRender() {
     const oldElement = this.getElement();
     this.removeElement();
     const newElement = this.getElement();

@@ -210,7 +210,7 @@ export default class PageController {
     this._api.updateFilm(oldData.id, newData)
       .then((film) => {
         this._filmsModel.updateFIlm(oldData.id, film);
-        this._rerenderFilm(film);
+        this._reRenderFilm(film);
         if (this._filmsModel.getFilter() !== FilterTypes.ALL) {
           this._updateFilms(SHOWING_FILMS);
         }
@@ -248,8 +248,8 @@ export default class PageController {
           this._commentsModel.addComment(CommentModel.parseComments(answer.comments));
           const newFilmData = FilmModel.parseFilm(answer.movie);
           this._filmsModel.updateFIlm(film.id, newFilmData);
-          this._rerenderFilm(newFilmData);
-          popup.rerender(newFilmData);
+          this._reRenderFilm(newFilmData);
+          popup.reRender(newFilmData);
         })
         .catch(() => {
           popup.returnsTextFieldToDefaultState();
@@ -269,8 +269,8 @@ export default class PageController {
           const newCommentsIds = [].concat(oldCommentsIds.slice(0, indexOfDeletedComment), oldCommentsIds.slice(indexOfDeletedComment + 1));
           film.comments = newCommentsIds;
           this._filmsModel.updateFIlm(film.id, film);
-          this._rerenderFilm(film);
-          popup.rerender(film);
+          this._reRenderFilm(film);
+          popup.reRender(film);
         })
         .catch(() => {
           popup.shake();
@@ -279,7 +279,7 @@ export default class PageController {
     }
   }
 
-  _rerenderFilm(updatedFilm) {
+  _reRenderFilm(updatedFilm) {
     let allFilmsControllers = this._showedFilmsControllers;
     allFilmsControllers = allFilmsControllers.concat(this._showedMostCommentedFilmsControllers);
     allFilmsControllers = allFilmsControllers.concat(this._showedTopRatedFilmsControllers);

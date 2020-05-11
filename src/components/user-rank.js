@@ -19,8 +19,8 @@ export default class UserRank extends SmartAbstractComponent {
     super();
     this._filmsModel = filmsModel;
     this._countFilmsWatched = null;
-    this.rerender = this.rerender.bind(this);
-    this._filmsModel.setFilmsChangeHandlers(this.rerender);
+    this.reRender = this.reRender.bind(this);
+    this._filmsModel.setFilmsChangeHandlers(this.reRender);
   }
 
   getTemplate() {
@@ -28,7 +28,7 @@ export default class UserRank extends SmartAbstractComponent {
     return createUserRankTemplate(this._countFilmsWatched);
   }
 
-  rerender() {
+  reRender() {
     const oldElement = this.getElement();
     this.removeElement();
     const newElement = this.getElement();

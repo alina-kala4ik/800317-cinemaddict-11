@@ -15,7 +15,7 @@ export default class FooterStatistics extends SmartAbstractComponent {
     return createFooterStatistics(this._countOfFilmsInTheDatabase);
   }
 
-  rerender() {
+  reRender() {
     const oldElement = this.getElement();
     this.removeElement();
     const newElement = this.getElement();

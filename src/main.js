@@ -23,7 +23,7 @@ const STORE_NAME = `${STORE_PREFIX}-${STORE_VER}`;
 
 const statisticClickHandler = () => {
   statisticComponent.setSortType(StatisticsSortType.DEFAULT);
-  statisticComponent.rerender();
+  statisticComponent.reRender();
   statisticComponent.show();
   pageController.hide();
   filterController.removeActiveFilter();
@@ -61,7 +61,7 @@ render(footerStatisticsElement, footerStatisticsComponent);
 apiWithProvider.getFilms()
   .then((films) => {
     filmsModel.setFilms(films);
-    userRankComponent.rerender();
+    userRankComponent.reRender();
 
     menuComponent.setStatsClickHandler(statisticClickHandler);
 
@@ -72,7 +72,7 @@ apiWithProvider.getFilms()
     render(mainElement, statisticComponent);
     statisticComponent.hide();
 
-    footerStatisticsComponent.rerender();
+    footerStatisticsComponent.reRender();
   });
 
 window.addEventListener(`online`, () => {

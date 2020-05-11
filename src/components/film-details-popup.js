@@ -220,7 +220,7 @@ export default class FilmDetailsPopup extends SmartAbstractComponent {
 
     this._checkedEmoji = null;
     this._closeHandler = null;
-    this.rerender = this.rerender.bind(this);
+    this.reRender = this.reRender.bind(this);
 
     this._commentInputField = null;
     this._activeDeleteButton = null;
@@ -277,7 +277,7 @@ export default class FilmDetailsPopup extends SmartAbstractComponent {
     this.setMarkAsFavoriteClickHandler(this._markAsFavoriteClickHandler);
   }
 
-  _rerenderEmoji() {
+  _reRenderEmoji() {
     const emojiWrapper = this.getElement().querySelector(`.film-details__add-emoji-label`);
     const newEmoji = `<img src="./images/emoji/${this._checkedEmoji}.png" width="55" height="55" alt="emoji-${this._checkedEmoji}"></img>`;
     emojiWrapper.innerHTML = newEmoji;
@@ -286,7 +286,7 @@ export default class FilmDetailsPopup extends SmartAbstractComponent {
   _setEmojiListClickHandler() {
     this.getElement().querySelector(`.film-details__emoji-list`).addEventListener(`change`, (evt) => {
       this._checkedEmoji = evt.target.value;
-      this._rerenderEmoji();
+      this._reRenderEmoji();
     });
   }
 
@@ -329,10 +329,10 @@ export default class FilmDetailsPopup extends SmartAbstractComponent {
     document.addEventListener(`keydown`, this._addComment);
   }
 
-  rerender(newFilmData) {
+  reRender(newFilmData) {
     this._film = newFilmData;
     this._checkedEmoji = null;
-    super.rerender();
+    super.reRender();
   }
 
   shake() {
@@ -360,7 +360,7 @@ export default class FilmDetailsPopup extends SmartAbstractComponent {
     document.addEventListener(`keydown`, this._addComment);
     this._commentsModel.setCommentsByFilmId(this._film.id, (comments) => {
       this._comments = comments;
-      this.rerender(this._film);
+      this.reRender(this._film);
     });
   }
 

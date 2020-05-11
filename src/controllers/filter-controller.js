@@ -61,7 +61,7 @@ export default class FilterController {
 
   onDataChange() {
     const filterData = this._generateFilterData();
-    this._filterComponent.rerender(filterData);
+    this._filterComponent.reRender(filterData);
   }
 
   setFilterClickHandler(handler) {
