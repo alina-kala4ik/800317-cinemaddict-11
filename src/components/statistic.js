@@ -6,6 +6,7 @@ import SmartAbstractComponent from "./smart-abstract-component.js";
 import {getFilteredFilms, FilterTypes} from "./../utils/filter.js";
 import {getTimeFromMins, StatisticsSortType} from "./../utils/common.js";
 
+const BAR_HEIGHT = 50;
 
 const calculatesCountOfWatchedMoviesByGenre = (films) => {
   const ratioOfGenreToCountOfRepetitions = {};
@@ -81,7 +82,7 @@ const renderGenreCharts = (statisticCtx, ratioOfGenreToCountViews) => {
     films.push(ratio[0]);
     countsOfViews.push(ratio[1]);
   });
-  const BAR_HEIGHT = 50;
+
   statisticCtx.height = BAR_HEIGHT * Object.keys(ratioOfGenreToCountViews).length;
 
   return new Chart(statisticCtx, {
