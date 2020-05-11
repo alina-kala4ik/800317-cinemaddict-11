@@ -228,6 +228,10 @@ export default class FilmDetailsPopup extends SmartAbstractComponent {
     this.onOnline = this.onOnline.bind(this);
     window.addEventListener(`online`, this.onOnline);
     window.addEventListener(`offline`, this.onOffline);
+
+    this._addToWatchlistClickHandler = null;
+    this._markAsWatchedClickHandler = null;
+    this._markAsFavoriteClickHandler = null;
   }
 
   getTemplate() {
@@ -245,14 +249,17 @@ export default class FilmDetailsPopup extends SmartAbstractComponent {
 
   setAddToWatchlistClickHandler(handler) {
     this.getElement().querySelector(`.film-details__control-label--watchlist`).addEventListener(`click`, handler);
+    this._addToWatchlistClickHandler = handler;
   }
 
   setMarkAsWatchedClickHandler(handler) {
     this.getElement().querySelector(`.film-details__control-label--watched`).addEventListener(`click`, handler);
+    this._markAsWatchedClickHandler = handler;
   }
 
   setMarkAsFavoriteClickHandler(handler) {
     this.getElement().querySelector(`.film-details__control-label--favorite`).addEventListener(`click`, handler);
+    this._markAsFavoriteClickHandler = handler;
   }
 
   recoveryListeners() {
@@ -262,6 +269,9 @@ export default class FilmDetailsPopup extends SmartAbstractComponent {
     allDeleteButton.forEach((button) => button.addEventListener(`click`, (evt) => {
       this._deleteComment(evt, this._deleteCommentHandler);
     }));
+    this.setAddToWatchlistClickHandler(this._addToWatchlistClickHandler);
+    this.setMarkAsWatchedClickHandler(this._markAsWatchedClickHandler);
+    this.setMarkAsFavoriteClickHandler(this._markAsFavoriteClickHandler);
   }
 
   _rerenderEmoji() {
