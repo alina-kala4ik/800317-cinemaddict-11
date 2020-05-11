@@ -268,10 +268,7 @@ export default class FilmDetailsPopup extends SmartAbstractComponent {
   recoveryListeners() {
     this._setEmojiListClickHandler();
     this.setCloseButtonClickHandler(this._closeHandler);
-    const allDeleteButton = this.getElement().querySelectorAll(`.film-details__comment-delete`);
-    allDeleteButton.forEach((button) => button.addEventListener(`click`, (evt) => {
-      this._deleteComment(evt, this._deleteCommentHandler);
-    }));
+    this.addsClickHandlerToAllDeleteButtons();
     this.setAddToWatchlistClickHandler(this._addToWatchlistClickHandler);
     this.setMarkAsWatchedClickHandler(this._markAsWatchedClickHandler);
     this.setMarkAsFavoriteClickHandler(this._markAsFavoriteClickHandler);
@@ -300,11 +297,8 @@ export default class FilmDetailsPopup extends SmartAbstractComponent {
   }
 
   setDeleteCommentClickHandler(handler) {
-    const allDeleteButton = this.getElement().querySelectorAll(`.film-details__comment-delete`);
-    allDeleteButton.forEach((button) => button.addEventListener(`click`, (evt) => {
-      this._deleteComment(evt, handler);
-    }));
     this._deleteCommentHandler = handler;
+    this.addsClickHandlerToAllDeleteButtons();
   }
 
   addComment(evt) {
@@ -376,5 +370,12 @@ export default class FilmDetailsPopup extends SmartAbstractComponent {
         button.setAttribute(`disabled`, `disabled`);
       });
     }
+  }
+
+  addsClickHandlerToAllDeleteButtons() {
+    const allDeleteButton = document.body.querySelectorAll(`.film-details__comment-delete`);
+    allDeleteButton.forEach((button) => button.addEventListener(`click`, (evt) => {
+      this._deleteComment(evt, this._deleteCommentHandler);
+    }));
   }
 }
