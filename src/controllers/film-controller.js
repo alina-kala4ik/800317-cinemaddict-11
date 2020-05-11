@@ -68,6 +68,7 @@ export default class FilmController {
   _closePopup() {
     window.removeEventListener(`online`, this._filmDetailsPopupComponent.onOnline);
     window.removeEventListener(`offline`, this._filmDetailsPopupComponent.onOffline);
+    document.removeEventListener(`keydown`, this._filmDetailsPopupComponent.addComment);
     this._mode = Mode.DEFAULT;
     removeChild(this._filmDetailsPopupComponent);
     document.removeEventListener(`keydown`, this._documentKeydownHandler);

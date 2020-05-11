@@ -233,7 +233,7 @@ export default class FilmDetailsPopup extends SmartAbstractComponent {
     this._addToWatchlistClickHandler = null;
     this._markAsWatchedClickHandler = null;
     this._markAsFavoriteClickHandler = null;
-    this._addComment = this._addComment.bind(this);
+    this.addComment = this.addComment.bind(this);
     this._commentHandler = null;
   }
 
@@ -307,7 +307,7 @@ export default class FilmDetailsPopup extends SmartAbstractComponent {
     this._deleteCommentHandler = handler;
   }
 
-  _addComment(evt) {
+  addComment(evt) {
     if (evt.ctrlKey && evt.keyCode === ENTER_KEY_CODE || evt.metaKey && evt.keyCode === ENTER_KEY_CODE) {
       const form = this.getElement().querySelector(`.film-details__inner`);
       const formData = new FormData(form);
@@ -326,7 +326,7 @@ export default class FilmDetailsPopup extends SmartAbstractComponent {
 
   addCommentHandler(handler) {
     this._commentHandler = handler;
-    document.addEventListener(`keydown`, this._addComment);
+    document.addEventListener(`keydown`, this.addComment);
   }
 
   reRender(newFilmData) {
@@ -357,7 +357,7 @@ export default class FilmDetailsPopup extends SmartAbstractComponent {
   }
 
   onOnline() {
-    document.addEventListener(`keydown`, this._addComment);
+    document.addEventListener(`keydown`, this.addComment);
     this._commentsModel.setCommentsByFilmId(this._film.id, (comments) => {
       this._comments = comments;
       this.reRender(this._film);
@@ -365,7 +365,7 @@ export default class FilmDetailsPopup extends SmartAbstractComponent {
   }
 
   onOffline() {
-    document.removeEventListener(`keydown`, this._addComment);
+    document.removeEventListener(`keydown`, this.addComment);
     const commentInputField = document.body.querySelector(`.film-details__comment-input`);
     const allDeleteButton = document.body.querySelectorAll(`.film-details__comment-delete`);
 
