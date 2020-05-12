@@ -261,7 +261,7 @@ export default class FilmDetailsPopup extends SmartAbstractComponent {
   }
 
   addComment(evt) {
-    if (evt.ctrlKey && evt.keyCode === ENTER_KEY_CODE || evt.metaKey && evt.keyCode === ENTER_KEY_CODE) {
+    if ((evt.ctrlKey || evt.metaKey) && evt.keyCode === ENTER_KEY_CODE) {
       const form = this.getElement().querySelector(`.film-details__inner`);
       const formData = new FormData(form);
       const newComment = createNewComment(formData, this._checkedEmoji);
@@ -342,6 +342,13 @@ export default class FilmDetailsPopup extends SmartAbstractComponent {
     handler(this._film, commentId, null, this);
   }
 
+  _setEmojiListClickHandler() {
+    this.getElement().querySelector(`.film-details__emoji-list`).addEventListener(`change`, (evt) => {
+      this._checkedEmoji = evt.target.value;
+      this._reRenderEmoji();
+    });
+  }
+
   setCloseButtonClickHandler(handler) {
     this._closeHandler = handler;
     this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, handler);
@@ -360,13 +367,6 @@ export default class FilmDetailsPopup extends SmartAbstractComponent {
   setMarkAsFavoriteClickHandler(handler) {
     this.getElement().querySelector(`.film-details__control-label--favorite`).addEventListener(`click`, handler);
     this._markAsFavoriteClickHandler = handler;
-  }
-
-  _setEmojiListClickHandler() {
-    this.getElement().querySelector(`.film-details__emoji-list`).addEventListener(`change`, (evt) => {
-      this._checkedEmoji = evt.target.value;
-      this._reRenderEmoji();
-    });
   }
 
   setDeleteCommentClickHandler(handler) {
