@@ -34,6 +34,11 @@ export default class Sorting extends SmartAbstractComponent {
     return this._activeSort;
   }
 
+  setSortType(sortType) {
+    this._activeSort = sortType;
+    this.reRender();
+  }
+
   recoveryListeners() {
     this.setSortTypeChangeHandler(this._sortTypeChangeHandler);
   }
@@ -53,11 +58,6 @@ export default class Sorting extends SmartAbstractComponent {
       handler(this._activeSort);
     });
     this._sortTypeChangeHandler = handler;
-  }
-
-  setSortType(sortType) {
-    this._activeSort = sortType;
-    this.reRender();
   }
 }
 

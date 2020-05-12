@@ -28,18 +28,6 @@ export default class FilterController {
     render(this._container, this._filterComponent, InsertionPoint.AFTERBEGIN);
   }
 
-  _generateFilterData() {
-    const films = this._filmsModel.getAllFilms();
-    const filterData = Object.values(FilterTypes).map((filter) => {
-      return {
-        title: filter,
-        count: getFilteredFilms(filter, films).length,
-        isChecked: filter === this._activeFilter,
-      };
-    });
-    return filterData;
-  }
-
   render() {
     const filterData = this._generateFilterData();
 
@@ -64,19 +52,23 @@ export default class FilterController {
     this._filterComponent.reRender(filterData);
   }
 
-  setFilterClickHandler(handler) {
-    this._filterComponent.setFilterClickHandler(handler);
-  }
-
   removeActiveFilter() {
     this._filterComponent.removeActiveFilter();
   }
 
-  setFilterClickHandler(handler) {
-    this._filterComponent.setFilterClickHandler(handler);
+  _generateFilterData() {
+    const films = this._filmsModel.getAllFilms();
+    const filterData = Object.values(FilterTypes).map((filter) => {
+      return {
+        title: filter,
+        count: getFilteredFilms(filter, films).length,
+        isChecked: filter === this._activeFilter,
+      };
+    });
+    return filterData;
   }
 
-  removeActiveFilter() {
-    this._filterComponent.removeActiveFilter();
+  setFilterClickHandler(handler) {
+    this._filterComponent.setFilterClickHandler(handler);
   }
 }

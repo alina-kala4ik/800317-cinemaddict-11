@@ -34,6 +34,16 @@ export default class Filter extends SmartAbstractComponent {
     this.setFilterClickHandler(this.filterClickHandler);
   }
 
+  reRender(filterData) {
+    this._filterData = filterData;
+    super.reRender();
+  }
+
+  removeActiveFilter() {
+    this._activeFilter = null;
+    this.reRender(this._filterData);
+  }
+
   setFilterChangeHandler(handler) {
     this.getElement().addEventListener(`click`, (evt) => {
       if (evt.target.tagName === `A` || evt.target.parentNode.tagName === `A`) {
@@ -53,15 +63,5 @@ export default class Filter extends SmartAbstractComponent {
   setFilterClickHandler(handler) {
     this.getElement().addEventListener(`click`, handler);
     this.filterClickHandler = handler;
-  }
-
-  removeActiveFilter() {
-    this._activeFilter = null;
-    this.reRender(this._filterData);
-  }
-
-  reRender(filterData) {
-    this._filterData = filterData;
-    super.reRender();
   }
 }

@@ -52,6 +52,16 @@ export default class FilmController {
     this._cardFilmComponent.setMarkAsFavoriteClickHandler(() => this._callOnDataChange(`isMarkAsFavorite`));
   }
 
+  setDefaultView() {
+    if (this._mode === Mode.POPUP_IS_OPEN) {
+      this._closePopup();
+    }
+  }
+
+  destroy() {
+    remove(this._cardFilmComponent);
+  }
+
   _callOnDataChange(variableParameter) {
     const newFilm = FilmModel.clone(this._film);
     newFilm[variableParameter] = !newFilm[variableParameter];
@@ -59,10 +69,6 @@ export default class FilmController {
       newFilm.watchingDate = new Date();
     }
     this._onDataChange(this._film, newFilm);
-  }
-
-  _documentKeydownHandler(evt) {
-    checksKeydownEsc(evt, this._closePopup);
   }
 
   _closePopup() {
@@ -104,13 +110,7 @@ export default class FilmController {
     replace(this._container, this._cardFilmComponent.getElement(), oldCardFilmComponent.getElement());
   }
 
-  setDefaultView() {
-    if (this._mode === Mode.POPUP_IS_OPEN) {
-      this._closePopup();
-    }
-  }
-
-  destroy() {
-    remove(this._cardFilmComponent);
+  _documentKeydownHandler(evt) {
+    checksKeydownEsc(evt, this._closePopup);
   }
 }

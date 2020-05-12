@@ -158,6 +158,19 @@ export default class Statistic extends SmartAbstractComponent {
     return createStatisticTemplate(this._statisticsData);
   }
 
+  setSortType(sortType) {
+    this._activeSortType = sortType;
+  }
+
+  recoveryListeners() {
+    this.setSortChangeHandler();
+  }
+
+  reRender() {
+    super.reRender();
+    this._renderCharts();
+  }
+
   _generatesStatisticsData() {
     const films = this._filmsModel.getAllFilms();
     const filmsWatched = getFilteredFilms(FilterTypes.HISTORY, films);
@@ -209,22 +222,6 @@ export default class Statistic extends SmartAbstractComponent {
     };
   }
 
-  setSortChangeHandler() {
-    this.getElement().querySelector(`.statistic__filters`).addEventListener(`change`, (evt) => {
-      this._activeSortType = evt.target.value;
-      this.reRender();
-    });
-  }
-
-  recoveryListeners() {
-    this.setSortChangeHandler();
-  }
-
-  reRender() {
-    super.reRender();
-    this._renderCharts();
-  }
-
   _renderCharts() {
     const statisticCtx = this.getElement().querySelector(`.statistic__chart`);
 
@@ -236,7 +233,10 @@ export default class Statistic extends SmartAbstractComponent {
     this._genreCharts = renderGenreCharts(statisticCtx, this._statisticsData.ratioOfGenreToCountViews);
   }
 
-  setSortType(sortType) {
-    this._activeSortType = sortType;
+  setSortChangeHandler() {
+    this.getElement().querySelector(`.statistic__filters`).addEventListener(`change`, (evt) => {
+      this._activeSortType = evt.target.value;
+      this.reRender();
+    });
   }
 }

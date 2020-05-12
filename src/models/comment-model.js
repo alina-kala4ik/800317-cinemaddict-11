@@ -7,20 +7,20 @@ export default class CommentModel {
     this.message = data.comment;
   }
 
-  static parseComment(data) {
-    return new CommentModel(data);
-  }
-
-  static parseComments(data) {
-    return data.map(CommentModel.parseComment);
-  }
-
   toRAW() {
     return {
       "emotion": this.emoji,
       "date": this.date,
       "comment": this.message,
     };
+  }
+
+  static parseComment(data) {
+    return new CommentModel(data);
+  }
+
+  static parseComments(data) {
+    return data.map(CommentModel.parseComment);
   }
 
   static clone(data) {

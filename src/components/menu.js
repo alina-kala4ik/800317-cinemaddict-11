@@ -13,15 +13,15 @@ export default class Menu extends AbstractComponent {
     return createMenuTemplate();
   }
 
+  removesLinkSelection() {
+    this.getElement().querySelector(`.main-navigation__additional`).classList.remove(`main-navigation__additional--active`);
+  }
+
   setStatsClickHandler(handler) {
     const statsButton = this.getElement().querySelector(`.main-navigation__additional`);
     statsButton.addEventListener(`click`, () => {
       statsButton.classList.add(`main-navigation__additional--active`);
       handler();
     });
-  }
-
-  removesLinkSelection() {
-    this.getElement().querySelector(`.main-navigation__additional`).classList.remove(`main-navigation__additional--active`);
   }
 }
